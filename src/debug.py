@@ -18,6 +18,8 @@ def save_image_dbg(name: str, img: Image):
 def save_print_dbg(txt: str, end='\n', is_print=True):
     if not DEBUG: return
     if is_print: print(txt, end=end)
+    if not path.isdir(SAVE_DEBUG_PATH):
+        mkdir(SAVE_DEBUG_PATH)
     with open(DEBUG_TEXT_PATH, 'a+') as f:
         f.write(txt + end)
 

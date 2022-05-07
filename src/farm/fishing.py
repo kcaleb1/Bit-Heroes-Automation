@@ -8,7 +8,6 @@ from error import *
 
 FEATURE_PATH = join(IMG_PATH, 'fishing')
 BTN = join(FEATURE_PATH, 'button.png')
-PLAY_BTN = join(FEATURE_PATH, 'play.png')
 START_BTN = join(FEATURE_PATH, 'start.png')
 CAST_BTN = join(FEATURE_PATH, 'cast.png')
 CATCH_BTN = join(FEATURE_PATH, 'catch.png')
@@ -22,7 +21,7 @@ PERCENT_100 = join(FEATURE_PATH, '100-percent.png')
 @farm_exceptions
 def go_fishing(is_loop=False, **kwargs):
     find_image_and_click_then_sleep(BTN)
-    find_image_and_click_then_sleep(PLAY_BTN)
+    find_image_and_click_then_sleep(COMMON_PLAY)
     sleep(SLEEP*10)  # wait for walking
     doing_fish(initial=True)
     while is_loop:

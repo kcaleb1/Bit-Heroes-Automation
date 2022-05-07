@@ -1,9 +1,10 @@
 from decorator import farm_exceptions, feature, go_main_screen
 from const import *
-from utils import find_image, find_image_and_click_then_sleep, sleep
+from error import NoEnergyException
+from utils import find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
 from window import click_screen_and_sleep, press_escape
 
-FEATURE_PATH = join(IMG_PATH, 'raid')
+FEATURE_PATH = join(IMG_PATH, 'pvp')
 BTN = join(FEATURE_PATH, 'button.png')
 COST = join(FEATURE_PATH, 'cost.png')
 COST_1 = join(FEATURE_PATH, 'cost-1.png')
@@ -37,12 +38,20 @@ def run_pvp(**kwargs):
     find_image_and_click_then_sleep(COST, retry_time=5)
 
     try:
-        find_image_and_click_then_sleep(
-            kwargs.get('cost', COST_1), retry_time=5)
-    except:
+        img_cost = kwargs.get('cost', COST_1)
+        find_image_and_click_then_sleep(img_cost, retry_time=5, sleep_duration=0.5)
+        find_image(img_cost)
         press_escape()
+    except:
+        pass
 
     find_image_and_click_then_sleep(COMMON_PLAY, retry_time=5)
+    sleep(0.5)
+    
+    run_or_raise_exception(
+        lambda: find_image_and_click_then_sleep(COMMON_NO_BTN),
+        NoEnergyException
+    )
 
     try:
         find_image(COMMON_AUTO_ON, retry_time=3)
