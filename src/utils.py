@@ -1,18 +1,21 @@
+from window import click_screen_and_sleep, get_game_screen, press_escape
+from debug import save_image_dbg, save_print_dbg
+from error import *
+from const import *
+import const
+from time import sleep
+import os
 import cv2
 import numpy as np
 from PIL import Image, ImageGrab
 from functools import partial
 ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
 
-import os
-from time import sleep
-from const import *
-from error import *
-from debug import save_image
-from window import click_screen_and_sleep, get_game_screen, get_app, press_escape
 
-
-def find_image_position(image_source, image_find_path: str, threshold=None):
+def find_image_position(image_source: Image, image_find_path: str, threshold=None):
+    image_path = image_find_path.replace(IMG_PATH+os.sep, '')
+    name = '_'.join(image_path.split(os.sep))
+    
     if type(image_source) == str:
         source = np.array(Image.open(image_source).convert('RGBA'))
     else:
@@ -21,45 +24,45 @@ def find_image_position(image_source, image_find_path: str, threshold=None):
     # convert from maximum size to current game resolution
     find_image = Image.open(image_find_path).convert('RGBA')
     old_width, old_height = find_image._size
-    if x_multiply != 0 and y_multiply != 0:
-        new_height = int(old_height * x_multiply)
-        new_width = int(old_width * y_multiply)
+    new_height = int(old_height * const.y_multiply)
+    new_width = int(old_width * const.x_multiply)
+    if old_width != new_width or old_height != new_height:
         find_image = find_image.resize((new_width, new_height), Image.ANTIALIAS)
         old_width, old_height = find_image._size
+        save_image_dbg(f'resize-{name}', find_image)
     find = np.array(find_image)
 
     heat_map = cv2.matchTemplate(source, find, cv2.TM_CCOEFF_NORMED)
-    max_corr = np.max(heat_map)
+    max_corr = round(np.max(heat_map), 2)
+    # threshold = min(round((const.y_multiply + const.y_multiply) / 2, 2), DEFAULT_THRESHOLD_IMAGE_MATCH)
 
-    print(max_corr, threshold)
+    save_print_dbg(f'resize: y:{const.y_multiply:.2f} x:{const.x_multiply:.2f}\tmatching: {max_corr:.2f}/{threshold}')
+    
     if threshold and not max_corr >= threshold:
-        raise ImageNotFoundException("Could not found event image")
+        raise ImageNotFoundException(image_path=image_path)
 
     y, x = np.unravel_index(np.argmax(heat_map), heat_map.shape)
 
     y += int(old_height / 2)
     x += int(old_width / 2)
 
-    if DEBUG:
-        cv2.rectangle(source, (x,y), (x+5, y+5), (255,0,0,255), 5)
-        img = Image.fromarray(source, 'RGBA')
-        feature, file_name = image_find_path.split(os.sep)[-2:]
-        name = '_'.join(file_name.split('.')[0].split('-'))
-        save_image(f'find_image_position-{feature}-{name}', img)
+    cv2.rectangle(source, (x, y), (x+5, y+5), (255, 0, 0, 255), 5)
+    img = Image.fromarray(source, 'RGBA')
+    save_image_dbg(f'find_image_position-{name}', img)
 
     return y, x
 
 
-def find_image_and_click_then_sleep(path, retry_time=RETRY_TIME_FIND_IMAGE, sleep_duration=SLEEP, threshold=DEFAULT_THRESHOLD_IMAGE_MATCH):
+def find_image_and_click_then_sleep(path: str, retry_time=RETRY_TIME_FIND_IMAGE, sleep_duration=SLEEP, threshold=DEFAULT_THRESHOLD_IMAGE_MATCH):
     y, x = find_image(path, retry_time, threshold)
     click_screen_and_sleep(y, x, sleep_duration)
 
 
 def find_image(path: str, retry_time=RETRY_TIME_FIND_IMAGE, threshold=DEFAULT_THRESHOLD_IMAGE_MATCH):
-    y, x = -1 , -1
+    y, x = -1, -1
     e = None
     for i in range(retry_time):
-        print(i, path.split(CUR_PATH)[0])
+        save_print_dbg(f"retry: {i} on {path.replace(IMG_PATH, '')}", end='\t')
         game_screen = get_game_screen()
         try:
             y, x = find_image_position(game_screen, path, threshold)
@@ -67,19 +70,24 @@ def find_image(path: str, retry_time=RETRY_TIME_FIND_IMAGE, threshold=DEFAULT_TH
         except Exception as ex:
             e = ex
         sleep(SLEEP)
-        
+
     raise e
 
 
 def go_main_screen():
+    old_dbg_name = const.dbg_name.__str__()
+    const.dbg_name = 'escape'
+    save_print_dbg('**Debug for press escape')
     while True:
         press_escape()
         sleep(SLEEP)
         try:
             find_image_and_click_then_sleep(COMMON_NO_BTN, retry_time=3)
-            return
+            break
         except:
             pass
+    save_print_dbg('**Finished press escape')
+    const.dbg_name = old_dbg_name
 
 def run_or_raise_exception(fun, exception: Exception):
     try:

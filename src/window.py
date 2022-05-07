@@ -4,20 +4,21 @@ import win32gui
 
 import sys
 from time import sleep
-from debug import save_image
+from debug import save_image_dbg
 from const import *
 from error import *
+import const
 
 
 def get_app():
-    global app
-    app = pywinauto.Application().connect(path=APP_NAME)
-    app.top_window().set_focus()
+    const.app = pywinauto.Application().connect(path=APP_NAME)
+    const.app.top_window().set_focus()
 
 
-def click_screen_and_sleep(y, x, sleep_duration=SLEEP):
-    app[GAME_TITLE].click_input(coords=(x, y + TITLE_BAR_HEIGHT))
-    pyautogui.moveTo(y - y, x - x) # reset mouse position so not display unwanted UI
+def click_screen_and_sleep(y: int, x: int, sleep_duration=SLEEP):
+    const.app[GAME_TITLE].click_input(coords=(x, y + TITLE_BAR_HEIGHT))
+    # reset mouse position so not display unwanted UI
+    pyautogui.moveTo(y - y, x - x)
     sleep(sleep_duration)
 
 
@@ -34,20 +35,21 @@ def get_game_screen(game_title=GAME_TITLE):
         if x1 == MAX_RESOLUTION[0] and y1 == MAX_RESOLUTION[1]:
             pass
         elif x1 <= MAX_RESOLUTION[0] and y1 <= MAX_RESOLUTION[1]:
-            x_multiply = x1 / MAX_RESOLUTION[0]
-            y_multiply = y1 / MAX_RESOLUTION[1]
+            const.x_multiply = x1 / MAX_RESOLUTION[0]
+            const.y_multiply = y1 / MAX_RESOLUTION[1]
         else:
-            raise MismatchConditionException('Resolution %s:%s not supported, working resolution is %s:%s and lower' %(x1, y1, *MAX_RESOLUTION))
+            raise MismatchConditionException(
+                'Resolution %s:%s not supported, working resolution is %s:%s and lower' % (x1, y1, *MAX_RESOLUTION))
 
         x, y = win32gui.ClientToScreen(hwnd, (x, y))
         x1, y1 = win32gui.ClientToScreen(hwnd, (x1 - x, y1 - y))
         img = pyautogui.screenshot(region=(x, y, x1, y1))
 
         if DEBUG:
-            save_image('get_game_screen', img)
+            save_image_dbg('get_game_screen', img)
 
         return img
-    
+
     raise MismatchConditionException('OS not supported')
 
 

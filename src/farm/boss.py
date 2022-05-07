@@ -1,19 +1,78 @@
-from utils import find_image_and_click_then_sleep
-from utils import go_main_screen
+from utils import find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
+from window import click_screen_and_sleep, press_escape
 from const import *
 from error import *
+from decorator import feature, go_main_screen, farm_exceptions
+from datetime import datetime
 
 
-IMAGE_PATH = join(CUR_PATH, 'img', 'boss')
-BTN = join(IMAGE_PATH, 'button.png')
+FEATURE_PATH = join(IMG_PATH, 'boss')
+BTN = join(FEATURE_PATH, 'button.png')
+FULL_TXT = join(FEATURE_PATH, 'full.png')
+JOIN_BTN = join(FEATURE_PATH, 'join.png')
+NO_ENERGY = join(FEATURE_PATH, 'no-energy.png')
+READY_BTN = join(FEATURE_PATH, 'ready.png')
 
 
-def go_boss(is_loop=False):
-    go_main_screen()
+@feature('farm boss')
+@farm_exceptions
+def go_boss(is_loop=False, **kwargs):
+    run_boss(**kwargs)
+    while is_loop:
+        run_boss(**kwargs)
 
-    raise UnimplementedException()
-
+@go_main_screen
+def run_boss(**kwargs):
+    find_image_and_click_then_sleep(BTN)
+    
+    run_or_raise_exception(
+        lambda: find_image(NO_ENERGY, retry_time=5, threshold=0.9),
+        NoEnergyException
+    )
+    
     try:
-        find_image_and_click_then_sleep(BTN)
-    except Exception as e:
-        print('got error when go_boss: ', e)
+        find_image_and_click_then_sleep(JOIN_BTN)
+    except:
+        return run_boss(**kwargs)
+    
+    try:
+        find_image(COMMON_CLOSE, retry_time=5)
+        return run_boss(**kwargs)
+    except:
+        pass
+
+    find_image_and_click_then_sleep(READY_BTN)
+    start_time = datetime.now()
+    is_started = False
+    is_auto_on = False
+    while True:
+        try:
+            y, x = find_image(COMMON_TOWN, retry_time=1)
+            sleep(1)
+            click_screen_and_sleep(y, x)
+            is_started = True
+            break
+        except:
+            pass
+
+        if not is_auto_on:
+            try:
+                find_image(COMMON_AUTO_ON, retry_time=1)
+                is_auto_on = True
+                continue
+            except:
+                pass
+
+            try:
+                find_image_and_click_then_sleep(COMMON_AUTO_OFF, retry_time=1)
+                is_auto_on = True
+            except:
+                pass
+        
+        if not is_auto_on and (datetime.now() - start_time).seconds >= 60:
+            press_escape()
+
+    if not is_started:
+        sleep(0.5)
+        find_image_and_click_then_sleep(COMMON_YES_BTN)
+        return run_boss(**kwargs)

@@ -1,46 +1,39 @@
 from random import uniform
-from time import sleep
+from decorator import feature, go_main_screen, farm_exceptions
 
-from utils import find_image_and_click_then_sleep, find_image, go_main_screen, run_or_raise_exception
+from utils import find_image_and_click_then_sleep, find_image, run_or_raise_exception, sleep
 from window import click_screen_and_sleep
 from const import *
 from error import *
 
-IMAGE_PATH = join(CUR_PATH, 'img', 'fishing')
-BTN = join(IMAGE_PATH, 'button.png')
-PLAY_BTN = join(IMAGE_PATH, 'play.png')
-START_BTN = join(IMAGE_PATH, 'start.png')
-CAST_BTN = join(IMAGE_PATH, 'cast.png')
-CATCH_BTN = join(IMAGE_PATH, 'catch.png')
-TRADE_BTN = join(IMAGE_PATH, 'trade.png')
-CLOSE_BTN = join(IMAGE_PATH, 'close.png')
-EMPTY_BAIT = join(IMAGE_PATH, 'empty-bait.png')
-PERCENT_100 = join(IMAGE_PATH, '100-percent.png')
+FEATURE_PATH = join(IMG_PATH, 'fishing')
+BTN = join(FEATURE_PATH, 'button.png')
+PLAY_BTN = join(FEATURE_PATH, 'play.png')
+START_BTN = join(FEATURE_PATH, 'start.png')
+CAST_BTN = join(FEATURE_PATH, 'cast.png')
+CATCH_BTN = join(FEATURE_PATH, 'catch.png')
+TRADE_BTN = join(FEATURE_PATH, 'trade.png')
+EMPTY_BAIT = join(FEATURE_PATH, 'empty-bait.png')
+PERCENT_100 = join(FEATURE_PATH, '100-percent.png')
 
 
-def go_fishing(is_loop=False):
-    go_main_screen()
-
-    try:
-        find_image_and_click_then_sleep(BTN)
-        find_image_and_click_then_sleep(PLAY_BTN)
-        sleep(SLEEP*10)  # wait for walking
-        doing_fish(initial=True)
-        while is_loop:
-            doing_fish()
-    except EmptyBaitException as ex:
-        print(ex.__str__())
-    except KeyboardInterrupt as ex:
-        raise ex
-    except Exception as ex:
-        print('got error when go_fishing: ', ex)
+@feature('farm fish')
+@go_main_screen
+@farm_exceptions
+def go_fishing(is_loop=False, **kwargs):
+    find_image_and_click_then_sleep(BTN)
+    find_image_and_click_then_sleep(PLAY_BTN)
+    sleep(SLEEP*10)  # wait for walking
+    doing_fish(initial=True)
+    while is_loop:
+        doing_fish()
 
 
 def doing_fish(initial=False):
     def is_check_closes() -> bool:
         try:
             find_image_and_click_then_sleep(
-                CLOSE_BTN, retry_time=1, sleep_duration=0.5)
+                COMMON_CLOSE, retry_time=1, sleep_duration=0.5)
             find_image_and_click_then_sleep(COMMON_SMALL_X_BTN, retry_time=1)
             return True
         except:
