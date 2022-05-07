@@ -4,7 +4,7 @@ from os.path import join
 #global variables
 app = None
 x_multiply, y_multiply = 1, 1
-dbg_name = 'none'
+dbg_name = 'initialize'
 
 GAME_TITLE = 'Bit Heroes'
 APP_NAME = GAME_TITLE+'.exe'

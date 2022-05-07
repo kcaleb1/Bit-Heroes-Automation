@@ -70,14 +70,13 @@ def find_image(path: str, retry_time=RETRY_TIME_FIND_IMAGE, threshold=DEFAULT_TH
         except Exception as ex:
             e = ex
         sleep(SLEEP)
-
     raise e
 
 
 def go_main_screen():
     old_dbg_name = const.dbg_name.__str__()
     const.dbg_name = 'escape'
-    save_print_dbg('**Debug for press escape')
+    save_print_dbg("**Debug for action 'press escape'")
     while True:
         press_escape()
         sleep(SLEEP)
@@ -86,7 +85,7 @@ def go_main_screen():
             break
         except:
             pass
-    save_print_dbg('**Finished press escape')
+    save_print_dbg("**Finished action 'press escape'")
     const.dbg_name = old_dbg_name
 
 def run_or_raise_exception(fun, exception: Exception):

@@ -29,7 +29,7 @@ def get_game_screen(game_title=GAME_TITLE):
         hwnd = win32gui.FindWindow(None, game_title)
 
         if not hwnd:
-            raise MismatchConditionException(f'{game_title} not running')
+            raise MismatchConditionException(txt=f'{game_title} not running')
 
         x, y, x1, y1 = win32gui.GetClientRect(hwnd)
         if x1 == MAX_RESOLUTION[0] and y1 == MAX_RESOLUTION[1]:
@@ -39,18 +39,17 @@ def get_game_screen(game_title=GAME_TITLE):
             const.y_multiply = y1 / MAX_RESOLUTION[1]
         else:
             raise MismatchConditionException(
-                'Resolution %s:%s not supported, working resolution is %s:%s and lower' % (x1, y1, *MAX_RESOLUTION))
+                txt='Resolution %s:%s not supported, working resolution is %s:%s and lower' % (x1, y1, *MAX_RESOLUTION))
 
         x, y = win32gui.ClientToScreen(hwnd, (x, y))
         x1, y1 = win32gui.ClientToScreen(hwnd, (x1 - x, y1 - y))
         img = pyautogui.screenshot(region=(x, y, x1, y1))
 
-        if DEBUG:
-            save_image_dbg('get_game_screen', img)
+        # save_image_dbg('get_game_screen', img)
 
         return img
 
-    raise MismatchConditionException('OS not supported')
+    raise MismatchConditionException(txt='OS not supported')
 
 
 def press_escape():

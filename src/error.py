@@ -25,11 +25,12 @@ class ImageNotFoundException(Exception):
 
 
 class MismatchConditionException(Exception):
-    def __init__(self, *args: object) -> None:
+    def __init__(self, *args: object, **kwargs) -> None:
         super().__init__(*args)
+        self.txt = kwargs.get('txt', '')
 
     def __str__(self):
-        return "Required condition unmatched"
+        return f"{self.txt}"
 
 
 class UnimplementedException(Exception):

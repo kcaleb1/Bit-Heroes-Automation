@@ -8,20 +8,15 @@ from error import *
 
 FEATURE_PATH = join(IMG_PATH, 'raid')
 BTN = join(FEATURE_PATH, 'button.png')
-MOVE_RIGHT_BTN = join(FEATURE_PATH, 'move-right.png')
 MOVE_LEFT_BTN = join(FEATURE_PATH, 'move-left.png')
 SUMMON_BTN = join(FEATURE_PATH, 'summon.png')
-BOSS_1 = join(FEATURE_PATH, 'boss-1.png')
-BOSS_2 = join(FEATURE_PATH, 'boss-2.png')
-BOSS_3 = join(FEATURE_PATH, 'boss-3.png')
-BOSS_4 = join(FEATURE_PATH, 'boss-4.png')
 NO_ENERGY = join(FEATURE_PATH, 'no-energy.png')
 
 BOSSES = {
-    1: BOSS_1,
-    2: BOSS_2,
-    3: BOSS_3,
-    4: BOSS_4
+    1: join(FEATURE_PATH, 'boss-1.png'),
+    2: join(FEATURE_PATH, 'boss-2.png'),
+    3: join(FEATURE_PATH, 'boss-3.png'),
+    4: join(FEATURE_PATH, 'boss-4.png')
 }
 
 
