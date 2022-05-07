@@ -55,11 +55,11 @@ def find_image_and_click_then_sleep(path, retry_time=RETRY_TIME_FIND_IMAGE, slee
     click_screen_and_sleep(y, x, sleep_duration)
 
 
-def find_image(path, retry_time=RETRY_TIME_FIND_IMAGE, threshold=DEFAULT_THRESHOLD_IMAGE_MATCH):
+def find_image(path: str, retry_time=RETRY_TIME_FIND_IMAGE, threshold=DEFAULT_THRESHOLD_IMAGE_MATCH):
     y, x = -1 , -1
     e = None
     for i in range(retry_time):
-        print(i, path)
+        print(i, path.split(CUR_PATH)[0])
         game_screen = get_game_screen()
         try:
             y, x = find_image_position(game_screen, path, threshold)
@@ -80,3 +80,14 @@ def go_main_screen():
             return
         except:
             pass
+
+def run_or_raise_exception(fun, exception: Exception):
+    try:
+        fun()
+        raise exception()
+    except exception as ex:
+        raise ex
+    except KeyboardInterrupt as ex:
+        raise ex
+    except:
+        pass

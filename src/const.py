@@ -22,8 +22,6 @@ SAVE_DESTINATION = join(CUR_PATH, 'debug')
 # PATH IMAGE FOLDER
 FISHING_IMAGE_PATH = join(CUR_PATH, 'img', 'fishing')
 COMMON_IMAGE_PATH = join(CUR_PATH, 'img', 'common')
-BOSS_IMAGE_PATH = join(CUR_PATH, 'img', 'boss')
-RAID_IMAGE_PATH = join(CUR_PATH, 'img', 'raid')
 
 # COMMON_IMAGE_PATH
 COMMON_SMALL_X_BTN = join(COMMON_IMAGE_PATH, 'small-x.png')
@@ -39,26 +37,8 @@ COMMON_AUTO_TEAM = join(COMMON_IMAGE_PATH, 'auto-team.png')
 COMMON_AUTO_ON = join(COMMON_IMAGE_PATH, 'auto-on.png')
 COMMON_AUTO_OFF = join(COMMON_IMAGE_PATH, 'auto-off.png')
 
-# FISHING_IMAGE_PATH
-FISHING_BTN = join(FISHING_IMAGE_PATH, 'button.png')
-FISHING_PLAY_BTN = join(FISHING_IMAGE_PATH, 'play.png')
-FISHING_START_BTN = join(FISHING_IMAGE_PATH, 'start.png')
-FISHING_CAST_BTN = join(FISHING_IMAGE_PATH, 'cast.png')
-FISHING_CATCH_BTN = join(FISHING_IMAGE_PATH, 'catch.png')
-FISHING_TRADE_BTN = join(FISHING_IMAGE_PATH, 'trade.png')
-FISHING_CLOSE_BTN = join(FISHING_IMAGE_PATH, 'close.png')
-FISHING_EMPTY_BAIT = join(FISHING_IMAGE_PATH, 'empty-bait.png')
-FISHING_100_PERCENT = join(FISHING_IMAGE_PATH, '100-percent.png')
-
-# BOSS_IMAGE_PATH
-BOSS_BTN = join(BOSS_IMAGE_PATH, 'button.png')
-
-# RAID_IMAGE_PATH
-RAID_BTN = join(RAID_IMAGE_PATH, 'button.png')
-RAID_MOVE_RIGHT_BTN = join(RAID_IMAGE_PATH, 'move-right.png')
-RAID_MOVE_LEFT_BTN = join(RAID_IMAGE_PATH, 'move-left.png')
-RAID_SUMMON_BTN = join(RAID_IMAGE_PATH, 'summon.png')
-RAID_BOSS_1 = join(RAID_IMAGE_PATH, 'boss-1.png')
-RAID_BOSS_2 = join(RAID_IMAGE_PATH, 'boss-2.png')
-RAID_BOSS_3 = join(RAID_IMAGE_PATH, 'boss-3.png')
-RAID_NO_RAID = join(RAID_IMAGE_PATH, 'no-raid.png')
+DIFFICULTIES = {
+    1: COMMON_NORMAL,
+    2: COMMON_HARD,
+    3: COMMON_HEROIC
+}
