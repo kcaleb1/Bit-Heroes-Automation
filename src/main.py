@@ -13,6 +13,7 @@ def main():
     go_pvp(is_loop=True, cost=5)
 
     go_main_screen()
+    input("Press enter close...")
 
 if __name__ == '__main__':
     with warnings.catch_warnings():

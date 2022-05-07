@@ -26,7 +26,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='main',
+    name='Bit Heros Automation',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

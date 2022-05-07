@@ -52,6 +52,8 @@ def run_pvp(**kwargs):
         lambda: find_image_and_click_then_sleep(COMMON_NO_BTN),
         NoEnergyException
     )
+    
+    find_image_and_click_then_sleep(COMMON_FIGHT)
 
     try:
         find_image(COMMON_AUTO_ON, retry_time=3)

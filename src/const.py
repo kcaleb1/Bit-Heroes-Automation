@@ -41,6 +41,7 @@ COMMON_AUTO_ON = join(COMMON_IMAGE_PATH, 'auto-on.png')
 COMMON_AUTO_OFF = join(COMMON_IMAGE_PATH, 'auto-off.png')
 COMMON_CLOSE = join(COMMON_IMAGE_PATH, 'close.png')
 COMMON_PLAY = join(COMMON_IMAGE_PATH, 'play.png')
+COMMON_FIGHT = join(COMMON_IMAGE_PATH, 'fight.png')
 
 DIFFICULTIES = {
     1: COMMON_NORMAL,
