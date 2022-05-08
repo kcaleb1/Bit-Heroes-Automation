@@ -5,29 +5,30 @@ from utils import find_image, find_image_and_click_then_sleep, run_or_raise_exce
 from window import click_screen_and_sleep, press_escape
 
 
-FEATURE_PATH = join(IMG_PATH, 'pvp')
+FEATURE_PATH = join(IMG_PATH, 'gauntlet')
 BTN = join(FEATURE_PATH, 'button.png')
 
 
 @feature('pvp')
 @is_run
 @farm_exceptions
-def go_pvp(is_loop=True, **kwargs):
+def go_gauntlet(is_loop=True, **kwargs):
     cost = kwargs.get('cfg', {}).get('cost', 1)
-    kwargs['cost'] = COSTS.get(cost)
+    kwargs['cost'] = COSTS.get(cost, 1)
 
-    run_pvp(**kwargs)
+    run_gauntlet(**kwargs)
     while is_loop:
-        run_pvp(**kwargs)
+        run_gauntlet(**kwargs)
 
 
 @go_main_screen
-def run_pvp(**kwargs):
+def run_gauntlet(**kwargs):
     find_image_and_click_then_sleep(BTN, retry_time=5)
+
     find_image_and_click_then_sleep(COMMON_COST, retry_time=5)
 
     try:
-        img_cost = kwargs.get('cost', COSTS[1])
+        img_cost = kwargs.get('cost')
         find_image_and_click_then_sleep(img_cost, retry_time=5, sleep_duration=0.5)
         find_image(img_cost)
         press_escape()

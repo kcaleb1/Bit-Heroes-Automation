@@ -1,5 +1,5 @@
 from random import uniform
-from decorator import feature, go_main_screen, farm_exceptions
+from decorator import feature, go_main_screen, farm_exceptions, is_run
 
 from utils import find_image_and_click_then_sleep, find_image, run_or_raise_exception, sleep
 from window import click_screen_and_sleep
@@ -16,10 +16,11 @@ EMPTY_BAIT = join(FEATURE_PATH, 'empty-bait.png')
 PERCENT_100 = join(FEATURE_PATH, '100-percent.png')
 
 
-@feature('farm fish')
+@feature('fishing')
+@is_run
 @go_main_screen
 @farm_exceptions
-def go_fishing(is_loop=False, **kwargs):
+def go_fishing(is_loop=True, **kwargs):
     find_image_and_click_then_sleep(BTN)
     find_image_and_click_then_sleep(COMMON_PLAY)
     sleep(SLEEP*10)  # wait for walking
@@ -38,12 +39,6 @@ def doing_fish(initial=False):
         except:
             return False
 
-    run_or_raise_exception(
-        lambda: find_image(EMPTY_BAIT, threshold=0.9,
-                           retry_time=10 if initial else 5),
-        EmptyBaitException
-    )
-
     y_start, x_start = find_image(START_BTN)
     # click start
     click_screen_and_sleep(y_start, x_start, uniform(0, 0.5))
@@ -56,6 +51,11 @@ def doing_fish(initial=False):
         return  # stop when got trash
     except:
         pass
+    
+    run_or_raise_exception(
+        lambda: find_image(START_BTN, retry_time=3),
+        EmptyBaitException
+    )
 
     while True:
         try:

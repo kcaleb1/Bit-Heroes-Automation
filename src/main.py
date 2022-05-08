@@ -2,18 +2,22 @@ from farm.fishing import go_fishing
 from farm.boss import go_boss
 from farm.pvp import go_pvp
 from farm.raid import go_raid
-from decorator import focus_game, go_main_screen_after, terminal_wait
+from farm.gvg import go_gvg
+from decorator import focus_game, go_main_screen_after, terminal_wait, time_messure
+from const import cfg
 import warnings
 
 
 @terminal_wait
+@time_messure
 @go_main_screen_after
 @focus_game
 def main():
-    go_fishing(is_loop=True)
-    go_raid(is_loop=True, boss=4, difficulty=3)
-    go_boss(is_loop=True)
-    go_pvp(is_loop=True, cost=5)
+    go_boss()
+    go_fishing()
+    go_gvg()
+    go_pvp()
+    go_raid()
 
 if __name__ == '__main__':
     with warnings.catch_warnings():

@@ -17,9 +17,11 @@ def get_app():
 
 def click_screen_and_sleep(y: int, x: int, sleep_duration=SLEEP):
     cur_pos = pyautogui.position()
+    cur_app = pyautogui.getActiveWindow()
     const.app[GAME_TITLE].click_input(coords=(x, y + TITLE_BAR_HEIGHT))
-    # reset mouse position so not display unwanted UI
-    pyautogui.moveTo(cur_pos.x, cur_pos.y)
+    # reset mouse position and set focus to previous app
+    pyautogui.position(cur_pos.x, cur_pos.y)
+    cur_app.activate()
     sleep(sleep_duration)
 
 
@@ -27,24 +29,27 @@ def get_game_screen(game_title=GAME_TITLE):
     global x_multiply, y_multiply
 
     if sys.platform in ['Windows', 'win32', 'cygwin']:
-        hwnd = win32gui.FindWindow(None, game_title)
+        if not const.hwnd:
+            const.hwnd = win32gui.FindWindow(None, game_title)
 
-        if not hwnd:
-            raise MismatchConditionException(txt=f'{game_title} not running')
+            if not const.hwnd:
+                raise MismatchConditionException(txt=f'{game_title} not running')
 
-        x, y, x1, y1 = win32gui.GetClientRect(hwnd)
-        if x1 == MAX_RESOLUTION[0] and y1 == MAX_RESOLUTION[1]:
-            pass
-        elif x1 <= MAX_RESOLUTION[0] and y1 <= MAX_RESOLUTION[1]:
-            const.x_multiply = x1 / MAX_RESOLUTION[0]
-            const.y_multiply = y1 / MAX_RESOLUTION[1]
-        else:
-            raise MismatchConditionException(
-                txt='Resolution %s:%s not supported, working resolution is %s:%s and lower' % (x1, y1, *MAX_RESOLUTION))
+            x, y, x1, y1 = win32gui.GetClientRect(const.hwnd)
+            if x1 == MAX_RESOLUTION[0] and y1 == MAX_RESOLUTION[1]:
+                pass
+            elif x1 <= MAX_RESOLUTION[0] and y1 <= MAX_RESOLUTION[1]:
+                const.x_multiply = x1 / MAX_RESOLUTION[0]
+                const.y_multiply = y1 / MAX_RESOLUTION[1]
+            else:
+                raise MismatchConditionException(
+                    txt='Resolution %s:%s not supported, working resolution is %s:%s and lower' % (x1, y1, *MAX_RESOLUTION))
 
-        x, y = win32gui.ClientToScreen(hwnd, (x, y))
-        x1, y1 = win32gui.ClientToScreen(hwnd, (x1 - x, y1 - y))
-        img = pyautogui.screenshot(region=(x, y, x1, y1))
+            x, y = win32gui.ClientToScreen(const.hwnd, (x, y))
+            x1, y1 = win32gui.ClientToScreen(const.hwnd, (x1 - x, y1 - y))
+            const.app_pos = (x, y, x1, y1)
+            
+        img = pyautogui.screenshot(region=const.app_pos)
 
         # save_image_dbg('get_game_screen', img)
 

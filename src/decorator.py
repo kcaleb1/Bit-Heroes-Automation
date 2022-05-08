@@ -3,7 +3,7 @@ from utils import go_main_screen as do_go_main_screen
 from window import get_app, get_game_screen
 from datetime import datetime
 from debug import save_print_dbg
-from const import TIME_FORMAT
+from const import TIME_FORMAT, cfg
 import const
 
 
@@ -18,10 +18,13 @@ def feature(feature: str):
     def decorator(f):
         def wrapper(*args, **kwargs):
             kwargs['feature'] = feature
+            kwargs['cfg'] = cfg[feature]
             rename = feature.replace(' ', '_')
             const.dbg_name = datetime.now().strftime(f'{TIME_FORMAT}_{rename}')
+            print(f"Running '{feature}'")
             save_print_dbg(f"\n***Debug for '{const.dbg_name}'***")
             result = f(*args, **kwargs)
+            print(f"Finished '{feature}'")
             save_print_dbg(f"***Finished '{const.dbg_name}***'")
             return result
         return wrapper
@@ -84,4 +87,24 @@ def terminal_wait(f):
     def wrapper(*args, **kwargs):
         f(*args, **kwargs)
         input('Press enter to close...')
+    return wrapper
+
+
+def is_run(f):
+    def wrapper(*args, **kwargs):
+        if kwargs.get('cfg', {}).get('is_run', False):
+            return f(*args, **kwargs)
+        else:
+            txt = f"Feature '{kwargs.get('feature')}' disabled"
+            print(txt)
+            save_print_dbg(txt=txt, is_print=False)
+    return wrapper
+
+
+def time_messure(f):
+    def wrapper(*args, **kwargs):
+        start = datetime.now()
+        r = f(*args, **kwargs)
+        print('Total time: %s seconds' % (datetime.now() - start).seconds)
+        return r
     return wrapper

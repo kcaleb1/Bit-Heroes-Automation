@@ -1,0 +1,28 @@
+{
+    "debug": true,
+    "save_captured_image": true,
+    "boss": {
+        "is_run": true
+    },
+    "fishing": {
+        "is_run": true
+    },
+    "gauntlet": {
+        "is_run": true,
+        "cost": 5,
+        "difficulty": 3
+    },
+    "gvg": {
+        "is_run": true,
+        "cost": 5
+    },
+    "pvp": {
+        "is_run": true,
+        "cost": 5
+    },
+    "raid": {
+        "is_run": true,
+        "boss": 4,
+        "difficulty": 3
+    }
+}

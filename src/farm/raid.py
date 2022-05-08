@@ -1,5 +1,5 @@
 from time import sleep
-from decorator import feature, go_main_screen, farm_exceptions
+from decorator import feature, go_main_screen, farm_exceptions, is_run
 from utils import find_image_and_click_then_sleep, find_image, run_or_raise_exception
 from window import click_screen_and_sleep
 from const import *
@@ -10,7 +10,6 @@ FEATURE_PATH = join(IMG_PATH, 'raid')
 BTN = join(FEATURE_PATH, 'button.png')
 MOVE_LEFT_BTN = join(FEATURE_PATH, 'move-left.png')
 SUMMON_BTN = join(FEATURE_PATH, 'summon.png')
-NO_ENERGY = join(FEATURE_PATH, 'no-energy.png')
 
 BOSSES = {
     1: join(FEATURE_PATH, 'boss-1.png'),
@@ -20,16 +19,15 @@ BOSSES = {
 }
 
 
-@feature('farm raid')
+@feature('raid')
+@is_run
 @go_main_screen
 @farm_exceptions
-def go_raid(is_loop=False, boss=1, difficulty=1, **kwargs):
-    find_image_and_click_then_sleep(BTN)
+def go_raid(is_loop=True, **kwargs):
+    boss = kwargs.get('cfg', {}).get('boss', 1)
+    difficulty= kwargs.get('cfg', {}).get('difficulty', 1)
 
-    run_or_raise_exception(
-        lambda: find_image(NO_ENERGY, threshold=0.9),
-        NoEnergyException
-    )
+    find_image_and_click_then_sleep(BTN)
 
     while True:
         try:
@@ -75,3 +73,6 @@ def do_raid():
             break
         except:
             pass
+        
+        try: find_image_and_click_then_sleep(COMMON_DECLINE, retry_time=1)
+        except: pass
