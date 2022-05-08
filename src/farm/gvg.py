@@ -12,7 +12,7 @@ BTN = join(FEATURE_PATH, 'button.png')
 @feature('gvg')
 @is_run
 @farm_exceptions
-def go_gvg(is_loop=False, **kwargs):
+def go_gvg(is_loop=True, **kwargs):
     cost = kwargs.get('cfg', {}).get('cost', 1)
     kwargs['cost'] = COSTS.get(cost, 1)
 

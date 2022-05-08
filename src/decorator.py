@@ -71,12 +71,12 @@ def focus_game(f):
             get_app()
             get_game_screen()
         except MismatchConditionException as e:
-            ex = e
+            ex = e.__str__()
         except:
             ex = MismatchConditionException(txt='Game not found').__str__()
         if ex:
-            print(ex.__str__())
-            save_print_dbg(txt=ex.__str__(), is_print=False)
+            print(ex)
+            save_print_dbg(txt=ex, is_print=False)
             return
         print('We are good to go...')
         return f(*args, **kwargs)

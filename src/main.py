@@ -4,7 +4,6 @@ from farm.pvp import go_pvp
 from farm.raid import go_raid
 from farm.gvg import go_gvg
 from decorator import focus_game, go_main_screen_after, terminal_wait, time_messure
-from const import cfg
 import warnings
 
 
