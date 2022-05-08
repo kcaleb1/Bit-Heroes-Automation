@@ -51,14 +51,15 @@ def doing_fish(initial=False):
     click_screen_and_sleep(y_start, x_start, sleep_duration=SLEEP * 7)
     # when got trash
     try:
-        find_image_and_click_then_sleep(TRADE_BTN)
+        find_image_and_click_then_sleep(TRADE_BTN, sleep_duration=0.5)
+        find_image_and_click_then_sleep(COMMON_SMALL_X_BTN)
         return  # stop when got trash
     except:
         pass
 
     while True:
         try:
-            find_image(PERCENT_100, retry_time=1, threshold=0.5)
+            find_image(PERCENT_100, threshold=0.5)
             break
         except:
             pass

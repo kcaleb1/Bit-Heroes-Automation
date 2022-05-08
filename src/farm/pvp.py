@@ -49,6 +49,7 @@ def run_pvp(**kwargs):
     )
     
     find_image_and_click_then_sleep(COMMON_FIGHT)
+    find_image_and_click_then_sleep(COMMON_ACCEPT)
 
     try:
         find_image(COMMON_AUTO_ON)

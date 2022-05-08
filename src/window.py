@@ -5,8 +5,8 @@ import win32gui
 import sys
 from time import sleep
 from debug import save_image_dbg
-from const import *
 from error import *
+from const import *
 import const
 
 
@@ -16,9 +16,10 @@ def get_app():
 
 
 def click_screen_and_sleep(y: int, x: int, sleep_duration=SLEEP):
+    cur_pos = pyautogui.position()
     const.app[GAME_TITLE].click_input(coords=(x, y + TITLE_BAR_HEIGHT))
     # reset mouse position so not display unwanted UI
-    pyautogui.moveTo(y - y, x - x)
+    pyautogui.moveTo(cur_pos.x, cur_pos.y)
     sleep(sleep_duration)
 
 
