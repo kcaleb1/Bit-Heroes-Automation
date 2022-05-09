@@ -15,15 +15,15 @@ READY_BTN = join(FEATURE_PATH, 'ready.png')
 
 @feature('boss')
 @is_run
-@go_main_screen
 @farm_exceptions
 def go_boss(is_loop=True, **kwargs):
-    find_image_and_click_then_sleep(BTN)
     run_boss(**kwargs)
     while is_loop:
         run_boss(**kwargs)
 
+@go_main_screen
 def run_boss(**kwargs):    
+    find_image_and_click_then_sleep(BTN)
     try:
         find_image_and_click_then_sleep(JOIN_BTN)
     except:

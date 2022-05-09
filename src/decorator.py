@@ -105,6 +105,8 @@ def time_messure(f):
     def wrapper(*args, **kwargs):
         start = datetime.now()
         r = f(*args, **kwargs)
-        print('Total time: %s seconds' % (datetime.now() - start).seconds)
+        seconds = (datetime.now() - start).seconds
+        minutes = int(seconds / 60)
+        print('Total %s:%s' % (minutes, seconds - 60 * minutes))
         return r
     return wrapper
