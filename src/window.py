@@ -1,6 +1,8 @@
 import pyautogui
 import pywinauto
 import win32gui
+import win32api
+import win32con
 
 import sys
 from time import sleep
@@ -20,7 +22,7 @@ def click_screen_and_sleep(y: int, x: int, sleep_duration=SLEEP):
     cur_app = pyautogui.getActiveWindow()
     const.app[GAME_TITLE].click_input(coords=(x, y + TITLE_BAR_HEIGHT))
     # reset mouse position and set focus to previous app
-    pyautogui.position(cur_pos.x, cur_pos.y)
+    pyautogui.moveTo(cur_pos.x, cur_pos.y)
     cur_app.activate()
     sleep(sleep_duration)
 

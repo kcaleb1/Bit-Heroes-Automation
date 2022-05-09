@@ -33,12 +33,12 @@ COMMON_CLOSE = join(COMMON_IMAGE_PATH, 'close.png')
 COMMON_COST = join(COMMON_IMAGE_PATH, 'cost.png')
 COMMON_DECLINE = join(COMMON_IMAGE_PATH, 'decline.png')
 COMMON_FIGHT = join(COMMON_IMAGE_PATH, 'fight.png')
-COMMON_NO_BTN = join(COMMON_IMAGE_PATH, 'no.png')
+COMMON_NO = join(COMMON_IMAGE_PATH, 'no.png')
 COMMON_PLAY = join(COMMON_IMAGE_PATH, 'play.png')
 COMMON_RERUN = join(COMMON_IMAGE_PATH, 'rerun.png')
-COMMON_SMALL_X_BTN = join(COMMON_IMAGE_PATH, 'small-x.png')
+COMMON_SMALL_X = join(COMMON_IMAGE_PATH, 'small-x.png')
 COMMON_TOWN = join(COMMON_IMAGE_PATH, 'town.png')
-COMMON_YES_BTN = join(COMMON_IMAGE_PATH, 'yes.png')
+COMMON_YES = join(COMMON_IMAGE_PATH, 'yes.png')
 
 COSTS = {
     1: join(COMMON_IMAGE_PATH, 'cost-1.png'),

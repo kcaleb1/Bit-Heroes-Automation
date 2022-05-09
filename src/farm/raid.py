@@ -8,7 +8,7 @@ from error import *
 
 FEATURE_PATH = join(IMG_PATH, 'raid')
 BTN = join(FEATURE_PATH, 'button.png')
-MOVE_LEFT_BTN = join(FEATURE_PATH, 'move-left.png')
+MOVE_LEFT = join(FEATURE_PATH, 'move-left.png')
 SUMMON_BTN = join(FEATURE_PATH, 'summon.png')
 
 BOSSES = {
@@ -34,7 +34,7 @@ def go_raid(is_loop=True, **kwargs):
             find_image(BOSSES[boss], retry_time=1)
             break
         except:
-            find_image_and_click_then_sleep(MOVE_LEFT_BTN)
+            find_image_and_click_then_sleep(MOVE_LEFT)
             sleep(0.5)
 
     find_image_and_click_then_sleep(SUMMON_BTN)
@@ -50,7 +50,7 @@ def go_raid(is_loop=True, **kwargs):
 
 def do_raid():
     run_or_raise_exception(
-        lambda: find_image_and_click_then_sleep(COMMON_NO_BTN, threshold=0.9, retry_time=20),
+        lambda: find_image_and_click_then_sleep(COMMON_NO, threshold=0.9, retry_time=20),
         NoEnergyException
     )
 
@@ -74,5 +74,8 @@ def do_raid():
         except:
             pass
         
-        try: find_image_and_click_then_sleep(COMMON_DECLINE, retry_time=1)
-        except: pass
+        try:
+            find_image_and_click_then_sleep(COMMON_DECLINE, retry_time=1)
+            find_image_and_click_then_sleep(COMMON_YES, retry_time=1)
+        except:
+            pass

@@ -12,6 +12,7 @@
 - Auto Boss (auto join random lobby)
 - Auto PVP
 - Auto GVG
+- Auto Gauntlet (use current difficulty selected)
 
 ## Usage
 
@@ -20,9 +21,9 @@
 
 ## To do
 
+- [x] Auto run 'Gauntlet'
 - [ ] Add all boss in 'Raid'
 - [ ] Auto run 'Quest'
-- [ ] Auto run 'Gauntlet'
 - [ ] Resolution auto scale
 - [ ] Basic UI
 

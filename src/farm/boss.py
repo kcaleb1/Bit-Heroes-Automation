@@ -15,28 +15,27 @@ READY_BTN = join(FEATURE_PATH, 'ready.png')
 
 @feature('boss')
 @is_run
+@go_main_screen
 @farm_exceptions
 def go_boss(is_loop=True, **kwargs):
+    find_image_and_click_then_sleep(BTN)
     run_boss(**kwargs)
     while is_loop:
         run_boss(**kwargs)
 
-@go_main_screen
-def run_boss(**kwargs):
-    find_image_and_click_then_sleep(BTN)
-    
+def run_boss(**kwargs):    
     try:
         find_image_and_click_then_sleep(JOIN_BTN)
     except:
         return run_boss(**kwargs)
     
     run_or_raise_exception(
-        lambda: find_image(COMMON_NO_BTN, retry_time=5, threshold=0.9),
+        lambda: find_image(COMMON_NO, retry_time=3, threshold=0.9),
         NoEnergyException
     )
     
     try:
-        find_image(COMMON_CLOSE, retry_time=5)
+        find_image(COMMON_CLOSE, retry_time=3)
         return run_boss(**kwargs)
     except:
         pass
@@ -58,7 +57,7 @@ def run_boss(**kwargs):
 
         if not is_auto_on:
             try:
-                find_image(COMMON_AUTO_ON, retry_time=1)
+                find_image(COMMON_AUTO_ON, retry_time=1, threshold=0.9)
                 is_auto_on = True
                 continue
             except:
@@ -81,5 +80,5 @@ def run_boss(**kwargs):
 
     if not is_started:
         sleep(0.5)
-        find_image_and_click_then_sleep(COMMON_YES_BTN)
+        find_image_and_click_then_sleep(COMMON_YES)
         return run_boss(**kwargs)

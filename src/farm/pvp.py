@@ -11,19 +11,18 @@ BTN = join(FEATURE_PATH, 'button.png')
 
 @feature('pvp')
 @is_run
+@go_main_screen
 @farm_exceptions
 def go_pvp(is_loop=True, **kwargs):
     cost = kwargs.get('cfg', {}).get('cost', 1)
     kwargs['cost'] = COSTS.get(cost)
-
+    find_image_and_click_then_sleep(BTN, retry_time=5)
     run_pvp(**kwargs)
     while is_loop:
         run_pvp(**kwargs)
 
 
-@go_main_screen
 def run_pvp(**kwargs):
-    find_image_and_click_then_sleep(BTN, retry_time=5)
     find_image_and_click_then_sleep(COMMON_COST, retry_time=5)
 
     try:
@@ -38,7 +37,7 @@ def run_pvp(**kwargs):
     sleep(0.5)
     
     run_or_raise_exception(
-        lambda: find_image_and_click_then_sleep(COMMON_NO_BTN),
+        lambda: find_image_and_click_then_sleep(COMMON_NO),
         NoEnergyException
     )
     

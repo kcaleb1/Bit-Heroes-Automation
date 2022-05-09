@@ -33,8 +33,8 @@ def doing_fish(initial=False):
     def is_check_closes() -> bool:
         try:
             find_image_and_click_then_sleep(
-                COMMON_CLOSE, retry_time=1, sleep_duration=0.5)
-            find_image_and_click_then_sleep(COMMON_SMALL_X_BTN, retry_time=1)
+                COMMON_CLOSE, retry_time=1, sleep_duration=0.5, threshold=0.9)
+            find_image_and_click_then_sleep(COMMON_SMALL_X, retry_time=1, threshold=0.9)
             return True
         except:
             return False
@@ -47,7 +47,7 @@ def doing_fish(initial=False):
     # when got trash
     try:
         find_image_and_click_then_sleep(TRADE_BTN, sleep_duration=0.5)
-        find_image_and_click_then_sleep(COMMON_SMALL_X_BTN)
+        find_image_and_click_then_sleep(COMMON_SMALL_X, threshold=0.9)
         return  # stop when got trash
     except:
         pass
@@ -71,16 +71,16 @@ def doing_fish(initial=False):
     click_screen_and_sleep(y_start, x_start, sleep_duration=SLEEP * 15)
 
     try:
-        find_image_and_click_then_sleep(TRADE_BTN, sleep_duration=SLEEP)
+        find_image_and_click_then_sleep(TRADE_BTN)
     except:
         pass
 
-    for _ in range(5):
+    for _ in range(10):
         if is_check_closes():
             return
 
         try:
-            find_image_and_click_then_sleep(COMMON_SMALL_X_BTN, retry_time=1)
+            find_image_and_click_then_sleep(COMMON_SMALL_X, retry_time=1)
             return
         except:
             pass

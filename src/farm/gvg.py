@@ -11,20 +11,20 @@ BTN = join(FEATURE_PATH, 'button.png')
 
 @feature('gvg')
 @is_run
+@go_main_screen
 @farm_exceptions
 def go_gvg(is_loop=True, **kwargs):
     cost = kwargs.get('cfg', {}).get('cost', 1)
     kwargs['cost'] = COSTS.get(cost, 1)
+
+    find_image_and_click_then_sleep(BTN, retry_time=5)
 
     run_gvg(**kwargs)
     while is_loop:
         run_gvg(**kwargs)
 
 
-@go_main_screen
 def run_gvg(**kwargs):
-    find_image_and_click_then_sleep(BTN, retry_time=5)
-
     find_image_and_click_then_sleep(COMMON_COST, retry_time=5)
 
     try:
@@ -39,7 +39,7 @@ def run_gvg(**kwargs):
     sleep(0.5)
     
     run_or_raise_exception(
-        lambda: find_image_and_click_then_sleep(COMMON_NO_BTN),
+        lambda: find_image_and_click_then_sleep(COMMON_NO),
         NoEnergyException
     )
     
