@@ -98,3 +98,36 @@ def run_or_raise_exception(fun, exception: Exception):
         raise ex
     except:
         pass
+
+
+def enable_auto_on() -> bool:
+    try:
+        find_image(COMMON_AUTO_ON, retry_time=1, threshold=0.9)
+        return True
+    except:
+        pass
+
+    try:
+        find_image_and_click_then_sleep(COMMON_AUTO_OFF, retry_time=1)
+        return True
+    except:
+        pass
+    
+    return False
+
+
+def click_town() -> bool:
+    try:
+        y, x = find_image(COMMON_TOWN, retry_time=1)
+        sleep(1)
+        click_screen_and_sleep(y, x)
+        return True
+    except:
+        return False
+    
+
+def check_no_energy():
+    run_or_raise_exception(
+        lambda: find_image_and_click_then_sleep(COMMON_NO, threshold=0.9, retry_time=4),
+        NoEnergyException
+    )

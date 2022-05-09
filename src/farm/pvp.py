@@ -1,7 +1,7 @@
 from decorator import farm_exceptions, feature, go_main_screen, is_run
 from const import *
 from error import NoEnergyException
-from utils import find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
+from utils import click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
 from window import click_screen_and_sleep, press_escape
 
 
@@ -44,19 +44,7 @@ def run_pvp(**kwargs):
     find_image_and_click_then_sleep(COMMON_FIGHT)
     find_image_and_click_then_sleep(COMMON_ACCEPT)
 
-    try:
-        find_image(COMMON_AUTO_ON)
-    except:
-        try:
-            find_image_and_click_then_sleep(COMMON_AUTO_OFF)
-        except:
-            pass
+    enable_auto_on()
 
-    while True:
-        try:
-            y, x = find_image(COMMON_TOWN, retry_time=1)
-            sleep(1)
-            click_screen_and_sleep(y, x)
-            break
-        except:
-            pass
+    while not click_town():
+        sleep(1)

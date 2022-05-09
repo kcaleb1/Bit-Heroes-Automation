@@ -1,6 +1,6 @@
 from time import sleep
 from decorator import feature, go_main_screen, farm_exceptions, is_run
-from utils import find_image_and_click_then_sleep, find_image, run_or_raise_exception
+from utils import check_no_energy, enable_auto_on, find_image_and_click_then_sleep, find_image, run_or_raise_exception
 from window import click_screen_and_sleep
 from const import *
 from error import *
@@ -49,21 +49,9 @@ def go_raid(is_loop=True, **kwargs):
 
 
 def do_raid():
-    run_or_raise_exception(
-        lambda: find_image_and_click_then_sleep(COMMON_NO, threshold=0.9, retry_time=20),
-        NoEnergyException
-    )
+    check_no_energy()
 
-    while True:
-        try:
-            find_image(COMMON_AUTO_ON)
-            break
-        except:
-            try:
-                find_image_and_click_then_sleep(COMMON_AUTO_OFF)
-            except:
-                pass
-            break
+    while not enable_auto_on(): sleep()
 
     while True:
         try:

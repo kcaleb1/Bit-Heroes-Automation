@@ -1,4 +1,4 @@
-from utils import find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
+from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
 from window import click_screen_and_sleep, press_escape
 from const import *
 from error import *
@@ -25,14 +25,11 @@ def go_boss(is_loop=True, **kwargs):
 def run_boss(**kwargs):    
     find_image_and_click_then_sleep(BTN)
     try:
-        find_image_and_click_then_sleep(JOIN_BTN)
+        find_image_and_click_then_sleep(JOIN_BTN, retry_time=3)
     except:
         return run_boss(**kwargs)
     
-    run_or_raise_exception(
-        lambda: find_image(COMMON_NO, retry_time=3, threshold=0.9),
-        NoEnergyException
-    )
+    check_no_energy()
     
     try:
         find_image(COMMON_CLOSE, retry_time=3)
@@ -46,28 +43,12 @@ def run_boss(**kwargs):
     is_auto_on = False
     is_pressed_escape = False
     while True:
-        try:
-            y, x = find_image(COMMON_TOWN, retry_time=1)
-            sleep(1)
-            click_screen_and_sleep(y, x)
-            is_started = True
+        is_started = click_town()
+        if is_started:
             break
-        except:
-            pass
 
         if not is_auto_on:
-            try:
-                find_image(COMMON_AUTO_ON, retry_time=1, threshold=0.9)
-                is_auto_on = True
-                continue
-            except:
-                pass
-
-            try:
-                find_image_and_click_then_sleep(COMMON_AUTO_OFF, retry_time=1)
-                is_auto_on = True
-            except:
-                pass
+            is_auto_on = enable_auto_on()
 
         # this will help to exit the lobby when host afk to long
         # press escape, in case of already in-game, this will turn off auto play

@@ -1,7 +1,7 @@
 from decorator import farm_exceptions, feature, go_main_screen, is_run
 from const import *
 from error import NoEnergyException
-from utils import find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
+from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
 from window import click_screen_and_sleep, press_escape
 
 
@@ -39,26 +39,10 @@ def run_gauntlet(**kwargs):
     find_image_and_click_then_sleep(COMMON_PLAY, retry_time=5)
     sleep(0.5)
     
-    run_or_raise_exception(
-        lambda: find_image_and_click_then_sleep(COMMON_NO, retry_time=5, threshold=0.8),
-        NoEnergyException
-    )
+    check_no_energy()
     
     find_image_and_click_then_sleep(COMMON_ACCEPT)
+    enable_auto_on()
 
-    try:
-        find_image(COMMON_AUTO_ON)
-    except:
-        try:
-            find_image_and_click_then_sleep(COMMON_AUTO_OFF)
-        except:
-            pass
-
-    while True:
-        try:
-            y, x = find_image(COMMON_TOWN, retry_time=1)
-            sleep(1)
-            click_screen_and_sleep(y, x)
-            break
-        except:
-            pass
+    while not click_town():
+        sleep(1)
