@@ -103,13 +103,13 @@ def run_or_raise_exception(fun, exception: Exception):
 
 def enable_auto_on() -> bool:
     try:
-        find_image(COMMON_AUTO_ON, retry_time=1, threshold=0.8)
+        find_image(COMMON_AUTO_ON, retry_time=1, threshold=0.9)
         return True
     except:
         pass
 
     try:
-        find_image_and_click_then_sleep(COMMON_AUTO_OFF, retry_time=1, threshold=0.8)
+        find_image_and_click_then_sleep(COMMON_AUTO_OFF, retry_time=1, threshold=0.9)
         return True
     except:
         pass
