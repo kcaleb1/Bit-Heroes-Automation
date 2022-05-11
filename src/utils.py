@@ -140,9 +140,10 @@ def click_cost_and_play(cost, menu_cost=COMMON_COST):
     try:
         find_image_and_click_then_sleep(cost, retry_time=5, sleep_duration=0.5, threshold=0.9)
         find_image(cost, retry_time=5)
-        press_escape()
     except:
         pass
+    finally:
+        press_escape()
 
     find_image_and_click_then_sleep(COMMON_PLAY, retry_time=5, sleep_duration=1)
 

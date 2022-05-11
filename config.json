@@ -1,7 +1,7 @@
 {
     "debug": true,
     "save_captured_image": true,
-    "capture_interval": 0.44,
+    "capture_interval": 0.3,
     "boss": {
         "is_run": true
     },

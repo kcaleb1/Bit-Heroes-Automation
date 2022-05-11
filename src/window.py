@@ -17,9 +17,12 @@ def get_app():
 
 def click_screen_and_sleep(y: int, x: int, sleep_duration=SLEEP):
     add = lambda x: x + PREFIX_CLICK
+    cur_active = pyautogui.getActiveWindow()
+    cur_pos = pyautogui.position()
     const.app[GAME_TITLE].click_input(coords=(add(x), add(y) + TITLE_BAR_HEIGHT))
     # reset mouse position and set focus to previous app
-    pyautogui.moveTo(0, 0)
+    pyautogui.moveTo(cur_pos.x, cur_pos.y)
+    cur_active.activate()
     sleep(sleep_duration)
 
 
@@ -61,3 +64,4 @@ def get_game_screen(game_title=GAME_TITLE):
 def press_escape():
     get_app()
     pywinauto.keyboard.send_keys('{VK_ESCAPE}')
+    save_print_dbg('pressed escape')
