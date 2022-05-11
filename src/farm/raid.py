@@ -9,6 +9,7 @@ FEATURE_PATH = join(IMG_PATH, 'raid')
 BTN = join(FEATURE_PATH, 'button.png')
 MOVE_LEFT = join(FEATURE_PATH, 'move-left.png')
 SUMMON_BTN = join(FEATURE_PATH, 'summon.png')
+DECLINE = join(FEATURE_PATH, 'decline.png')
 
 BOSSES = {
     1: join(FEATURE_PATH, 'boss-1.png'),
@@ -56,7 +57,7 @@ def do_raid(boss, difficulty):
             return
         
         try:
-            find_image_and_click_then_sleep(COMMON_DECLINE, retry_time=1)
+            find_image_and_click_then_sleep(DECLINE, retry_time=1)
             find_image_and_click_then_sleep(COMMON_YES, retry_time=1)
         except:
             pass

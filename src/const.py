@@ -12,14 +12,13 @@ cfg = {}
 
 ### --------------------------------------------
 CUR_PATH = getcwd()
-DEBUG_PATH = getcwd()
 
 CONFIG_FILE = join(CUR_PATH, 'config.json')
 with open(CONFIG_FILE, 'r') as f:
     cfg = load(f)
 
 IMG_PATH = join(CUR_PATH, 'img')
-SAVE_DEBUG_PATH = join(DEBUG_PATH, 'debug')
+SAVE_DEBUG_PATH = join(CUR_PATH, 'debug')
 DEBUG_TEXT_PATH = join(SAVE_DEBUG_PATH, 'debug.log')
 SAVE_ESCAPE_IMG_PATH = join(SAVE_DEBUG_PATH, 'escape')
 
@@ -31,7 +30,6 @@ COMMON_AUTO_ON = join(COMMON_IMAGE_PATH, 'auto-on.png')
 COMMON_AUTO_TEAM = join(COMMON_IMAGE_PATH, 'auto-team.png')
 COMMON_CLOSE = join(COMMON_IMAGE_PATH, 'close.png')
 COMMON_COST = join(COMMON_IMAGE_PATH, 'cost.png')
-COMMON_DECLINE = join(COMMON_IMAGE_PATH, 'decline.png')
 COMMON_FIGHT = join(COMMON_IMAGE_PATH, 'fight.png')
 COMMON_NO = join(COMMON_IMAGE_PATH, 'no.png')
 COMMON_PLAY = join(COMMON_IMAGE_PATH, 'play.png')
@@ -39,6 +37,7 @@ COMMON_RERUN = join(COMMON_IMAGE_PATH, 'rerun.png')
 COMMON_SMALL_X = join(COMMON_IMAGE_PATH, 'small-x.png')
 COMMON_TOWN = join(COMMON_IMAGE_PATH, 'town.png')
 COMMON_YES = join(COMMON_IMAGE_PATH, 'yes.png')
+COMMON_PERSUADE = join(COMMON_IMAGE_PATH, 'persuade.png')
 
 COSTS = {
     1: join(COMMON_IMAGE_PATH, 'cost-1.png'),
@@ -65,6 +64,6 @@ TIME_FORMAT = '%y%m%d%H%M%S%f'
 
 RETRY_TIME_FIND_IMAGE = 10
 
-SLEEP = cfg.get('capture_interval')
+SLEEP = cfg.get('capture_interval', 0.3)
 DEBUG = cfg.get('debug', False)
 DEBUG_SAVE_IMG = cfg.get('save_captured_image', False)
