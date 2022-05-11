@@ -1,7 +1,6 @@
 from time import sleep
 from decorator import feature, go_main_screen, farm_exceptions, is_run
-from utils import check_no_energy, enable_auto_on, find_image_and_click_then_sleep, find_image, run_or_raise_exception
-from window import click_screen_and_sleep
+from utils import check_no_energy, click_town, enable_auto_on, find_image_and_click_then_sleep, find_image, run_or_raise_exception
 from const import *
 from error import *
 
@@ -21,12 +20,17 @@ BOSSES = {
 
 @feature('raid')
 @is_run
-@go_main_screen
 @farm_exceptions
 def go_raid(is_loop=True, **kwargs):
     boss = kwargs.get('cfg', {}).get('boss', 1)
     difficulty= kwargs.get('cfg', {}).get('difficulty', 1)
 
+    do_raid(boss, difficulty)
+    while is_loop:
+        do_raid(boss, difficulty)
+
+@go_main_screen
+def do_raid(boss, difficulty):
     find_image_and_click_then_sleep(BTN)
 
     while True:
@@ -42,25 +46,14 @@ def go_raid(is_loop=True, **kwargs):
 
     find_image_and_click_then_sleep(COMMON_AUTO_TEAM)
     find_image_and_click_then_sleep(COMMON_ACCEPT)
-
-    do_raid()
-    while is_loop:
-        do_raid()
-
-
-def do_raid():
+    
     check_no_energy()
 
-    while not enable_auto_on(): sleep()
+    while not enable_auto_on(): sleep(SLEEP)
 
     while True:
-        try:
-            y, x = find_image(COMMON_RERUN)
-            sleep(1)
-            click_screen_and_sleep(y, x)
-            break
-        except:
-            pass
+        if click_town():
+            return
         
         try:
             find_image_and_click_then_sleep(COMMON_DECLINE, retry_time=1)

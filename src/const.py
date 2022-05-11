@@ -57,13 +57,14 @@ DIFFICULTIES = {
 GAME_TITLE = 'Bit Heroes'
 APP_NAME = GAME_TITLE+'.exe'
 DEFAULT_THRESHOLD_IMAGE_MATCH = 0.75
-MAX_RESOLUTION = (1600, 900)
-TITLE_BAR_HEIGHT = 0
+MAX_RESOLUTION = (800, 480)
+TITLE_BAR_HEIGHT = 10
+PREFIX_CLICK = 10
 
 TIME_FORMAT = '%y%m%d%H%M%S%f'
 
 RETRY_TIME_FIND_IMAGE = 10
-SLEEP = 0.2
 
+SLEEP = cfg.get('capture_interval')
 DEBUG = cfg.get('debug', False)
 DEBUG_SAVE_IMG = cfg.get('save_captured_image', False)

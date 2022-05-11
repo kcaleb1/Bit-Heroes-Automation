@@ -13,12 +13,23 @@ import warnings
 @go_main_screen_after
 @focus_game
 def main():
-    go_gauntlet()
-    go_gvg()
-    go_pvp()
-    go_raid()
+    farms = [
+        go_raid, # raid first, since it give items, etc
+        go_gauntlet,
+        go_gvg,
+        go_pvp,
+        go_boss # second last, due to AFK host, or lobby not good
+    ]
 
-    go_boss() # second last, due to AFK host, or lobby not good
+    # this will run each farm, to spend there energy
+    empty = {}
+    while len(empty) < len(farms):
+        for i, farm in enumerate(farms):
+            if i in empty:
+                continue
+            if not farm(is_loop=False):
+                empty[i] = True
+
     go_fishing() # this last, because no energy needed
 
 if __name__ == '__main__':

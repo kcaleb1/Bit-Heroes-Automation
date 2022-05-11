@@ -1,8 +1,7 @@
 from decorator import farm_exceptions, feature, go_main_screen, is_run
 from const import *
-from error import NoEnergyException
-from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
-from window import click_screen_and_sleep, press_escape
+from utils import check_no_energy, click_cost_and_play, click_town, enable_auto_on, fight_wait_town, find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
+from window import press_escape
 
 
 FEATURE_PATH = join(IMG_PATH, 'gauntlet')
@@ -26,23 +25,7 @@ def go_gauntlet(is_loop=True, **kwargs):
 
 
 def run_gauntlet(**kwargs):
-    find_image_and_click_then_sleep(COST, retry_time=5)
-
-    try:
-        img_cost = kwargs.get('cost')
-        find_image_and_click_then_sleep(img_cost, retry_time=5, sleep_duration=0.5)
-        find_image(img_cost)
-        press_escape()
-    except:
-        pass
-
-    find_image_and_click_then_sleep(COMMON_PLAY, retry_time=5)
-    sleep(0.5)
+    click_cost_and_play(kwargs.get('cost'), COST)
     
-    check_no_energy()
-    
-    find_image_and_click_then_sleep(COMMON_ACCEPT)
-    enable_auto_on()
-
-    while not click_town():
-        sleep(1)
+    find_image_and_click_then_sleep(COMMON_ACCEPT, sleep_duration=1)
+    fight_wait_town()

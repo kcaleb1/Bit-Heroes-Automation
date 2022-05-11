@@ -1,6 +1,7 @@
 {
     "debug": true,
     "save_captured_image": true,
+    "capture_interval": 0.44,
     "boss": {
         "is_run": true
     },
@@ -22,7 +23,7 @@
     },
     "raid": {
         "is_run": true,
-        "boss": 4,
+        "boss": 1,
         "difficulty": 3
     }
 }

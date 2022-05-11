@@ -3,7 +3,7 @@
 ## Support
 **Version:** [Bit Heros on Steam](https://store.steampowered.com/app/666860/Bit_Heroes/)
 
-**Resolution:** 1600:900
+**Resolution:** 800:480
 
 ## Features
 
@@ -24,7 +24,6 @@
 - [x] Auto run 'Gauntlet'
 - [ ] Add all boss in 'Raid'
 - [ ] Auto run 'Quest'
-- [ ] Resolution auto scale
 - [ ] Basic UI
 
 

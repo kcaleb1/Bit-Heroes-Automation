@@ -14,7 +14,7 @@ def unimplemented(f):
     return wrapper
 
 
-def feature(feature: str):
+def feature(feature: str) -> bool:
     def decorator(f):
         def wrapper(*args, **kwargs):
             kwargs['feature'] = feature
@@ -45,11 +45,12 @@ def go_main_screen_after(f):
     return wrapper
 
 
-def farm_exceptions(f):
+def farm_exceptions(f) -> bool:
     def wrapper(*args, **kwargs):
         err = ''
         try:
-            return f(*args, **kwargs)
+            f(*args, **kwargs)
+            return True
         except NoEnergyException:
             err = NoEnergyException(feature=kwargs['feature']).__str__()
         except KeyboardInterrupt:
@@ -60,6 +61,7 @@ def farm_exceptions(f):
             err = f"got error when run '{kwargs['feature']}': {ex.__str__()}"
         print(err)
         save_print_dbg(txt=err, is_print=False)
+        return False
     return wrapper
 
 
@@ -90,7 +92,7 @@ def terminal_wait(f):
     return wrapper
 
 
-def is_run(f):
+def is_run(f) -> bool:
     def wrapper(*args, **kwargs):
         if kwargs.get('cfg', {}).get('is_run', False):
             return f(*args, **kwargs)
@@ -98,6 +100,7 @@ def is_run(f):
             txt = f"Feature '{kwargs.get('feature')}' disabled"
             print(txt)
             save_print_dbg(txt=txt, is_print=False)
+            return False
     return wrapper
 
 
@@ -107,6 +110,8 @@ def time_messure(f):
         r = f(*args, **kwargs)
         seconds = (datetime.now() - start).seconds
         minutes = int(seconds / 60)
-        print('Total %s:%ss' % (minutes, seconds - 60 * minutes))
+        txt = '_____Total %s:%ss' % (minutes, seconds - 60 * minutes)
+        print(txt)
+        save_print_dbg(txt=txt, is_print=False)
         return r
     return wrapper

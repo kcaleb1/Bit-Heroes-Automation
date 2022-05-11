@@ -1,5 +1,5 @@
 from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
-from window import click_screen_and_sleep, press_escape
+from window import press_escape
 from const import *
 from error import *
 from decorator import feature, go_main_screen, farm_exceptions, is_run
@@ -48,6 +48,13 @@ def run_boss(**kwargs):
             break
 
         if not is_auto_on:
+            # check got kicked from room
+            try:
+                find_image_and_click_then_sleep(COMMON_CLOSE, retry_time=1)
+                return run_boss(**kwargs)
+            except:
+                pass
+            
             is_auto_on = enable_auto_on()
 
         # this will help to exit the lobby when host afk to long

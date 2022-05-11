@@ -23,7 +23,7 @@ PERCENT_100 = join(FEATURE_PATH, '100-percent.png')
 def go_fishing(is_loop=True, **kwargs):
     find_image_and_click_then_sleep(BTN)
     find_image_and_click_then_sleep(COMMON_PLAY)
-    sleep(SLEEP*10)  # wait for walking
+    sleep(3)  # wait for walking
     doing_fish(initial=True)
     while is_loop:
         doing_fish()
@@ -43,11 +43,12 @@ def doing_fish(initial=False):
     # click start
     click_screen_and_sleep(y_start, x_start, uniform(0, 0.5))
     # click cast
-    click_screen_and_sleep(y_start, x_start, sleep_duration=SLEEP * 7)
+    click_screen_and_sleep(y_start, x_start)
+    sleep(3)
     # when got trash
     try:
-        find_image_and_click_then_sleep(TRADE_BTN, sleep_duration=0.5)
-        find_image_and_click_then_sleep(COMMON_SMALL_X, threshold=0.9)
+        find_image_and_click_then_sleep(TRADE_BTN, sleep_duration=0.5, retry_time=3)
+        find_image_and_click_then_sleep(COMMON_SMALL_X, threshold=0.9, retry_time=3)
         return  # stop when got trash
     except:
         pass
@@ -59,7 +60,7 @@ def doing_fish(initial=False):
 
     while True:
         try:
-            find_image(PERCENT_100, threshold=0.5)
+            find_image(PERCENT_100, retry_time=20, threshold=0.5, find_interval=0.2)
             break
         except:
             pass
@@ -68,7 +69,7 @@ def doing_fish(initial=False):
             return
 
     # click catch
-    click_screen_and_sleep(y_start, x_start, sleep_duration=SLEEP * 15)
+    click_screen_and_sleep(y_start, x_start, sleep_duration=3)
 
     try:
         find_image_and_click_then_sleep(TRADE_BTN)
