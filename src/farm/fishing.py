@@ -23,7 +23,6 @@ PERCENT_100 = join(FEATURE_PATH, '100-percent.png')
 def go_fishing(is_loop=True, **kwargs):
     find_image_and_click_then_sleep(BTN)
     find_image_and_click_then_sleep(COMMON_PLAY)
-    sleep(3)  # wait for walking
     doing_fish(initial=True)
     while is_loop:
         doing_fish()
@@ -39,7 +38,11 @@ def doing_fish(initial=False):
         except:
             return False
 
-    y_start, x_start = find_image(START_BTN)
+    y_start, x_start = 0, 0
+    while True:
+        try: y_start, x_start = find_image(START_BTN)
+        except: break
+        
     # click start
     click_screen_and_sleep(y_start, x_start, uniform(0, 0.5))
     # click cast
