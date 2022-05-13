@@ -15,6 +15,7 @@
 - Auto Gauntlet (use current difficulty selected)
 - Auto Expedition (use current difficulty selected)
 - Auto Trials (use current difficulty selected)
+- Auto Quest (only big floor and currently max zone is z4f4)
 
 ## Usage
 
@@ -24,8 +25,9 @@
 ## To do
 
 - [x] Auto run 'Gauntlet'
+- [x] Auto run 'Quest'
+- [ ] Add all zone & floor in 'Quest'
 - [ ] Add all boss in 'Raid'
-- [ ] Auto run 'Quest'
 - [ ] Basic UI
 
 

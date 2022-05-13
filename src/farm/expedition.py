@@ -12,6 +12,7 @@ Z2 = join(FEATURE_PATH, 'hero-fest.png')
 Z3 = join(FEATURE_PATH, 'melvapaloozo.png')
 ENTER = join(FEATURE_PATH, 'enter.png')
 
+ZONES = [Z1, Z2, Z3]
 
 @feature('expedition')
 @is_run
@@ -30,7 +31,7 @@ def go_expedition(is_loop=True, **kwargs):
 def run_expedition(**kwargs):
     click_cost_and_play(kwargs.get('cost', COSTS[1]))
     is_zone = False
-    for z in [Z1, Z2, Z3]:
+    for z in ZONES:
         try:
             find_image_and_click_then_sleep(z)
             is_zone = True

@@ -62,6 +62,8 @@ def get_game_screen(game_title=GAME_TITLE):
 
 
 def press_escape():
+    cur_active = pyautogui.getActiveWindow()
     get_app()
     pywinauto.keyboard.send_keys('{VK_ESCAPE}')
     save_print_dbg('pressed escape')
+    cur_active.activate()

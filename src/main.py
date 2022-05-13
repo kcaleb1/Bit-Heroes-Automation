@@ -5,6 +5,7 @@ from farm.trials import go_trials
 from farm.gvg import go_gvg
 from farm.pvp import go_pvp
 from farm.raid import go_raid
+from farm.quest import go_quest
 from farm.expedition import go_expedition
 from decorator import focus_game, go_main_screen_after, terminal_wait, time_messure, check_reconnect
 import warnings
@@ -18,11 +19,12 @@ import warnings
 def main():
     farms = [
         go_expedition,
-        go_raid,
-        go_trials,
+        go_quest,
         go_gauntlet,
         go_gvg,
         go_pvp,
+        go_raid,
+        go_trials,
         go_boss # second last, due to AFK host, or lobby not good
     ]
 

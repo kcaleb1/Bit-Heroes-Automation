@@ -40,14 +40,17 @@ def doing_fish(initial=False):
 
     y_start, x_start = 0, 0
     while True:
-        try: y_start, x_start = find_image(START_BTN)
-        except: break
+        try:
+            y_start, x_start = find_image(START_BTN)
+            break
+        except:
+            pass
         
     # click start
     click_screen_and_sleep(y_start, x_start, uniform(0, 0.5))
     # click cast
     click_screen_and_sleep(y_start, x_start)
-    sleep(3)
+    sleep(4)
     # when got trash
     try:
         find_image_and_click_then_sleep(TRADE_BTN, sleep_duration=0.5, retry_time=3)
@@ -73,11 +76,7 @@ def doing_fish(initial=False):
 
     # click catch
     click_screen_and_sleep(y_start, x_start, sleep_duration=3)
-
-    try:
-        find_image_and_click_then_sleep(TRADE_BTN)
-    except:
-        pass
+    find_image_and_click_then_sleep(TRADE_BTN, ignore_exception=True)
 
     for _ in range(10):
         if is_check_closes():

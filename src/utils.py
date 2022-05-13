@@ -54,12 +54,30 @@ def find_image_position(image_source: Image, image_find_path: str, threshold=Non
     return y, x
 
 
-def find_image_and_click_then_sleep(path: str, retry_time=RETRY_TIME_FIND_IMAGE, sleep_duration=SLEEP, threshold=DEFAULT_THRESHOLD_IMAGE_MATCH, find_interval=SLEEP):
-    y, x = find_image(path, retry_time, threshold, find_interval=find_interval)
+def find_image_and_click_then_sleep(
+        path: str,
+        retry_time=RETRY_TIME_FIND_IMAGE,
+        sleep_duration=SLEEP,
+        threshold=DEFAULT_THRESHOLD_IMAGE_MATCH,
+        find_interval=SLEEP,
+        ignore_exception=False
+    ):
+    y, x = 0, 0
+    try:
+        y, x = find_image(path, retry_time, threshold, find_interval=find_interval)
+    except Exception as ex:
+        if ignore_exception:
+            return
+        raise ex
     click_screen_and_sleep(y, x, sleep_duration)
 
 
-def find_image(path: str, retry_time=RETRY_TIME_FIND_IMAGE, threshold=DEFAULT_THRESHOLD_IMAGE_MATCH, find_interval=SLEEP):
+def find_image(
+        path: str,
+        retry_time=RETRY_TIME_FIND_IMAGE,
+        threshold=DEFAULT_THRESHOLD_IMAGE_MATCH,
+        find_interval=SLEEP
+    ):
     y, x = -1, -1
     e = None
     for i in range(retry_time):
@@ -82,12 +100,14 @@ def go_main_screen():
         press_escape()
         sleep(0.5)
         try:
-            find_image_and_click_then_sleep(COMMON_NO, retry_time=1)
+            find_image(COMMON_NO, retry_time=1)
+            press_escape()
             break
         except:
             pass
     save_print_dbg("**Finished action 'press escape'")
     const.dbg_name = old_dbg_name
+
 
 def run_or_raise_exception(fun, exception: Exception):
     try:

@@ -122,10 +122,7 @@ def check_reconnect(f):
     def wrapper(*args, **kwargs):
         old_name = const.dbg_name
         const.dbg_name = datetime.now().strftime(f'{TIME_FORMAT}_reconnect')
-        try:
-            find_image_and_click_then_sleep(COMMON_RECONNECT, retry_time=10, sleep_duration=0.5)
-        except:
-            pass
+        find_image_and_click_then_sleep(COMMON_RECONNECT, retry_time=10, sleep_duration=0.5, ignore_exception=True)
         const.dbg_name = old_name
         return f(*args, **kwargs)
     return wrapper
