@@ -44,10 +44,8 @@ def do_raid(boss, difficulty):
 
     find_image_and_click_then_sleep(SUMMON_BTN)
     find_image_and_click_then_sleep(DIFFICULTIES[difficulty])
-
     find_image_and_click_then_sleep(COMMON_AUTO_TEAM)
     find_image_and_click_then_sleep(COMMON_ACCEPT, sleep_duration=1)
-    
     check_no_energy()
 
     while not enable_auto_on(): sleep(SLEEP)

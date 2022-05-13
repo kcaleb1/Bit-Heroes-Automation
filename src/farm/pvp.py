@@ -1,7 +1,6 @@
 from decorator import farm_exceptions, feature, go_main_screen, is_run
 from const import *
-from utils import check_no_energy, click_cost_and_play, click_town, enable_auto_on, fight_wait_town, find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
-from window import press_escape
+from utils import click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
 
 
 FEATURE_PATH = join(IMG_PATH, 'pvp')
@@ -23,8 +22,6 @@ def go_pvp(is_loop=True, **kwargs):
 
 def run_pvp(**kwargs):
     click_cost_and_play(kwargs.get('cost', COSTS[1]))
-    
     find_image_and_click_then_sleep(COMMON_FIGHT)
     find_image_and_click_then_sleep(COMMON_ACCEPT)
-
     fight_wait_town()

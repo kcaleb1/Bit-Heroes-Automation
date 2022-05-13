@@ -80,7 +80,7 @@ def go_main_screen():
     save_print_dbg("**Debug for action 'press escape'")
     while True:
         press_escape()
-        sleep(SLEEP)
+        sleep(0.5)
         try:
             find_image_and_click_then_sleep(COMMON_NO, retry_time=1)
             break
@@ -134,19 +134,19 @@ def check_no_energy():
     )
     
     
-def click_cost_and_play(cost, menu_cost=COMMON_COST):
+def click_cost_and_play(cost, menu_cost=COMMON_COST, play_btn=COMMON_PLAY):
     find_image_and_click_then_sleep(menu_cost, retry_time=5)
 
     try:
         find_image_and_click_then_sleep(cost, retry_time=5, sleep_duration=0.5, threshold=0.9)
         find_image(cost, retry_time=5)
-    except:
-        pass
-    finally:
         press_escape()
+    except:
+        press_escape()
+    finally:
+        sleep(SLEEP)
 
-    find_image_and_click_then_sleep(COMMON_PLAY, retry_time=5, sleep_duration=1)
-
+    find_image_and_click_then_sleep(play_btn, retry_time=5, sleep_duration=1)
     check_no_energy()
 
 

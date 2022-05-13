@@ -38,6 +38,8 @@ COMMON_SMALL_X = join(COMMON_IMAGE_PATH, 'small-x.png')
 COMMON_TOWN = join(COMMON_IMAGE_PATH, 'town.png')
 COMMON_YES = join(COMMON_IMAGE_PATH, 'yes.png')
 COMMON_PERSUADE = join(COMMON_IMAGE_PATH, 'persuade.png')
+COMMON_SPECIAL_COST = join(COMMON_IMAGE_PATH, 'special-cost.png')
+COMMON_RECONNECT = join(COMMON_IMAGE_PATH, 'reconnect.png')
 
 COSTS = {
     1: join(COMMON_IMAGE_PATH, 'cost-1.png'),

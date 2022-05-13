@@ -1,10 +1,11 @@
 from error import EmptyBaitException, MismatchConditionException, UnimplementedException, NoEnergyException
-from utils import go_main_screen as do_go_main_screen
+from utils import find_image_and_click_then_sleep, go_main_screen as do_go_main_screen
 from window import get_app, get_game_screen
 from datetime import datetime
 from debug import save_print_dbg
-from const import TIME_FORMAT, cfg
+from const import TIME_FORMAT, cfg, COMMON_RECONNECT
 import const
+from time import sleep
 
 
 def unimplemented(f):
@@ -114,4 +115,17 @@ def time_messure(f):
         print(txt)
         save_print_dbg(txt=txt, is_print=False)
         return r
+    return wrapper
+
+
+def check_reconnect(f):
+    def wrapper(*args, **kwargs):
+        old_name = const.dbg_name
+        const.dbg_name = datetime.now().strftime(f'{TIME_FORMAT}_reconnect')
+        try:
+            find_image_and_click_then_sleep(COMMON_RECONNECT, retry_time=10, sleep_duration=0.5)
+        except:
+            pass
+        const.dbg_name = old_name
+        return f(*args, **kwargs)
     return wrapper

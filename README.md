@@ -13,6 +13,8 @@
 - Auto PVP
 - Auto GVG
 - Auto Gauntlet (use current difficulty selected)
+- Auto Expedition (use current difficulty selected)
+- Auto Trials (use current difficulty selected)
 
 ## Usage
 
