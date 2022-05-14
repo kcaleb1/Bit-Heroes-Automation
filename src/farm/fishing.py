@@ -70,7 +70,7 @@ def doing_fish(initial=False):
     while True:
         try:
             find_image(PERCENT_100, retry_time=20,
-                       threshold=0.5, find_interval=0.2)
+                       threshold=0.6, find_interval=0.2)
             break
         except:
             pass

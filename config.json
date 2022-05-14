@@ -2,10 +2,10 @@
     "debug": true,
     "save_captured_image": true,
     "capture_interval": 0.3,
-    "boss": {
+    "fishing": {
         "is_run": true
     },
-    "fishing": {
+    "boss": {
         "is_run": true
     },
     "gauntlet": {
