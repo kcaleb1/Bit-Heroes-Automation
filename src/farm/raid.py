@@ -24,11 +24,12 @@ BOSSES = {
 @farm_exceptions
 def go_raid(is_loop=True, **kwargs):
     boss = kwargs.get('cfg', {}).get('boss', 1)
-    difficulty= kwargs.get('cfg', {}).get('difficulty', 1)
+    difficulty = kwargs.get('cfg', {}).get('difficulty', 1)
 
     do_raid(boss, difficulty)
     while is_loop:
         do_raid(boss, difficulty)
+
 
 @go_main_screen
 def do_raid(boss, difficulty):
@@ -48,12 +49,13 @@ def do_raid(boss, difficulty):
     find_image_and_click_then_sleep(COMMON_ACCEPT, sleep_duration=1)
     check_no_energy()
 
-    while not enable_auto_on(): sleep(SLEEP)
+    while not enable_auto_on():
+        sleep(SLEEP)
 
     while True:
         if click_town():
             return
-        
+
         try:
             find_image_and_click_then_sleep(DECLINE, retry_time=1)
             find_image_and_click_then_sleep(COMMON_YES, retry_time=1)

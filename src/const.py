@@ -2,7 +2,7 @@ from os import getcwd
 from os.path import join, isdir
 from json import load
 
-#global variables
+# global variables
 app = None
 hwnd = None
 app_pos = (0, 0, 0, 0)
@@ -10,7 +10,7 @@ x_multiply, y_multiply = 1, 1
 dbg_name = 'initialize'
 cfg = {}
 
-### --------------------------------------------
+# --------------------------------------------
 CUR_PATH = getcwd()
 
 CONFIG_FILE = join(CUR_PATH, 'config.json')

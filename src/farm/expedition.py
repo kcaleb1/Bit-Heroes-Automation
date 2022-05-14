@@ -1,4 +1,4 @@
-from debug import save_image_dbg, save_print_dbg
+from debug import save_image_dbg
 from decorator import farm_exceptions, feature, go_main_screen, is_run
 from const import *
 from utils import click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
@@ -13,6 +13,7 @@ Z3 = join(FEATURE_PATH, 'melvapaloozo.png')
 ENTER = join(FEATURE_PATH, 'enter.png')
 
 ZONES = [Z1, Z2, Z3]
+
 
 @feature('expedition')
 @is_run
@@ -38,7 +39,7 @@ def run_expedition(**kwargs):
             break
         except:
             pass
-    
+
     if not is_zone:
         save_image_dbg('?????', get_game_screen())
         raise Exception('?????????')

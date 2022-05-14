@@ -33,7 +33,8 @@ def doing_fish(initial=False):
         try:
             find_image_and_click_then_sleep(
                 COMMON_CLOSE, retry_time=1, sleep_duration=0.5, threshold=0.9)
-            find_image_and_click_then_sleep(COMMON_SMALL_X, retry_time=1, threshold=0.9)
+            find_image_and_click_then_sleep(
+                COMMON_SMALL_X, retry_time=1, threshold=0.9)
             return True
         except:
             return False
@@ -45,7 +46,7 @@ def doing_fish(initial=False):
             break
         except:
             pass
-        
+
     # click start
     click_screen_and_sleep(y_start, x_start, uniform(0, 0.5))
     # click cast
@@ -53,12 +54,14 @@ def doing_fish(initial=False):
     sleep(4)
     # when got trash
     try:
-        find_image_and_click_then_sleep(TRADE_BTN, sleep_duration=0.5, retry_time=3)
-        find_image_and_click_then_sleep(COMMON_SMALL_X, threshold=0.9, retry_time=3)
+        find_image_and_click_then_sleep(
+            TRADE_BTN, sleep_duration=0.5, retry_time=3)
+        find_image_and_click_then_sleep(
+            COMMON_SMALL_X, threshold=0.9, retry_time=3)
         return  # stop when got trash
     except:
         pass
-    
+
     run_or_raise_exception(
         lambda: find_image(START_BTN, retry_time=3),
         EmptyBaitException
@@ -66,7 +69,8 @@ def doing_fish(initial=False):
 
     while True:
         try:
-            find_image(PERCENT_100, retry_time=20, threshold=0.5, find_interval=0.2)
+            find_image(PERCENT_100, retry_time=20,
+                       threshold=0.5, find_interval=0.2)
             break
         except:
             pass

@@ -16,10 +16,11 @@ def get_app():
 
 
 def click_screen_and_sleep(y: int, x: int, sleep_duration=SLEEP):
-    add = lambda x: x + PREFIX_CLICK
+    def add(x): return x + PREFIX_CLICK
     cur_active = pyautogui.getActiveWindow()
     cur_pos = pyautogui.position()
-    const.app[GAME_TITLE].click_input(coords=(add(x), add(y) + TITLE_BAR_HEIGHT))
+    const.app[GAME_TITLE].click_input(
+        coords=(add(x), add(y) + TITLE_BAR_HEIGHT))
     # reset mouse position and set focus to previous app
     pyautogui.moveTo(cur_pos.x, cur_pos.y)
     cur_active.activate()
@@ -51,7 +52,7 @@ def get_game_screen(game_title=GAME_TITLE):
         x, y = win32gui.ClientToScreen(const.hwnd, (x, y))
         x1, y1 = win32gui.ClientToScreen(const.hwnd, (x1 - x, y1 - y))
         const.app_pos = (x, y, x1, y1)
-            
+
         img = pyautogui.screenshot(region=const.app_pos)
 
         # save_image_dbg('get_game_screen', img)

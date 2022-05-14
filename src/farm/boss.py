@@ -22,16 +22,18 @@ def go_boss(is_loop=True, **kwargs):
     while is_loop:
         run_boss(**kwargs)
 
+
 @go_main_screen
-def run_boss(**kwargs):    
+def run_boss(**kwargs):
     find_image_and_click_then_sleep(BTN)
     try:
-        find_image_and_click_then_sleep(JOIN_BTN, retry_time=3, sleep_duration=1)
+        find_image_and_click_then_sleep(
+            JOIN_BTN, retry_time=3, sleep_duration=1)
     except:
         return run_boss(**kwargs)
-    
+
     check_no_energy()
-    
+
     try:
         find_image(COMMON_CLOSE, retry_time=3)
         return run_boss(**kwargs)
@@ -55,14 +57,14 @@ def run_boss(**kwargs):
                 return run_boss(**kwargs)
             except:
                 pass
-            
+
             # check when become host, leave lobby and rerun
             try:
                 find_image(START_BTN, retry_time=1)
                 return run_boss(**kwargs)
             except:
                 pass
-            
+
             is_auto_on = enable_auto_on()
 
         # this will help to exit the lobby when host afk to long

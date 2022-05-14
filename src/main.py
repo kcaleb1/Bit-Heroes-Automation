@@ -25,7 +25,7 @@ def main():
         go_pvp,
         go_raid,
         go_trials,
-        go_boss # second last, due to AFK host, or lobby not good
+        go_boss  # second last, due to AFK host, or lobby not good
     ]
 
     # this will run each farm, to spend there energy
@@ -37,7 +37,8 @@ def main():
             if not farm(is_loop=False):
                 empty[i] = True
 
-    go_fishing() # this last, because no energy needed
+    go_fishing()  # this last, because no energy needed
+
 
 if __name__ == '__main__':
     with warnings.catch_warnings():
