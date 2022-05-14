@@ -13,16 +13,15 @@ PLAY = join(FEATURE_PATH, 'play.png')
 @go_main_screen
 @farm_exceptions
 def go_trials(is_loop=True, **kwargs):
-    cost = kwargs.get('cfg', {}).get('cost', 1)
-    kwargs['cost'] = COSTS.get(cost, 1)
+    cost = COSTS.get(kwargs.get('cfg', {}).get('cost', 1), 1)
 
     find_image_and_click_then_sleep(BTN, retry_time=5)
-    run_trials(**kwargs)
+    run_trials(cost)
     while is_loop:
-        run_trials(**kwargs)
+        run_trials(cost)
 
 
-def run_trials(**kwargs):
-    click_cost_and_play(kwargs.get('cost'), COMMON_SPECIAL_COST, play_btn=PLAY)
+def run_trials(cost):
+    click_cost_and_play(cost, COMMON_SPECIAL_COST, play_btn=PLAY)
     find_image_and_click_then_sleep(COMMON_ACCEPT, sleep_duration=1)
     fight_wait_town()

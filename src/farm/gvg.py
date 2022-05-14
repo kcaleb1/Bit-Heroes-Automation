@@ -12,17 +12,16 @@ BTN = join(FEATURE_PATH, 'button.png')
 @go_main_screen
 @farm_exceptions
 def go_gvg(is_loop=True, **kwargs):
-    cost = kwargs.get('cfg', {}).get('cost', 1)
-    kwargs['cost'] = COSTS.get(cost, 1)
+    cost = COSTS.get(kwargs.get('cfg', {}).get('cost', 1), 1)
 
     find_image_and_click_then_sleep(BTN, retry_time=5)
-    run_gvg(**kwargs)
+    run_gvg(cost)
     while is_loop:
-        run_gvg(**kwargs)
+        run_gvg(cost)
 
 
-def run_gvg(**kwargs):
-    click_cost_and_play(kwargs.get('cost', COSTS[1]))
+def run_gvg(cost):
+    click_cost_and_play(cost)
     find_image_and_click_then_sleep(COMMON_FIGHT)
     find_image_and_click_then_sleep(COMMON_AUTO_TEAM)
     find_image_and_click_then_sleep(COMMON_ACCEPT)

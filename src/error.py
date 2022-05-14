@@ -40,3 +40,11 @@ class UnimplementedException(Exception):
 
     def __str__(self):
         return f"Feature '{self.feature}' not implemented"
+
+
+class UnableJoinBossException(Exception):
+    def __init__(self, *args: object, **kwargs) -> None:
+        super().__init__(*args)
+
+    def __str__(self):
+        return f"Unable to join boss lobby"

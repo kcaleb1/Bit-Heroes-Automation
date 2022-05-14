@@ -61,7 +61,7 @@ def find_image_and_click_then_sleep(
     sleep_duration=SLEEP,
     threshold=DEFAULT_THRESHOLD_IMAGE_MATCH,
     find_interval=SLEEP,
-    ignore_exception=False
+    ignore_exception=False,
 ):
     y, x = 0, 0
     try:
@@ -78,15 +78,22 @@ def find_image(
     path: str,
     retry_time=RETRY_TIME_FIND_IMAGE,
     threshold=DEFAULT_THRESHOLD_IMAGE_MATCH,
-    find_interval=SLEEP
+    find_interval=SLEEP,
+    game_screen=None,
+    return_game_screen=False,
 ):
     y, x = -1, -1
     e = None
     for i in range(retry_time):
         save_print_dbg(f"retry: {i} on {path.replace(IMG_PATH, '')}", end='\t')
-        game_screen = get_game_screen()
+        if game_screen == None:
+            cur_game_screen = get_game_screen()
+        else:
+            cur_game_screen = game_screen
         try:
-            y, x = find_image_position(game_screen, path, threshold)
+            y, x = find_image_position(cur_game_screen, path, threshold)
+            if return_game_screen:
+                return y, x, cur_game_screen
             return y, x
         except Exception as ex:
             e = ex
@@ -181,3 +188,15 @@ def fight_wait_town():
         sleep(SLEEP)
     while not click_town():
         sleep(1)
+
+
+def decline_except_persure(decline):
+    y, x, img = None, None, None
+    try:
+        y, x, img = find_image(decline, retry_time=1, return_game_screen=True)
+        find_image(COMMON_PERSUADE, retry_time=1, game_screen=img)
+    except:
+        if y != None:
+            click_screen_and_sleep(y, x, sleep_duration=0.5)
+            find_image_and_click_then_sleep(
+                COMMON_YES, retry_time=1, ignore_exception=True)

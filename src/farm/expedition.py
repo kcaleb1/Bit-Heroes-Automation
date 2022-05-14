@@ -20,17 +20,16 @@ ZONES = [Z1, Z2, Z3]
 @go_main_screen
 @farm_exceptions
 def go_expedition(is_loop=True, **kwargs):
-    cost = kwargs.get('cfg', {}).get('cost', 1)
-    kwargs['cost'] = COSTS.get(cost, 1)
+    cost = COSTS.get(kwargs.get('cfg', {}).get('cost', 1), 1)
 
     find_image_and_click_then_sleep(BTN, retry_time=5)
-    run_expedition(**kwargs)
+    run_expedition(cost)
     while is_loop:
-        run_expedition(**kwargs)
+        run_expedition(cost)
 
 
-def run_expedition(**kwargs):
-    click_cost_and_play(kwargs.get('cost', COSTS[1]))
+def run_expedition(cost):
+    click_cost_and_play(cost)
     is_zone = False
     for z in ZONES:
         try:

@@ -1,4 +1,4 @@
-from error import EmptyBaitException, MismatchConditionException, UnimplementedException, NoEnergyException
+from error import UnableJoinBossException, EmptyBaitException, MismatchConditionException, UnimplementedException, NoEnergyException
 from utils import find_image_and_click_then_sleep, go_main_screen as do_go_main_screen
 from window import get_app, get_game_screen
 from datetime import datetime
@@ -49,6 +49,7 @@ def go_main_screen_after(f):
 def farm_exceptions(f) -> bool:
     def wrapper(*args, **kwargs):
         err = ''
+        special = False
         try:
             f(*args, **kwargs)
             return True
@@ -58,11 +59,14 @@ def farm_exceptions(f) -> bool:
             err = f"'{kwargs['feature']}' stopped by keyboard".__str__()
         except EmptyBaitException as ex:
             err = ex.__str__()
+        except UnableJoinBossException as ex:
+            err = ex.__str__()
+            special = True
         except Exception as ex:
             err = f"got error when run '{kwargs['feature']}': {ex.__str__()}"
         print(err)
         save_print_dbg(txt=err, is_print=False)
-        return False
+        return True if special else False
     return wrapper
 
 

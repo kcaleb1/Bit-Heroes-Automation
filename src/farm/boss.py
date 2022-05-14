@@ -1,4 +1,4 @@
-from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, run_or_raise_exception, sleep
+from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, sleep
 from window import press_escape
 from const import *
 from error import *
@@ -18,29 +18,33 @@ START_BTN = join(FEATURE_PATH, 'start.png')
 @is_run
 @farm_exceptions
 def go_boss(is_loop=True, **kwargs):
-    run_boss(**kwargs)
+    run_boss()
     while is_loop:
-        run_boss(**kwargs)
+        run_boss()
 
 
 @go_main_screen
-def run_boss(**kwargs):
+def run_boss():
     find_image_and_click_then_sleep(BTN)
     try:
         find_image_and_click_then_sleep(
-            JOIN_BTN, retry_time=3, sleep_duration=1)
+            JOIN_BTN, sleep_duration=1)
     except:
-        return run_boss(**kwargs)
+        raise UnableJoinBossException()
 
     check_no_energy()
+    while True:
+        try:
+            find_image(COMMON_CLOSE, retry_time=1)
+            return run_boss()
+        except:
+            pass
+        try:
+            find_image_and_click_then_sleep(READY_BTN, retry_time=1)
+            break
+        except:
+            pass
 
-    try:
-        find_image(COMMON_CLOSE, retry_time=3)
-        return run_boss(**kwargs)
-    except:
-        pass
-
-    find_image_and_click_then_sleep(READY_BTN)
     start_time = datetime.now()
     is_started = False
     is_auto_on = False
@@ -54,7 +58,7 @@ def run_boss(**kwargs):
             # check got kicked from room
             try:
                 find_image_and_click_then_sleep(COMMON_CLOSE, retry_time=1)
-                return run_boss(**kwargs)
+                return run_boss()
             except:
                 pass
 
@@ -80,4 +84,4 @@ def run_boss(**kwargs):
     if not is_started:
         sleep(0.5)
         find_image_and_click_then_sleep(COMMON_YES)
-        return run_boss(**kwargs)
+        return run_boss()

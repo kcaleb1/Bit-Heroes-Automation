@@ -1,8 +1,9 @@
 from time import sleep
 from decorator import feature, go_main_screen, farm_exceptions, is_run
-from utils import check_no_energy, click_town, enable_auto_on, find_image_and_click_then_sleep, find_image, run_or_raise_exception
+from utils import check_no_energy, click_town, decline_except_persure, enable_auto_on, find_image_and_click_then_sleep, find_image, run_or_raise_exception
 from const import *
 from error import *
+from window import click_screen_and_sleep
 
 
 FEATURE_PATH = join(IMG_PATH, 'raid')
@@ -55,9 +56,4 @@ def do_raid(boss, difficulty):
     while True:
         if click_town():
             return
-
-        try:
-            find_image_and_click_then_sleep(DECLINE, retry_time=1)
-            find_image_and_click_then_sleep(COMMON_YES, retry_time=1)
-        except:
-            pass
+        decline_except_persure(DECLINE)
