@@ -78,4 +78,5 @@ def run_quest(zone, difficulty, img_quest, zone_name):
         except:
             if y != None:
                 click_screen_and_sleep(y, x, sleep_duration=0.5)
-                find_image_and_click_then_sleep(COMMON_YES, retry_time=1)
+                find_image_and_click_then_sleep(
+                    COMMON_YES, retry_time=1, ignore_exception=True)

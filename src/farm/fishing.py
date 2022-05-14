@@ -48,7 +48,7 @@ def doing_fish(initial=False):
             pass
 
     # click start
-    click_screen_and_sleep(y_start, x_start, uniform(0, 0.5))
+    click_screen_and_sleep(y_start, x_start, uniform(0, 2))
     # click cast
     click_screen_and_sleep(y_start, x_start)
     sleep(4)

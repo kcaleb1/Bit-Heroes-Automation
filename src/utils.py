@@ -103,6 +103,7 @@ def go_main_screen():
         sleep(0.5)
         try:
             find_image(COMMON_NO, retry_time=1)
+            sleep(0.5)
             press_escape()
             break
         except:

@@ -61,7 +61,8 @@ def run_boss(**kwargs):
             # check when become host, leave lobby and rerun
             try:
                 find_image(START_BTN, retry_time=1)
-                return run_boss(**kwargs)
+                press_escape()
+                break
             except:
                 pass
 

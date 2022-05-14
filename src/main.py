@@ -18,12 +18,12 @@ import warnings
 @check_reconnect
 def main():
     farms = [
-        go_expedition,
+        go_raid,
         go_quest,
+        go_expedition,
         go_gauntlet,
         go_gvg,
         go_pvp,
-        go_raid,
         go_trials,
         go_boss  # second last, due to AFK host, or lobby not good
     ]
