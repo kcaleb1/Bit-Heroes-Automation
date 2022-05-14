@@ -3,41 +3,41 @@
     "save_captured_image": true,
     "capture_interval": 0.3,
     "boss": {
-        "is_run": false
+        "is_run": true
     },
     "fishing": {
         "is_run": true
     },
     "gauntlet": {
-        "is_run": false,
+        "is_run": true,
         "cost": 1
     },
     "trials": {
-        "is_run": false,
+        "is_run": true,
         "cost": 1
     },
     "gvg": {
-        "is_run": false,
+        "is_run": true,
         "cost": 1
     },
     "expedition": {
-        "is_run": false,
+        "is_run": true,
         "cost": 1,
         "zone": 1
     },
     "pvp": {
-        "is_run": false,
+        "is_run": true,
         "cost": 1
     },
     "raid": {
-        "is_run": false,
+        "is_run": true,
         "boss": 4,
         "difficulty": 3
     },
     "quest": {
-        "is_run": false,
-        "zone": 4,
-        "floor": 12,
+        "is_run": true,
+        "zone": 5,
+        "floor": 4,
         "difficulty": 3
     }
 }

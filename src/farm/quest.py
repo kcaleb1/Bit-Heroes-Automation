@@ -4,6 +4,7 @@ from decorator import farm_exceptions, feature, go_main_screen, is_run
 from const import *
 from error import MismatchConditionException
 from utils import check_no_energy, click_town, enable_auto_on, fight_wait_town, find_image, find_image_and_click_then_sleep
+from window import click_screen_and_sleep
 
 
 FEATURE_PATH = join(IMG_PATH, 'quest')
@@ -69,8 +70,11 @@ def run_quest(zone, difficulty, img_quest ,zone_name):
         if click_town():
             return
         
+        y, x = None, None
         try:
-            find_image_and_click_then_sleep(DECLINE, retry_time=1)
-            find_image_and_click_then_sleep(COMMON_YES, retry_time=1)
+            y, x = find_image(DECLINE, retry_time=1)
+            find_image(COMMON_PERSUADE, retry_time=1)
         except:
-            pass
+            if y != None:
+                click_screen_and_sleep(y, x, sleep_duration=0.5)
+                find_image_and_click_then_sleep(COMMON_YES, retry_time=1)
