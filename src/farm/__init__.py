@@ -125,14 +125,14 @@ class Farm(object):
         self.thread = threading.Thread(target=self._run, args=())
         self.thread.start()
 
-    def start(self, is_wait=False):
+    def start(self, wait_done=False):
         if self.thread:
             return
 
         self.process = multiprocessing.Process(target=self._start_thread)
         self.process.start()
 
-        if is_wait:
+        if wait_done:
             self.process.join()
 
     def stop(self):

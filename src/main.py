@@ -14,10 +14,10 @@ from decorator import focus_game, go_main_screen_after, terminal_wait, time_mess
 
 
 @terminal_wait
-@time_messure
 @go_main_screen_after
 @focus_game
 @check_reconnect
+@time_messure
 def main_v2():
     farms = [
         Raid,
@@ -37,11 +37,11 @@ def main_v2():
             if i in empty:
                 continue
             f = farm()
-            f.start(is_wait=True)
+            f.start(wait_done=True)
             if not f.result:
                 empty[i] = True
 
-    Fishing().start()  # this last, because no energy needed
+    Fishing().start(wait_done=True)  # this last, because no energy needed
 
 
 if __name__ == '__main__':
