@@ -5,31 +5,6 @@ from datetime import datetime
 from debug import save_print_dbg
 from const import TIME_FORMAT, cfg, COMMON_RECONNECT
 import const
-from time import sleep
-
-
-def unimplemented(f):
-    def wrapper(*args, **kwargs):
-        print(UnimplementedException(kwargs['feature']).__str__())
-        return
-    return wrapper
-
-
-def feature(feature: str) -> bool:
-    def decorator(f):
-        def wrapper(*args, **kwargs):
-            kwargs['feature'] = feature
-            kwargs['cfg'] = cfg[feature]
-            rename = feature.replace(' ', '_')
-            const.dbg_name = datetime.now().strftime(f'{TIME_FORMAT}_{rename}')
-            print(f"Running '{feature}'")
-            save_print_dbg(f"\n***Debug for '{const.dbg_name}'***")
-            result = f(*args, **kwargs)
-            print(f"Finished '{feature}'")
-            save_print_dbg(f"***Finished '{const.dbg_name}***'")
-            return result
-        return wrapper
-    return decorator
 
 
 def go_main_screen(f):
@@ -43,30 +18,6 @@ def go_main_screen_after(f):
     def wrapper(*args, **kwargs):
         f(*args, **kwargs)
         do_go_main_screen()
-    return wrapper
-
-
-def farm_exceptions(f) -> bool:
-    def wrapper(*args, **kwargs):
-        err = ''
-        special = False
-        try:
-            f(*args, **kwargs)
-            return True
-        except NoEnergyException:
-            err = NoEnergyException(feature=kwargs['feature']).__str__()
-        except KeyboardInterrupt:
-            err = f"'{kwargs['feature']}' stopped by keyboard".__str__()
-        except EmptyBaitException as ex:
-            err = ex.__str__()
-        except UnableJoinBossException as ex:
-            err = ex.__str__()
-            special = True
-        except Exception as ex:
-            err = f"got error when run '{kwargs['feature']}': {ex.__str__()}"
-        print(err)
-        save_print_dbg(txt=err, is_print=False)
-        return True if special else False
     return wrapper
 
 
@@ -94,18 +45,6 @@ def terminal_wait(f):
     def wrapper(*args, **kwargs):
         f(*args, **kwargs)
         input('Press enter to close...')
-    return wrapper
-
-
-def is_run(f) -> bool:
-    def wrapper(*args, **kwargs):
-        if kwargs.get('cfg', {}).get('is_run', False):
-            return f(*args, **kwargs)
-        else:
-            txt = f"Feature '{kwargs.get('feature')}' disabled"
-            print(txt)
-            save_print_dbg(txt=txt, is_print=False)
-            return False
     return wrapper
 
 

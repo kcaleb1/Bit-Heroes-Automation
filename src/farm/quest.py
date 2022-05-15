@@ -1,9 +1,8 @@
+from farm import Farm
 from time import sleep
-from decorator import farm_exceptions, feature, go_main_screen, is_run
 from const import *
-from error import MismatchConditionException
+from error import InvalidValueValidateException
 from utils import check_no_energy, click_town, decline_except_persure, enable_auto_on, find_image, find_image_and_click_then_sleep
-from window import click_screen_and_sleep
 
 
 FEATURE_PATH = join(IMG_PATH, 'quest')
@@ -14,64 +13,76 @@ DUNGEON = join(FEATURE_PATH, 'dungeon.png')
 DECLINE = join(FEATURE_PATH, 'decline.png')
 Z1 = join(FEATURE_PATH, 'z1.png')
 
+DUNGEON_NUM = 99
+
 QUESTS_DIF = {
-    1: join(FEATURE_PATH, 'normal.png'),
-    2: join(FEATURE_PATH, 'hard.png'),
-    3: join(FEATURE_PATH, 'heroic.png')
+    'normal': join(FEATURE_PATH, 'normal.png'),
+    'hard': join(FEATURE_PATH, 'hard.png'),
+    'heroic': join(FEATURE_PATH, 'heroic.png')
 }
 
 
-@feature('quest')
-@is_run
-@go_main_screen
-@farm_exceptions
-def go_quest(is_loop=True, **kwargs):
-    zone = kwargs.get('cfg', {}).get('zone', 1)
-    floor = kwargs.get('cfg', {}).get('floor', 1)
-    difficulty = kwargs.get('cfg', {}).get('difficulty', 1)
+class Quest(Farm):
+    def __init__(self):
+        super().__init__('quest')
 
-    img_quest = join(FEATURE_PATH, f'z{zone}f{floor}.png')
-    zone_name = join(FEATURE_PATH, f'z{zone}.png')
-    if floor == '13':
-        img_quest = DUNGEON
-    elif floor > 13 or floor < 1:
-        raise MismatchConditionException(txt='Floor not support')
+    def do_run(self):
+        find_image_and_click_then_sleep(BTN, retry_time=5)
+        cur_img = None
+        while True:
+            try:
+                find_image(self.zone_name, retry_time=1)
+                break
+            except:
+                pass
+            find_image_and_click_then_sleep(
+                LEFT, retry_time=1, ignore_exception=True)
+            try:
+                find_image(Z1, retry_time=1, game_screen=cur_img)
+                cur_zone = 1
+                while cur_zone != self.zone:
+                    find_image_and_click_then_sleep(
+                        RIGHT, ignore_exception=True)
+                    cur_zone += 1
+                break
+            except:
+                pass
 
-    find_image_and_click_then_sleep(BTN, retry_time=5)
-    run_quest(zone, difficulty, img_quest, zone_name)
-    while is_loop:
-        run_quest(zone, difficulty, img_quest, zone_name)
+        find_image_and_click_then_sleep(self.img_quest, sleep_duration=1)
+        find_image_and_click_then_sleep(QUESTS_DIF[self.difficulty])
+        find_image_and_click_then_sleep(COMMON_ACCEPT)
+        check_no_energy()
 
+        while not enable_auto_on():
+            sleep(SLEEP)
 
-def run_quest(zone, difficulty, img_quest, zone_name):
-    cur_img = None
-    while True:
-        try:
-            find_image(zone_name, retry_time=1)
-            break
-        except:
-            pass
-        find_image_and_click_then_sleep(
-            LEFT, retry_time=1, ignore_exception=True)
-        try:
-            find_image(Z1, retry_time=1, game_screen=cur_img)
-            cur_zone = 1
-            while cur_zone != zone:
-                find_image_and_click_then_sleep(RIGHT, ignore_exception=True)
-                cur_zone += 1
-            break
-        except:
-            pass
+        while True:
+            if click_town():
+                return
+            decline_except_persure(DECLINE)
 
-    find_image_and_click_then_sleep(img_quest, sleep_duration=1)
-    find_image_and_click_then_sleep(QUESTS_DIF[difficulty])
-    find_image_and_click_then_sleep(COMMON_ACCEPT)
-    check_no_energy()
+    def mapping_config(self):
+        super().mapping_config()
+        self.zone = self.cfg.get('zone', 1)
+        self.floor = self.cfg.get('floor', 1)
+        self.difficulty = self.cfg.get(
+            'difficulty', list(DIFFICULTIES.keys())[0])
 
-    while not enable_auto_on():
-        sleep(SLEEP)
+        self.zone_name = join(FEATURE_PATH, f'z{self.zone}.png')
+        if self.floor == DUNGEON_NUM:
+            self.img_quest = DUNGEON
+        else:
+            self.img_quest = join(
+                FEATURE_PATH, f'z{self.zone}f{self.floor}.png')
 
-    while True:
-        if click_town():
-            return
-        decline_except_persure(DECLINE)
+    def validate(self):
+        super().validate()
+        if not self.zone > 0:
+            raise InvalidValueValidateException(
+                key='zone', value=self.zone, expect='> 0')
+        if self.floor not in range(1, 12+1) and self.floor != 99:
+            raise InvalidValueValidateException(
+                key='zone', value=self.zone, expect='>= 0 and < 12 or equal 99 (for dungeon)')
+        if self.difficulty not in DIFFICULTIES.keys():
+            raise InvalidValueValidateException(
+                key='difficulty', value=self.difficulty, expect=f'not in {DIFFICULTIES.keys()}')

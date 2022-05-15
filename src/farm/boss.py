@@ -1,8 +1,9 @@
+from farm import Farm
 from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, sleep
 from window import press_escape
 from const import *
 from error import *
-from decorator import feature, go_main_screen, farm_exceptions, is_run
+from decorator import go_main_screen
 from datetime import datetime
 
 
@@ -14,74 +15,69 @@ READY_BTN = join(FEATURE_PATH, 'ready.png')
 START_BTN = join(FEATURE_PATH, 'start.png')
 
 
-@feature('boss')
-@is_run
-@farm_exceptions
-def go_boss(is_loop=True, **kwargs):
-    run_boss()
-    while is_loop:
-        run_boss()
+class Boss(Farm):
+    def __init__(self):
+        super().__init__('boss')
 
-
-@go_main_screen
-def run_boss():
-    find_image_and_click_then_sleep(BTN)
-    try:
-        find_image_and_click_then_sleep(
-            JOIN_BTN, sleep_duration=1)
-    except:
-        raise UnableJoinBossException()
-
-    check_no_energy()
-    while True:
+    @go_main_screen
+    def do_run(self):
+        find_image_and_click_then_sleep(BTN)
         try:
-            find_image(COMMON_CLOSE, retry_time=1)
-            return run_boss()
+            find_image_and_click_then_sleep(
+                JOIN_BTN, sleep_duration=1)
         except:
-            pass
-        try:
-            find_image_and_click_then_sleep(READY_BTN, retry_time=1)
-            break
-        except:
-            pass
+            raise UnableJoinBossException()
 
-    start_time = datetime.now()
-    is_started = False
-    is_auto_on = False
-    is_pressed_escape = False
-    while True:
-        is_started = click_town()
-        if is_started:
-            break
-
-        if not is_auto_on:
-            # check got kicked from room
+        check_no_energy()
+        while True:
             try:
-                find_image_and_click_then_sleep(COMMON_CLOSE, retry_time=1)
-                return run_boss()
+                find_image(COMMON_CLOSE, retry_time=1)
+                return self.do_run()
+            except:
+                pass
+            try:
+                find_image_and_click_then_sleep(READY_BTN, retry_time=1)
+                break
             except:
                 pass
 
-            # check when become host, leave lobby and rerun
-            try:
-                find_image(START_BTN, retry_time=1)
+        start_time = datetime.now()
+        is_started = False
+        is_auto_on = False
+        is_pressed_escape = False
+        while True:
+            is_started = click_town()
+            if is_started:
+                break
+
+            if not is_auto_on:
+                # check got kicked from room
+                try:
+                    find_image_and_click_then_sleep(COMMON_CLOSE, retry_time=1)
+                    return self.do_run()
+                except:
+                    pass
+
+                # check when become host, leave lobby and rerun
+                try:
+                    find_image(START_BTN, retry_time=1)
+                    press_escape()
+                    break
+                except:
+                    pass
+
+                is_auto_on = enable_auto_on()
+
+            # this will help to exit the lobby when host afk to long
+            # press escape, in case of already in-game, this will turn off auto play
+            # and the click COMMON_AUTO_OFF will handle it
+            if not is_auto_on and (datetime.now() - start_time).seconds >= 60:
+                if is_pressed_escape:
+                    break
                 press_escape()
-                break
-            except:
-                pass
+                is_pressed_escape = True
 
-            is_auto_on = enable_auto_on()
-
-        # this will help to exit the lobby when host afk to long
-        # press escape, in case of already in-game, this will turn off auto play
-        # and the click COMMON_AUTO_OFF will handle it
-        if not is_auto_on and (datetime.now() - start_time).seconds >= 60:
-            if is_pressed_escape:
-                break
-            press_escape()
-            is_pressed_escape = True
-
-    if not is_started:
-        sleep(0.5)
-        find_image_and_click_then_sleep(COMMON_YES)
-        return run_boss()
+        if not is_started:
+            sleep(0.5)
+            find_image_and_click_then_sleep(COMMON_YES)
+            return self.do_run()

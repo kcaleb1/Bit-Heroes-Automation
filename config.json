@@ -23,7 +23,7 @@
     "expedition": {
         "is_run": true,
         "cost": 1,
-        "zone": 1
+        "zone": 2
     },
     "pvp": {
         "is_run": true,
@@ -32,12 +32,12 @@
     "raid": {
         "is_run": true,
         "boss": 4,
-        "difficulty": 3
+        "difficulty": "heroic"
     },
     "quest": {
         "is_run": true,
         "zone": 5,
         "floor": 4,
-        "difficulty": 3
+        "difficulty": "heroic"
     }
 }

@@ -1,6 +1,5 @@
 from random import uniform
-from decorator import feature, go_main_screen, farm_exceptions, is_run
-
+from farm import Farm
 from utils import find_image_and_click_then_sleep, find_image, run_or_raise_exception, sleep
 from window import click_screen_and_sleep
 from const import *
@@ -16,20 +15,11 @@ EMPTY_BAIT = join(FEATURE_PATH, 'empty-bait.png')
 PERCENT_100 = join(FEATURE_PATH, '100-percent.png')
 
 
-@feature('fishing')
-@is_run
-@go_main_screen
-@farm_exceptions
-def go_fishing(is_loop=True, **kwargs):
-    find_image_and_click_then_sleep(BTN)
-    find_image_and_click_then_sleep(COMMON_PLAY)
-    doing_fish()
-    while is_loop:
-        doing_fish()
+class Fishing(Farm):
+    def __init__(self):
+        super().__init__('fishing')
 
-
-def doing_fish():
-    def is_check_closes() -> bool:
+    def is_check_closes(self):
         try:
             find_image_and_click_then_sleep(
                 COMMON_CLOSE, retry_time=1, sleep_duration=0.5, threshold=0.9)
@@ -39,55 +29,59 @@ def doing_fish():
         except:
             return False
 
-    y_start, x_start = 0, 0
-    while True:
+    def do_run(self):
+        find_image_and_click_then_sleep(BTN)
+        find_image_and_click_then_sleep(COMMON_PLAY)
+
+        y_start, x_start = 0, 0
+        while True:
+            try:
+                y_start, x_start = find_image(START_BTN)
+                break
+            except:
+                pass
+
+        # click start
+        click_screen_and_sleep(y_start, x_start, uniform(0, 2))
+        # click cast
+        click_screen_and_sleep(y_start, x_start)
+        sleep(4)
+        # when got trash
         try:
-            y_start, x_start = find_image(START_BTN)
-            break
+            find_image_and_click_then_sleep(
+                TRADE_BTN, sleep_duration=0.5, retry_time=3)
+            find_image_and_click_then_sleep(
+                COMMON_SMALL_X, threshold=0.9, retry_time=3)
+            return  # stop when got trash
         except:
             pass
 
-    # click start
-    click_screen_and_sleep(y_start, x_start, uniform(0, 2))
-    # click cast
-    click_screen_and_sleep(y_start, x_start)
-    sleep(4)
-    # when got trash
-    try:
-        find_image_and_click_then_sleep(
-            TRADE_BTN, sleep_duration=0.5, retry_time=3)
-        find_image_and_click_then_sleep(
-            COMMON_SMALL_X, threshold=0.9, retry_time=3)
-        return  # stop when got trash
-    except:
-        pass
+        run_or_raise_exception(
+            lambda: find_image(START_BTN, retry_time=3),
+            EmptyBaitException
+        )
 
-    run_or_raise_exception(
-        lambda: find_image(START_BTN, retry_time=3),
-        EmptyBaitException
-    )
+        while True:
+            try:
+                find_image(PERCENT_100, retry_time=20,
+                           threshold=0.6, find_interval=0.2)
+                break
+            except:
+                pass
 
-    while True:
-        try:
-            find_image(PERCENT_100, retry_time=20,
-                       threshold=0.6, find_interval=0.2)
-            break
-        except:
-            pass
+            if self.is_check_closes():
+                return
 
-        if is_check_closes():
-            return
+        # click catch
+        click_screen_and_sleep(y_start, x_start, sleep_duration=3)
+        find_image_and_click_then_sleep(TRADE_BTN, ignore_exception=True)
 
-    # click catch
-    click_screen_and_sleep(y_start, x_start, sleep_duration=3)
-    find_image_and_click_then_sleep(TRADE_BTN, ignore_exception=True)
+        for _ in range(10):
+            if self.is_check_closes():
+                return
 
-    for _ in range(10):
-        if is_check_closes():
-            return
-
-        try:
-            find_image_and_click_then_sleep(COMMON_SMALL_X, retry_time=1)
-            return
-        except:
-            pass
+            try:
+                find_image_and_click_then_sleep(COMMON_SMALL_X, retry_time=1)
+                return
+            except:
+                pass

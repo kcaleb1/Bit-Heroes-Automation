@@ -21,7 +21,5 @@ def save_print_dbg(txt: str, end='\n', is_print=True):
         return
     if is_print:
         print(txt, end=end)
-    if not path.isdir(SAVE_DEBUG_PATH):
-        mkdir(SAVE_DEBUG_PATH)
     with open(DEBUG_TEXT_PATH, 'a+') as f:
-        f.write(txt + end)
+        f.write(str(txt) + end)

@@ -1,14 +1,16 @@
-from farm.boss import go_boss
-from farm.fishing import go_fishing
-from farm.gauntlet import go_gauntlet
-from farm.trials import go_trials
-from farm.gvg import go_gvg
-from farm.pvp import go_pvp
-from farm.raid import go_raid
-from farm.quest import go_quest
-from farm.expedition import go_expedition
-from decorator import focus_game, go_main_screen_after, terminal_wait, time_messure, check_reconnect
 import warnings
+import multiprocessing
+from farm import Farm
+from farm.boss import Boss
+from farm.fishing import Fishing
+from farm.gauntlet import Gauntlet
+from farm.trials import Trails
+from farm.gvg import Gvg
+from farm.pvp import Pvp
+from farm.raid import Raid
+from farm.quest import Quest
+from farm.expedition import Expedition
+from decorator import focus_game, go_main_screen_after, terminal_wait, time_messure, check_reconnect
 
 
 @terminal_wait
@@ -16,16 +18,16 @@ import warnings
 @go_main_screen_after
 @focus_game
 @check_reconnect
-def main():
+def main_v2():
     farms = [
-        go_raid,
-        go_quest,
-        go_expedition,
-        go_gauntlet,
-        go_gvg,
-        go_pvp,
-        go_trials,
-        go_boss  # second last, due to AFK host, or lobby not good
+        Raid,
+        Quest,
+        Expedition,
+        Gauntlet,
+        Gvg,
+        Pvp,
+        Trails,
+        Boss  # second last, due to AFK host, or lobby not good
     ]
 
     # this will run each farm, to spend there energy
@@ -34,13 +36,16 @@ def main():
         for i, farm in enumerate(farms):
             if i in empty:
                 continue
-            if not farm(is_loop=False):
+            f = farm()
+            f.start(is_wait=True)
+            if not f.result:
                 empty[i] = True
 
-    go_fishing()  # this last, because no energy needed
+    Fishing().start()  # this last, because no energy needed
 
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        main()
+        main_v2()

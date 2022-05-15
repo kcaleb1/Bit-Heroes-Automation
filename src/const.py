@@ -1,4 +1,4 @@
-from os import getcwd
+from os import getcwd, mkdir
 from os.path import join, isdir
 from json import load
 
@@ -21,6 +21,9 @@ IMG_PATH = join(CUR_PATH, 'img')
 SAVE_DEBUG_PATH = join(CUR_PATH, 'debug')
 DEBUG_TEXT_PATH = join(SAVE_DEBUG_PATH, 'debug.log')
 SAVE_ESCAPE_IMG_PATH = join(SAVE_DEBUG_PATH, 'escape')
+
+if not isdir(SAVE_DEBUG_PATH):
+    mkdir(SAVE_DEBUG_PATH)
 
 COMMON_IMAGE_PATH = join(IMG_PATH, 'common')
 # COMMON_IMAGE_PATH
@@ -50,9 +53,9 @@ COSTS = {
 }
 
 DIFFICULTIES = {
-    1: join(COMMON_IMAGE_PATH, 'normal.png'),
-    2: join(COMMON_IMAGE_PATH, 'hard.png'),
-    3: join(COMMON_IMAGE_PATH, 'heroic.png')
+    'normal': join(COMMON_IMAGE_PATH, 'normal.png'),
+    'hard': join(COMMON_IMAGE_PATH, 'hard.png'),
+    'heroic': join(COMMON_IMAGE_PATH, 'heroic.png')
 }
 
 GAME_TITLE = 'Bit Heroes'

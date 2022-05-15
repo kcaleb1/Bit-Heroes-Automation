@@ -1,8 +1,7 @@
-from debug import save_image_dbg
-from decorator import farm_exceptions, feature, go_main_screen, is_run
 from const import *
+from error import InvalidValueValidateException
+from farm import Farm
 from utils import click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
-from window import get_game_screen
 
 
 FEATURE_PATH = join(IMG_PATH, 'expedition')
@@ -12,38 +11,36 @@ Z2 = join(FEATURE_PATH, 'hero-fest.png')
 Z3 = join(FEATURE_PATH, 'melvapaloozo.png')
 ENTER = join(FEATURE_PATH, 'enter.png')
 
-ZONES = [Z1, Z2, Z3]
+ZONES = {
+    1: Z1,
+    2: Z2,
+    3: Z3
+}
 
 
-@feature('expedition')
-@is_run
-@go_main_screen
-@farm_exceptions
-def go_expedition(is_loop=True, **kwargs):
-    cost = COSTS.get(kwargs.get('cfg', {}).get('cost', 1), 1)
+class Expedition(Farm):
+    def __init__(self):
+        super().__init__('expedition')
 
-    find_image_and_click_then_sleep(BTN, retry_time=5)
-    run_expedition(cost)
-    while is_loop:
-        run_expedition(cost)
+    def do_run(self):
+        find_image_and_click_then_sleep(BTN, retry_time=5)
+        click_cost_and_play(self.cost)
+        find_image_and_click_then_sleep(self.zone)
+        find_image_and_click_then_sleep(ENTER)
+        find_image_and_click_then_sleep(COMMON_AUTO_TEAM)
+        find_image_and_click_then_sleep(COMMON_ACCEPT)
+        fight_wait_town()
 
+    def mapping_config(self):
+        super().mapping_config()
+        self.cost = self.cfg.get('cost', 1)
+        self.zone = self.cfg.get('zone', 1)
 
-def run_expedition(cost):
-    click_cost_and_play(cost)
-    is_zone = False
-    for z in ZONES:
-        try:
-            find_image_and_click_then_sleep(z)
-            is_zone = True
-            break
-        except:
-            pass
-
-    if not is_zone:
-        save_image_dbg('?????', get_game_screen())
-        raise Exception('?????????')
-
-    find_image_and_click_then_sleep(ENTER)
-    find_image_and_click_then_sleep(COMMON_AUTO_TEAM)
-    find_image_and_click_then_sleep(COMMON_ACCEPT)
-    fight_wait_town()
+    def validate(self):
+        super().validate()
+        if self.cost not in range(1, 3+1):
+            raise InvalidValueValidateException(
+                key='cost', value=self.cost, expect='not in 1-3')
+        if self.zone not in range(1, 3+1):
+            raise InvalidValueValidateException(
+                key='zone', value=self.zone, expect='not in 1-3')

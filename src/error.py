@@ -48,3 +48,14 @@ class UnableJoinBossException(Exception):
 
     def __str__(self):
         return f"Unable to join boss lobby"
+
+
+class InvalidValueValidateException(Exception):
+    def __init__(self, *args: object, **kwargs) -> None:
+        super().__init__(*args)
+        self.key = kwargs.get('key')
+        self.value = kwargs.get('value')
+        self.expect = kwargs.get('expect')
+
+    def __str__(self):
+        return f"Invalid value '{self.key}' = '{self.value}' expect: {self.expect}"

@@ -12,7 +12,11 @@ from functools import partial
 ImageGrab.grab = partial(ImageGrab.grab, all_screens=True)
 
 
-def find_image_position(image_source: Image, image_find_path: str, threshold=None):
+def find_image_position(
+    image_source: Image,
+    image_find_path: str,
+    threshold=None,
+):
     image_path = image_find_path.replace(IMG_PATH+os.sep, '')
     name = '_'.join(image_path.split(os.sep))
 
@@ -168,14 +172,16 @@ def check_no_energy():
 
 def click_cost_and_play(cost, menu_cost=COMMON_COST, play_btn=COMMON_PLAY):
     find_image_and_click_then_sleep(menu_cost, retry_time=5)
-
+    clicked = False
     try:
         find_image_and_click_then_sleep(
             cost, retry_time=5, sleep_duration=0.5, threshold=0.9)
+        clicked = True
         find_image(cost, retry_time=5)
         press_escape()
     except:
-        press_escape()
+        if not clicked:
+            press_escape()
     finally:
         sleep(SLEEP)
 
