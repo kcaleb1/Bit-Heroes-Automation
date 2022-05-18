@@ -56,9 +56,9 @@ class Raid(Farm):
 
     def validate(self):
         super().validate()
-        if not self.boss > 0:
+        if self.boss not in range(1, 4+1):
             raise InvalidValueValidateException(
-                key='boss', value=self.boss, expect='> 0')
+                key='boss', value=self.boss, expect='in 1-4')
         if self.difficulty not in DIFFICULTIES.keys():
             raise InvalidValueValidateException(
                 key='difficulty', value=self.difficulty, expect=f'not in {DIFFICULTIES.keys()}')

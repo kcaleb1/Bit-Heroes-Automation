@@ -1,9 +1,10 @@
+import json
 from error import UnableJoinBossException, EmptyBaitException, MismatchConditionException, UnimplementedException, NoEnergyException
 from utils import find_image_and_click_then_sleep, go_main_screen as do_go_main_screen
 from window import get_app, get_game_screen
 from datetime import datetime
 from debug import save_print_dbg
-from const import TIME_FORMAT, cfg, COMMON_RECONNECT
+from const import MARKER_FILE, TIME_FORMAT, cfg, COMMON_RECONNECT
 import const
 
 
@@ -69,4 +70,16 @@ def check_reconnect(f):
             COMMON_RECONNECT, retry_time=10, sleep_duration=0.5, ignore_exception=True)
         const.dbg_name = old_name
         return f(*args, **kwargs)
+    return wrapper
+
+
+def create_marker_file(fun):
+    def wrapper(*args, **kwargs):
+        try:
+            with open(MARKER_FILE, 'r') as f:
+                json.load(f)
+        except:
+            with open(MARKER_FILE, 'w') as f:
+                f.write(json.dumps({}, indent=4))
+        return fun(*args, **kwargs)
     return wrapper

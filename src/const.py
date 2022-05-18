@@ -13,6 +13,7 @@ cfg = {}
 # --------------------------------------------
 CUR_PATH = getcwd()
 
+MARKER_FILE = join(CUR_PATH, 'marker.json')
 CONFIG_FILE = join(CUR_PATH, 'config.json')
 with open(CONFIG_FILE, 'r') as f:
     cfg = load(f)
@@ -65,7 +66,7 @@ MAX_RESOLUTION = (800, 480)
 TITLE_BAR_HEIGHT = 10
 PREFIX_CLICK = 10
 
-TIME_FORMAT = '%y%m%d%H%M%S%f'
+TIME_FORMAT = '%y%m%d%H%M%S'
 
 RETRY_TIME_FIND_IMAGE = 10
 

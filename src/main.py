@@ -1,6 +1,5 @@
 import warnings
 import multiprocessing
-from farm import Farm
 from farm.boss import Boss
 from farm.fishing import Fishing
 from farm.gauntlet import Gauntlet
@@ -10,11 +9,12 @@ from farm.pvp import Pvp
 from farm.raid import Raid
 from farm.quest import Quest
 from farm.expedition import Expedition
-from decorator import focus_game, go_main_screen_after, terminal_wait, time_messure, check_reconnect
+from decorator import create_marker_file, focus_game, go_main_screen_after, terminal_wait, time_messure, check_reconnect
 
 
 @terminal_wait
 @go_main_screen_after
+@create_marker_file
 @focus_game
 @check_reconnect
 @time_messure
@@ -38,10 +38,14 @@ def main_v2():
                 continue
             f = farm()
             f.start(wait_done=True)
-            if not f.result:
+            if not f.get_result():
                 empty[i] = True
 
-    Fishing().start(wait_done=True)  # this last, because no energy needed
+    while True:
+        f = Fishing()  # this last, because no energy needed
+        f.start(wait_done=True)
+        if not f.get_result():
+            break
 
 
 if __name__ == '__main__':

@@ -11,6 +11,7 @@ LEFT = join(FEATURE_PATH, 'left.png')
 RIGHT = join(FEATURE_PATH, 'right.png')
 DUNGEON = join(FEATURE_PATH, 'dungeon.png')
 DECLINE = join(FEATURE_PATH, 'decline.png')
+DECLINE_MERCHANTS = join(FEATURE_PATH, 'decline-merchants.png')
 Z1 = join(FEATURE_PATH, 'z1.png')
 
 DUNGEON_NUM = 99
@@ -31,14 +32,15 @@ class Quest(Farm):
         cur_img = None
         while True:
             try:
-                find_image(self.zone_name, retry_time=1)
+                find_image(self.zone_name, retry_time=1, threshold=0.9)
                 break
             except:
                 pass
             find_image_and_click_then_sleep(
                 LEFT, retry_time=1, ignore_exception=True)
             try:
-                find_image(Z1, retry_time=1, game_screen=cur_img)
+                find_image(Z1, retry_time=1,
+                           game_screen=cur_img, threshold=0.9)
                 cur_zone = 1
                 while cur_zone != self.zone:
                     find_image_and_click_then_sleep(
@@ -60,6 +62,7 @@ class Quest(Farm):
             if click_town():
                 return
             decline_except_persure(DECLINE)
+            decline_except_persure(DECLINE_MERCHANTS)
 
     def mapping_config(self):
         super().mapping_config()

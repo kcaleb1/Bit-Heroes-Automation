@@ -54,7 +54,9 @@ class Boss(Farm):
                 # check got kicked from room
                 try:
                     find_image_and_click_then_sleep(COMMON_CLOSE, retry_time=1)
-                    return self.do_run()
+                    raise UnableJoinBossException()
+                except UnableJoinBossException as ex:
+                    raise ex
                 except:
                     pass
 
@@ -80,4 +82,4 @@ class Boss(Farm):
         if not is_started:
             sleep(0.5)
             find_image_and_click_then_sleep(COMMON_YES)
-            return self.do_run()
+            raise UnableJoinBossException()

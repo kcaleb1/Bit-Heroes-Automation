@@ -113,9 +113,8 @@ def go_main_screen():
         press_escape()
         sleep(0.5)
         try:
-            find_image(COMMON_NO, retry_time=1)
-            sleep(0.5)
-            press_escape()
+            find_image_and_click_then_sleep(
+                COMMON_NO, retry_time=1, sleep_duration=0.5)
             break
         except:
             pass

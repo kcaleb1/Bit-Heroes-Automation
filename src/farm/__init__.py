@@ -1,10 +1,11 @@
 from datetime import datetime
 from json import load
+import json
 import multiprocessing
 import threading
 from os import getpid
 import warnings
-from const import CONFIG_FILE, TIME_FORMAT
+from const import CONFIG_FILE, MARKER_FILE, TIME_FORMAT
 import const
 from debug import save_print_dbg
 from decorator import go_main_screen
@@ -17,10 +18,8 @@ class Farm(object):
     thread = None
     process = None
     is_run = False
-    result = None
     debug = None
     run_time = 0
-    run_total = 0
 
     def __init__(self, feature: str):
         self.feature = feature
@@ -28,11 +27,10 @@ class Farm(object):
 
     def hard_reset_config(self):
         self.reset_config()
-        self.run_time = 0
-        self.run_total = 0
         self.thread = None
 
     def reset_config(self):
+        self.run_time = 0
         self.set_name()
         self.get_config()
         self.mapping_config()
@@ -40,7 +38,7 @@ class Farm(object):
 
     def set_name(self):
         _t = self.feature.replace(' ', '_')
-        self.name = datetime.now().strftime(f'{TIME_FORMAT}_{_t}_{getpid()}')
+        self.name = datetime.now().strftime(f'{TIME_FORMAT}_{_t}')
 
     def decorator_catch_exceptions(f):
         def wrapper(self):
@@ -72,7 +70,6 @@ class Farm(object):
             save_print_dbg(f"\n***Debug for '{self.name}'***")
             result = f(self)
             print(f"Finished '{self.feature}'")
-            self.run_total += 1
             self.run_time += (datetime.now() - start).seconds
             minutes = int(self.run_time / 60)
             txt = '_____Total %s:%ss' % (minutes, self.run_time - 60 * minutes)
@@ -82,9 +79,27 @@ class Farm(object):
             return result
         return wrapper
 
-    def decorator_save_result(f):
+    def decorator_save_result(fun):
         def wrapper(self):
-            self.result = f(self)
+            self.result = fun(self)
+            marker = {}
+            with open(MARKER_FILE, 'r') as f:
+                marker = json.load(f)
+            # mapping
+            if self.feature not in marker:
+                marker[self.feature] = {
+                    'total_time': self.run_time,
+                    'total_run': 1,
+                    'last_runable': self.result
+                }
+            else:
+                marker[self.feature]['total_time'] += self.run_time
+                marker[self.feature]['total_run'] += 1
+                marker[self.feature]['last_runable'] = self.result
+
+            # store to marker.json
+            with open(MARKER_FILE, 'w') as f:
+                f.write(json.dumps(marker, indent=4, sort_keys=True))
         return wrapper
 
     def decorator_ignore_warning(f):
@@ -95,16 +110,17 @@ class Farm(object):
         return wrapper
 
     @decorator_ignore_warning
+    @decorator_save_result
     @decorator_init
     @go_main_screen
-    @decorator_save_result
     @decorator_catch_exceptions
     def _run(self):
         '''
         This call self.do_run, since it will be extended
         Use self.start/1 to run
         '''
-        const.dbg_name = f'{self.name}_{getpid()}'
+        const.dbg_name = f'{self.name}'
+        self.start_time = datetime.now()
         self.do_run()
 
     def do_run(self):
@@ -163,6 +179,10 @@ class Farm(object):
         if not self.feature:
             raise InvalidValueValidateException(
                 key='feature', value=self.feature, expect='!=null')
+
+    def get_result(self):
+        with open(MARKER_FILE, 'r') as f:
+            return json.load(f).get(self.feature, {}).get('last_runable', False)
 
     def __str__(self) -> str:
         return f"Farm: {self.feature}\nSave debug: {self.name}\nRun: {self.is_run}"
