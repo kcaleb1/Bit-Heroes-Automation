@@ -1,6 +1,6 @@
 from random import uniform
 from farm import Farm
-from utils import find_image_and_click_then_sleep, find_image, run_or_raise_exception, sleep
+from utils import find_image_and_click_then_sleep, find_image, raise_exception_when_runable, sleep
 from window import click_screen_and_sleep
 from const import *
 from error import *
@@ -56,7 +56,7 @@ class Fishing(Farm):
         except:
             pass
 
-        run_or_raise_exception(
+        raise_exception_when_runable(
             lambda: find_image(START_BTN, retry_time=3),
             EmptyBaitException
         )

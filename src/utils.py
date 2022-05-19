@@ -122,7 +122,7 @@ def go_main_screen():
     const.dbg_name = old_dbg_name
 
 
-def run_or_raise_exception(fun, exception: Exception):
+def raise_exception_when_runable(fun, exception: Exception):
     try:
         fun()
         raise exception()
@@ -162,7 +162,7 @@ def click_town() -> bool:
 
 
 def check_no_energy():
-    run_or_raise_exception(
+    raise_exception_when_runable(
         lambda: find_image_and_click_then_sleep(
             COMMON_NO, threshold=0.9, retry_time=3),
         NoEnergyException

@@ -1,6 +1,6 @@
 from farm import Farm
 from time import sleep
-from utils import check_no_energy, click_town, decline_except_persure, enable_auto_on, find_image_and_click_then_sleep, find_image, run_or_raise_exception
+from utils import check_no_energy, click_town, decline_except_persure, enable_auto_on, find_image_and_click_then_sleep, find_image, raise_exception_when_runable
 from const import *
 from error import *
 

@@ -1,5 +1,5 @@
 import json
-from error import UnableJoinBossException, EmptyBaitException, MismatchConditionException, UnimplementedException, NoEnergyException
+from error import MismatchConditionException
 from utils import find_image_and_click_then_sleep, go_main_screen as do_go_main_screen
 from window import get_app, get_game_screen
 from datetime import datetime
@@ -75,6 +75,7 @@ def check_reconnect(f):
 
 def create_marker_file(fun):
     def wrapper(*args, **kwargs):
+        # if file not exist, or failed load, create empty file
         try:
             with open(MARKER_FILE, 'r') as f:
                 json.load(f)

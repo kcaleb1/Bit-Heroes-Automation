@@ -1,5 +1,5 @@
 from farm import Farm
-from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, sleep
+from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, raise_exception_when_runable, sleep
 from window import press_escape
 from const import *
 from error import *
@@ -19,7 +19,6 @@ class Boss(Farm):
     def __init__(self):
         super().__init__('boss')
 
-    @go_main_screen
     def do_run(self):
         find_image_and_click_then_sleep(BTN)
         try:
@@ -30,11 +29,10 @@ class Boss(Farm):
 
         check_no_energy()
         while True:
-            try:
-                find_image(COMMON_CLOSE, retry_time=1)
-                return self.do_run()
-            except:
-                pass
+            raise_exception_when_runable(
+                lambda: find_image(COMMON_CLOSE, retry_time=1),
+                UnableJoinBossException
+            )
             try:
                 find_image_and_click_then_sleep(READY_BTN, retry_time=1)
                 break
@@ -52,13 +50,11 @@ class Boss(Farm):
 
             if not is_auto_on:
                 # check got kicked from room
-                try:
-                    find_image_and_click_then_sleep(COMMON_CLOSE, retry_time=1)
-                    raise UnableJoinBossException()
-                except UnableJoinBossException as ex:
-                    raise ex
-                except:
-                    pass
+                raise_exception_when_runable(
+                    lambda: find_image_and_click_then_sleep(
+                        COMMON_CLOSE, retry_time=1),
+                    UnableJoinBossException
+                )
 
                 # check when become host, leave lobby and rerun
                 try:

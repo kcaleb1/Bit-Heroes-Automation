@@ -36,7 +36,7 @@
     },
     "quest": {
         "is_run": true,
-        "zone": 7,
+        "zone": 6,
         "floor": 4,
         "difficulty": "heroic"
     }
