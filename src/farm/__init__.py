@@ -57,23 +57,21 @@ class Farm(object):
                 special = True
             except Exception as ex:
                 err = f"got error when run '{self.feature}': {str(ex)}"
-            print(err)
-            save_print_dbg(txt=err, is_print=False)
+            save_print_dbg(txt=err)
             return True if special else False
         return wrapper
 
     def decorator_init(f):
         def wrapper(self):
             start = datetime.now()
-            print(f"Running '{self.feature}'")
+            save_print_dbg(f"Running '{self.feature}'")
             save_print_dbg(f"\n***Debug for '{self.name}'***")
             result = f(self)
-            print(f"Finished '{self.feature}'")
+            save_print_dbg(f"Finished '{self.feature}'")
             self.run_time += (datetime.now() - start).seconds
             minutes = int(self.run_time / 60)
             txt = '_____Total %s:%ss' % (minutes, self.run_time - 60 * minutes)
-            print(txt)
-            save_print_dbg(txt=txt, is_print=False)
+            save_print_dbg(txt=txt)
             save_print_dbg(f"***Finished '{self.name}***'")
             return result
         return wrapper
@@ -177,7 +175,8 @@ class Farm(object):
     def validate(self):
         if not self.feature:
             raise InvalidValueValidateException(
-                key='feature', value=self.feature, expect='!=null')
+                farm='', key='feature',
+                value=self.feature, expect='!=null')
 
     def get_result(self):
         with open(MARKER_FILE, 'r') as f:

@@ -28,7 +28,8 @@ class Trails(Farm):
         super().validate()
         if not self.cost in range(1, 5+1):
             raise InvalidValueValidateException(
-                key='cost', value=self.cost, expect='not in 1-5')
+                farm=self.feature, key='cost',
+                value=self.cost, expect='not in 1-5')
 
     def __str__(self) -> str:
         return super().__str__() + f"Cost: {self.cost}\n"

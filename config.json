@@ -1,5 +1,5 @@
 {
-    "debug": false,
+    "debug": true,
     "save_captured_image": false,
     "capture_interval": 0.3,
     "fishing": {
@@ -10,28 +10,28 @@
     },
     "gauntlet": {
         "is_run": true,
-        "cost": 1
+        "cost": 5
     },
     "invasion": {
         "is_run": true,
-        "cost": 1
+        "cost": 5
     },
     "trials": {
         "is_run": true,
-        "cost": 1
+        "cost": 5
     },
     "gvg": {
         "is_run": true,
-        "cost": 1
+        "cost": 5
     },
     "expedition": {
         "is_run": true,
-        "cost": 1,
+        "cost": 5,
         "zone": 2
     },
     "pvp": {
         "is_run": true,
-        "cost": 1
+        "cost": 5
     },
     "raid": {
         "is_run": true,
@@ -40,7 +40,7 @@
     },
     "quest": {
         "is_run": true,
-        "zone": 6,
+        "zone": 7,
         "floor": 4,
         "difficulty": "heroic"
     }

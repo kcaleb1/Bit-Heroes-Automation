@@ -3,7 +3,6 @@ from utils import check_no_energy, click_town, enable_auto_on, find_image, find_
 from window import press_escape
 from const import *
 from error import *
-from decorator import go_main_screen
 from datetime import datetime
 
 

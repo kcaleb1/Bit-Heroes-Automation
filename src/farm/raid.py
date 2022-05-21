@@ -58,10 +58,12 @@ class Raid(Farm):
         super().validate()
         if self.boss not in range(1, 4+1):
             raise InvalidValueValidateException(
-                key='boss', value=self.boss, expect='in 1-4')
+                farm=self.feature, key='boss',
+                value=self.boss, expect='in 1-4')
         if self.difficulty not in DIFFICULTIES.keys():
             raise InvalidValueValidateException(
-                key='difficulty', value=self.difficulty, expect=f'not in {DIFFICULTIES.keys()}')
+                farm=self.feature, key='difficulty',
+                value=self.difficulty, expect=f'not in {DIFFICULTIES.keys()}')
 
     def __str__(self) -> str:
         return super().__str__() + f"Boss: {self.boss}\nDifficulty: {self.difficulty}"

@@ -1,5 +1,5 @@
-from os import getcwd, mkdir
-from os.path import join, isdir
+from os import getcwd
+from os.path import join
 from json import load
 
 # global variables

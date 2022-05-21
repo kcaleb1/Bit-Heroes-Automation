@@ -82,13 +82,16 @@ class Quest(Farm):
         super().validate()
         if not self.zone > 0:
             raise InvalidValueValidateException(
-                key='zone', value=self.zone, expect='> 0')
+                farm=self.feature, key='zone',
+                value=self.zone, expect='> 0')
         if self.floor not in range(1, 12+1) and self.floor != 99:
             raise InvalidValueValidateException(
-                key='zone', value=self.zone, expect='>= 0 and < 12 or equal 99 (for dungeon)')
+                farm=self.feature, key='zone',
+                value=self.zone, expect='>= 0 and < 12 or equal 99 (for dungeon)')
         if self.difficulty not in DIFFICULTIES.keys():
             raise InvalidValueValidateException(
-                key='difficulty', value=self.difficulty, expect=f'not in {DIFFICULTIES.keys()}')
+                farm=self.feature, key='difficulty',
+                value=self.difficulty, expect=f'not in {DIFFICULTIES.keys()}')
 
     def __str__(self) -> str:
         return super().__str__() + f"Zone: Z{self.zone}F{self.floor}\nDifficulty: {self.difficulty}"

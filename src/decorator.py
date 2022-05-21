@@ -4,7 +4,7 @@ from utils import find_image_and_click_then_sleep, go_main_screen as do_go_main_
 from window import get_app, get_game_screen
 from datetime import datetime
 from debug import save_print_dbg
-from const import MARKER_FILE, TIME_FORMAT, cfg, COMMON_RECONNECT
+from const import MARKER_FILE, TIME_FORMAT, COMMON_RECONNECT
 import const
 
 
@@ -24,7 +24,7 @@ def go_main_screen_after(f):
 
 def focus_game(f):
     def wrapper(*args, **kwargs):
-        print('Checking precondition')
+        save_print_dbg('Checking precondition')
         ex = None
         try:
             get_app()
@@ -34,10 +34,9 @@ def focus_game(f):
         except:
             ex = MismatchConditionException(txt='Game not found').__str__()
         if ex:
-            print(ex)
-            save_print_dbg(txt=ex, is_print=False)
+            save_print_dbg(ex)
             return
-        print('We are good to go...')
+        save_print_dbg('We are good to go...')
         return f(*args, **kwargs)
     return wrapper
 
@@ -56,8 +55,7 @@ def time_measure(f):
         seconds = (datetime.now() - start).seconds
         minutes = int(seconds / 60)
         txt = '_____Total %s:%ss' % (minutes, seconds - 60 * minutes)
-        print(txt)
-        save_print_dbg(txt=txt, is_print=False)
+        save_print_dbg(txt=txt)
         return r
     return wrapper
 

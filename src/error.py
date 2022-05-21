@@ -53,9 +53,13 @@ class UnableJoinBossException(Exception):
 class InvalidValueValidateException(Exception):
     def __init__(self, *args: object, **kwargs) -> None:
         super().__init__(*args)
+        self.farm = kwargs.get('farm')
         self.key = kwargs.get('key')
         self.value = kwargs.get('value')
         self.expect = kwargs.get('expect')
 
     def __str__(self):
-        return f"Invalid value '{self.key}' = '{self.value}' expect: {self.expect}"
+        return (f"{self.farm}:\n"
+                f"invalid value '{self.key}'='{self.value}'\n"
+                f"reason: {self.expect}"
+                )

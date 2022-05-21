@@ -40,7 +40,8 @@ class Expedition(Farm):
         super().validate()
         if self.cost not in range(1, 3+1):
             raise InvalidValueValidateException(
-                key='cost', value=self.cost, expect='not in 1-3')
+                farm=self.feature, key='cost',
+                value=self.cost, expect='not in 1-3')
         if self.zone not in range(1, 3+1):
             raise InvalidValueValidateException(
                 key='zone', value=self.zone, expect='not in 1-3')
