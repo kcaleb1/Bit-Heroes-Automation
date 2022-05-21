@@ -12,6 +12,10 @@
         "is_run": true,
         "cost": 1
     },
+    "invasion": {
+        "is_run": true,
+        "cost": 1
+    },
     "trials": {
         "is_run": true,
         "cost": 1

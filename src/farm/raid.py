@@ -1,6 +1,6 @@
 from farm import Farm
 from time import sleep
-from utils import check_no_energy, click_town, decline_except_persure, enable_auto_on, find_image_and_click_then_sleep, find_image, raise_exception_when_runable
+from utils import check_no_energy, click_town, decline_except_persuade, enable_auto_on, find_image_and_click_then_sleep, find_image, raise_exception_when_runnable
 from const import *
 from error import *
 
@@ -36,7 +36,7 @@ class Raid(Farm):
 
         find_image_and_click_then_sleep(SUMMON_BTN)
         find_image_and_click_then_sleep(DIFFICULTIES[self.difficulty])
-        find_image_and_click_then_sleep(COMMON_AUTO_TEAM)
+        find_image_and_click_then_sleep(COMMON_AUTO_TEAM, sleep_duration=0.5)
         find_image_and_click_then_sleep(COMMON_ACCEPT, sleep_duration=1)
         check_no_energy()
 
@@ -46,7 +46,7 @@ class Raid(Farm):
         while True:
             if click_town():
                 return
-            decline_except_persure(DECLINE)
+            decline_except_persuade(DECLINE)
 
     def mapping_config(self):
         super().mapping_config()
@@ -62,3 +62,6 @@ class Raid(Farm):
         if self.difficulty not in DIFFICULTIES.keys():
             raise InvalidValueValidateException(
                 key='difficulty', value=self.difficulty, expect=f'not in {DIFFICULTIES.keys()}')
+
+    def __str__(self) -> str:
+        return super().__str__() + f"Boss: {self.boss}\nDifficulty: {self.difficulty}"

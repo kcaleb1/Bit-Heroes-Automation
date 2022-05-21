@@ -109,8 +109,9 @@ def go_main_screen():
     old_dbg_name = const.dbg_name.__str__()
     const.dbg_name = 'escape'
     save_print_dbg("**Debug for action 'press escape'")
-    while True:
+    for _ in range(5):
         press_escape()
+    while True:
         sleep(0.5)
         try:
             find_image_and_click_then_sleep(
@@ -118,13 +119,15 @@ def go_main_screen():
             break
         except:
             pass
+        press_escape()
     save_print_dbg("**Finished action 'press escape'")
     const.dbg_name = old_dbg_name
 
 
-def raise_exception_when_runable(fun, exception: Exception):
+def raise_exception_when_runnable(fun, exception: Exception):
     try:
         fun()
+        sleep(0.5)
         raise exception()
     except exception as ex:
         raise ex
@@ -162,7 +165,8 @@ def click_town() -> bool:
 
 
 def check_no_energy():
-    raise_exception_when_runable(
+    sleep(0.5)
+    raise_exception_when_runnable(
         lambda: find_image_and_click_then_sleep(
             COMMON_NO, threshold=0.9, retry_time=3),
         NoEnergyException
@@ -195,7 +199,7 @@ def fight_wait_town():
         sleep(1)
 
 
-def decline_except_persure(decline):
+def decline_except_persuade(decline):
     y, x, img = None, None, None
     try:
         y, x, img = find_image(decline, retry_time=1, return_game_screen=True)

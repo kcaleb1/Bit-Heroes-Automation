@@ -23,9 +23,6 @@ SAVE_DEBUG_PATH = join(CUR_PATH, 'debug')
 DEBUG_TEXT_PATH = join(SAVE_DEBUG_PATH, 'debug.log')
 SAVE_ESCAPE_IMG_PATH = join(SAVE_DEBUG_PATH, 'escape')
 
-if not isdir(SAVE_DEBUG_PATH):
-    mkdir(SAVE_DEBUG_PATH)
-
 COMMON_IMAGE_PATH = join(IMG_PATH, 'common')
 # COMMON_IMAGE_PATH
 COMMON_ACCEPT = join(COMMON_IMAGE_PATH, 'accept.png')

@@ -89,12 +89,12 @@ class Farm(object):
                 marker[self.feature] = {
                     'total_time': self.run_time,
                     'total_run': 1,
-                    'runable': self.result
+                    'runnable': self.result
                 }
             else:
                 marker[self.feature]['total_time'] += self.run_time
                 marker[self.feature]['total_run'] += 1
-                marker[self.feature]['runable'] = self.result
+                marker[self.feature]['runnable'] = self.result
 
             # store to marker.json
             with open(MARKER_FILE, 'w') as f:
@@ -181,7 +181,7 @@ class Farm(object):
 
     def get_result(self):
         with open(MARKER_FILE, 'r') as f:
-            return json.load(f).get(self.feature, {}).get('runable', False)
+            return json.load(f).get(self.feature, {}).get('runnable', False)
 
     def __str__(self) -> str:
-        return f"Farm: {self.feature}\nSave debug: {self.name}\nRun: {self.is_run}"
+        return f"Farm: {self.feature}\n"

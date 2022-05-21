@@ -1,5 +1,5 @@
 from farm import Farm
-from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, raise_exception_when_runable, sleep
+from utils import check_no_energy, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, raise_exception_when_runnable, sleep
 from window import press_escape
 from const import *
 from error import *
@@ -28,8 +28,8 @@ class Boss(Farm):
             raise UnableJoinBossException()
 
         check_no_energy()
-        while True:
-            raise_exception_when_runable(
+        for _ in range(10):
+            raise_exception_when_runnable(
                 lambda: find_image(COMMON_CLOSE, retry_time=1),
                 UnableJoinBossException
             )
@@ -38,6 +38,8 @@ class Boss(Farm):
                 break
             except:
                 pass
+        else:
+            raise UnableJoinBossException()
 
         start_time = datetime.now()
         is_started = False
@@ -50,7 +52,7 @@ class Boss(Farm):
 
             if not is_auto_on:
                 # check got kicked from room
-                raise_exception_when_runable(
+                raise_exception_when_runnable(
                     lambda: find_image_and_click_then_sleep(
                         COMMON_CLOSE, retry_time=1),
                     UnableJoinBossException
@@ -64,16 +66,16 @@ class Boss(Farm):
                 except:
                     pass
 
-                is_auto_on = enable_auto_on()
+                # this will help to exit the lobby when host afk to long
+                # press escape, in case of already in-game, this will turn off auto play
+                # and the click COMMON_AUTO_OFF will handle it
+                if (datetime.now() - start_time).seconds >= 60:
+                    if is_pressed_escape:
+                        break
+                    press_escape()
+                    is_pressed_escape = True
 
-            # this will help to exit the lobby when host afk to long
-            # press escape, in case of already in-game, this will turn off auto play
-            # and the click COMMON_AUTO_OFF will handle it
-            if not is_auto_on and (datetime.now() - start_time).seconds >= 60:
-                if is_pressed_escape:
-                    break
-                press_escape()
-                is_pressed_escape = True
+                is_auto_on = enable_auto_on()
 
         if not is_started:
             sleep(0.5)

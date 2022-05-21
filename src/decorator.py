@@ -49,7 +49,7 @@ def terminal_wait(f):
     return wrapper
 
 
-def time_messure(f):
+def time_measure(f):
     def wrapper(*args, **kwargs):
         start = datetime.now()
         r = f(*args, **kwargs)

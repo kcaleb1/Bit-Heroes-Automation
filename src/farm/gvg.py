@@ -16,7 +16,7 @@ class Gvg(Farm):
         find_image_and_click_then_sleep(BTN, retry_time=5)
         click_cost_and_play(self.cost)
         find_image_and_click_then_sleep(COMMON_FIGHT)
-        find_image_and_click_then_sleep(COMMON_AUTO_TEAM)
+        find_image_and_click_then_sleep(COMMON_AUTO_TEAM, sleep_duration=0.5)
         find_image_and_click_then_sleep(COMMON_ACCEPT)
         fight_wait_town()
 
@@ -29,3 +29,6 @@ class Gvg(Farm):
         if self.cost not in range(1, 5+1):
             raise InvalidValueValidateException(
                 key='cost', value=self.cost, expect='not in 1-5')
+
+    def __str__(self) -> str:
+        return super().__str__() + f"Cost: {self.cost}\n"

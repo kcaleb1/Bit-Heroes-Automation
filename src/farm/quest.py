@@ -2,7 +2,7 @@ from farm import Farm
 from time import sleep
 from const import *
 from error import InvalidValueValidateException
-from utils import check_no_energy, click_town, decline_except_persure, enable_auto_on, find_image, find_image_and_click_then_sleep
+from utils import check_no_energy, click_town, decline_except_persuade, enable_auto_on, find_image, find_image_and_click_then_sleep
 
 
 FEATURE_PATH = join(IMG_PATH, 'quest')
@@ -61,8 +61,8 @@ class Quest(Farm):
         while True:
             if click_town():
                 return
-            decline_except_persure(DECLINE)
-            decline_except_persure(DECLINE_MERCHANTS)
+            decline_except_persuade(DECLINE)
+            decline_except_persuade(DECLINE_MERCHANTS)
 
     def mapping_config(self):
         super().mapping_config()
@@ -89,3 +89,6 @@ class Quest(Farm):
         if self.difficulty not in DIFFICULTIES.keys():
             raise InvalidValueValidateException(
                 key='difficulty', value=self.difficulty, expect=f'not in {DIFFICULTIES.keys()}')
+
+    def __str__(self) -> str:
+        return super().__str__() + f"Zone: Z{self.zone}F{self.floor}\nDifficulty: {self.difficulty}"

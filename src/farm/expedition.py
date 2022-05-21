@@ -27,7 +27,7 @@ class Expedition(Farm):
         click_cost_and_play(self.cost)
         find_image_and_click_then_sleep(ZONES.get(self.zone))
         find_image_and_click_then_sleep(ENTER)
-        find_image_and_click_then_sleep(COMMON_AUTO_TEAM)
+        find_image_and_click_then_sleep(COMMON_AUTO_TEAM, sleep_duration=0.5)
         find_image_and_click_then_sleep(COMMON_ACCEPT)
         fight_wait_town()
 
@@ -44,3 +44,6 @@ class Expedition(Farm):
         if self.zone not in range(1, 3+1):
             raise InvalidValueValidateException(
                 key='zone', value=self.zone, expect='not in 1-3')
+
+    def __str__(self) -> str:
+        return super().__str__() + f"Cost: {self.cost}\nZone: {self.zone}"
