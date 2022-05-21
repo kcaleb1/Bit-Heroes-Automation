@@ -101,6 +101,7 @@ class MainScreen():
         if self.farm != None and not self.farm.get_result():
             self.done.append(type(self.farm))
             save_print_dbg(f'--- done: {self.done}')
+            return self._next_farm()
 
         while True:
             farm = self.farms.pop(0)
@@ -115,12 +116,12 @@ class MainScreen():
         self.txt_main_label.set(str(self.farm))
 
     def _stop_farm(self):
+        save_print_dbg("**Stop farm")
         if self.farm != None:
-            save_print_dbg("**Stop farm")
             self.farm.stop()
-            self._reset_config()
-            self.done = self.farms
-            self._start_stop_swap()
+        self._reset_config()
+        self.done = self.farms
+        self._start_stop_swap()
 
     def _start_stop_swap(self):
         if self.start_enable:
