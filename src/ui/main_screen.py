@@ -100,6 +100,7 @@ class MainScreen():
 
         if self.farm != None and not self.farm.get_result():
             self.done.append(type(self.farm))
+            self.farm = None
             save_print_dbg(f'--- done: {self.done}')
             return self._next_farm()
 
