@@ -1,6 +1,6 @@
 {
-    "debug": true,
-    "save_captured_image": true,
+    "debug": false,
+    "save_captured_image": false,
     "capture_interval": 0.3,
     "fishing": {
         "is_run": true

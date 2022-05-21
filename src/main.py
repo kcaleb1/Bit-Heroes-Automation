@@ -10,16 +10,12 @@ from farm.pvp import Pvp
 from farm.raid import Raid
 from farm.quest import Quest
 from farm.expedition import Expedition
-from decorator import create_marker_file, focus_game, go_main_screen_after, terminal_wait, time_measure, check_reconnect
+from decorator import create_marker_file, focus_game
 from ui.main_screen import MainScreen
 
 
-# @terminal_wait
-# @go_main_screen_after
 @create_marker_file
 @focus_game
-# @check_reconnect
-# @time_measure
 def main_v2():
     farms = [
         Raid,
