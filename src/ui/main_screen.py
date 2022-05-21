@@ -46,6 +46,11 @@ class MainScreen():
         self._setup_button()
 
     def _setup_label(self):
+        # label timer
+        self.timer = 0
+        self.timer_label = ttk.Label(self.root, text='00:00:00')
+        self.timer_label.pack()
+        # label farm
         self.txt_main_label = StringVar()
         self.main_label = ttk.Label(
             self.root, textvariable=self.txt_main_label)
@@ -73,9 +78,20 @@ class MainScreen():
     def _do_farm(self):
         if self.start_enable:
             return
+
+        self._update_timer()
+
         if self.farm == None or self.farm.is_done():
             self._next_farm()
         self.start_btn.after(1000, self._do_farm)
+
+    def _update_timer(self):
+        # update timer
+        self.timer += 1
+        h = int(self.timer / 3600)
+        m = int((self.timer - h * 3600) / 60)
+        s = int(self.timer - h * 3600 - m * 60)
+        self.timer_label.configure(text=f'{h:02d}:{m:02d}:{s:02d}')
 
     def _next_farm(self):
         if len(self.done) >= len(self.farms):

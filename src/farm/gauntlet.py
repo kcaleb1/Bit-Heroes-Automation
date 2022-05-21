@@ -14,7 +14,7 @@ class Gauntlet(Farm):
 
     def do_run(self):
         find_image_and_click_then_sleep(BTN, retry_time=5)
-        click_cost_and_play(self.cost, COMMON_SPECIAL_COST)
+        click_cost_and_play(COSTS[self.cost], COMMON_SPECIAL_COST)
         find_image_and_click_then_sleep(COMMON_ACCEPT, sleep_duration=1)
         fight_wait_town()
 

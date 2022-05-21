@@ -14,7 +14,7 @@ class Gvg(Farm):
 
     def do_run(self):
         find_image_and_click_then_sleep(BTN, retry_time=5)
-        click_cost_and_play(self.cost)
+        click_cost_and_play(COSTS[self.cost])
         find_image_and_click_then_sleep(COMMON_FIGHT)
         find_image_and_click_then_sleep(COMMON_AUTO_TEAM, sleep_duration=0.5)
         find_image_and_click_then_sleep(COMMON_ACCEPT)

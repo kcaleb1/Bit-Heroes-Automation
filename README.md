@@ -26,9 +26,9 @@
 
 - [x] Auto run 'Gauntlet'
 - [x] Auto run 'Quest'
+- [x] Basic UI
 - [ ] Add all zone & floor in 'Quest'
 - [ ] Add all boss in 'Raid'
-- [ ] Basic UI
 
 
 References:

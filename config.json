@@ -31,7 +31,7 @@
     },
     "pvp": {
         "is_run": true,
-        "cost": 1
+        "cost": 5
     },
     "raid": {
         "is_run": true,

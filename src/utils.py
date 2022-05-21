@@ -173,7 +173,7 @@ def check_no_energy():
     )
 
 
-def click_cost_and_play(cost, menu_cost=COMMON_COST, play_btn=COMMON_PLAY):
+def click_cost_and_play(cost: str, menu_cost=COMMON_COST, play_btn=COMMON_PLAY):
     find_image_and_click_then_sleep(menu_cost, retry_time=5)
     clicked = False
     try:
