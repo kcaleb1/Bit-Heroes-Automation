@@ -8,7 +8,7 @@
 **Language:** English
 
 ## Caution
-- Mouse will being using during run
+- Mouse will be use during run
 ## Features
 
 - Auto Fishing
