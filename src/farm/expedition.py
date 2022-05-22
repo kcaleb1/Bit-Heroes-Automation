@@ -19,8 +19,10 @@ ZONES = {
 
 
 class Expedition(Farm):
+    feature = 'expedition'
+
     def __init__(self):
-        super().__init__('expedition')
+        super().__init__()
 
     def do_run(self):
         find_image_and_click_then_sleep(BTN, retry_time=5)
@@ -47,4 +49,6 @@ class Expedition(Farm):
                 key='zone', value=self.zone, expect='not in 1-3')
 
     def __str__(self) -> str:
-        return super().__str__() + f"Cost: {self.cost}\nZone: {self.zone}"
+        return '\n'.join([super().__str__(),
+                          f"Cost: {self.cost}",
+                          f"Zone: {self.zone}"])

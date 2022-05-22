@@ -16,8 +16,10 @@ PERCENT_100 = join(FEATURE_PATH, '100-percent.png')
 
 
 class Fishing(Farm):
+    feature = 'fishing'
+
     def __init__(self):
-        super().__init__('fishing')
+        super().__init__()
 
     def is_check_closes(self):
         try:

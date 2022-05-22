@@ -15,8 +15,10 @@ START_BTN = join(FEATURE_PATH, 'start.png')
 
 
 class Boss(Farm):
+    feature = 'boss'
+
     def __init__(self):
-        super().__init__('boss')
+        super().__init__()
 
     def do_run(self):
         find_image_and_click_then_sleep(BTN)

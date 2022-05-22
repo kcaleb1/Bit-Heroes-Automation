@@ -109,10 +109,9 @@ def go_main_screen():
     old_dbg_name = const.dbg_name.__str__()
     const.dbg_name = 'escape'
     save_print_dbg("**Debug for action 'press escape'")
-    for _ in range(5):
-        press_escape()
+    [press_escape() for _ in range(3)]
     while True:
-        sleep(0.5)
+        sleep(SLEEP)
         try:
             find_image_and_click_then_sleep(
                 COMMON_NO, retry_time=1, sleep_duration=0.5)
@@ -120,6 +119,7 @@ def go_main_screen():
         except:
             pass
         press_escape()
+
     save_print_dbg("**Finished action 'press escape'")
     const.dbg_name = old_dbg_name
 

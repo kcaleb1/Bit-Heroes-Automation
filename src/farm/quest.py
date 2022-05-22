@@ -24,8 +24,10 @@ QUESTS_DIF = {
 
 
 class Quest(Farm):
+    feature = 'quest'
+
     def __init__(self):
-        super().__init__('quest')
+        super().__init__()
 
     def do_run(self):
         find_image_and_click_then_sleep(BTN, retry_time=5)
@@ -91,7 +93,9 @@ class Quest(Farm):
         if self.difficulty not in DIFFICULTIES.keys():
             raise InvalidValueValidateException(
                 farm=self.feature, key='difficulty',
-                value=self.difficulty, expect=f'not in {DIFFICULTIES.keys()}')
+                value=self.difficulty, expect=f'not in {list(DIFFICULTIES.keys())}')
 
     def __str__(self) -> str:
-        return super().__str__() + f"Zone: Z{self.zone}F{self.floor}\nDifficulty: {self.difficulty}"
+        return '\n'.join([super().__str__(),
+                          f"Zone: Z{self.zone}F{self.floor}",
+                          f"Difficulty: {self.difficulty}"])

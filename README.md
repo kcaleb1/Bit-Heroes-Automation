@@ -2,9 +2,11 @@
 
 ## Support
 **Version:** [Bit Heros on Steam](https://store.steampowered.com/app/666860/Bit_Heroes/)
+**Resolution:** 800x480
+**Language:** English
 
-**Resolution:** 800:480
-
+## Caution
+- Mouse will being using during run
 ## Features
 
 - Auto Fishing
@@ -22,6 +24,21 @@
 1. Edit config.json file
 2. Run 'Bit Heros Automation'.exe 
 
+## UI
+
+![main screen](./doc/img/main-screen.png)
+
+- In the first row will Start/Stop automation, and display auto information
+- 'done' column:
+  - Show which farm was done (out of energy/out of bait)
+  - Clickable to re-add into the queue to play
+  - If automation was Stop and Start 'done' list will adding into 'queue'
+- 'queue' column:
+  - Show automation order
+- 'errors' column:
+  - If any config invalid in [config.json](./config.json) it will add into the 'errors' and after the config was corrected, click 'fixed' button, it will be add back into 'queue'
+  - 'errors' will not re-add into 'queue' when re-Start the run
+
 ## To do
 
 - [x] Auto run 'Gauntlet'
@@ -29,6 +46,7 @@
 - [x] Basic UI
 - [ ] Add all zone & floor in 'Quest'
 - [ ] Add all boss in 'Raid'
+- [ ] Config via UI
 
 
 References:

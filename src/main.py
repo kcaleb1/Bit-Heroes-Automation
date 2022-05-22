@@ -15,7 +15,7 @@ from ui.main_screen import MainScreen
 
 
 @create_marker_file
-@focus_game
+# @focus_game
 def main_v2():
     farms = [
         Raid,

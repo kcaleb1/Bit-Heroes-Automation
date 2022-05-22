@@ -20,8 +20,10 @@ BOSSES = {
 
 
 class Raid(Farm):
+    feature = 'raid'
+
     def __init__(self):
-        super().__init__('raid')
+        super().__init__()
 
     def do_run(self):
         find_image_and_click_then_sleep(BTN)
@@ -63,7 +65,9 @@ class Raid(Farm):
         if self.difficulty not in DIFFICULTIES.keys():
             raise InvalidValueValidateException(
                 farm=self.feature, key='difficulty',
-                value=self.difficulty, expect=f'not in {DIFFICULTIES.keys()}')
+                value=self.difficulty, expect=f'not in {list(DIFFICULTIES.keys())}')
 
     def __str__(self) -> str:
-        return super().__str__() + f"Boss: {self.boss}\nDifficulty: {self.difficulty}"
+        return '\n'.join([super().__str__(),
+                          f"Boss: {self.boss}",
+                          f"Difficulty: {self.difficulty}"])

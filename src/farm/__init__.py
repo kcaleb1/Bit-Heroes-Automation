@@ -20,8 +20,7 @@ class Farm(object):
     debug = None
     run_time = 0
 
-    def __init__(self, feature: str):
-        self.feature = feature
+    def __init__(self):
         self.reset_config()
 
     def hard_reset_config(self):
@@ -52,6 +51,7 @@ class Farm(object):
                 err = f"'{self.feature}' stopped by keyboard"
             except EmptyBaitException as ex:
                 err = str(ex)
+
             except UnableJoinBossException as ex:
                 err = str(ex)
                 special = True
@@ -183,4 +183,4 @@ class Farm(object):
             return json.load(f).get(self.feature, {}).get('runnable', False)
 
     def __str__(self) -> str:
-        return f"Farm: {self.feature}\n"
+        return '\n'.join([f"Farm: {self.feature}"])

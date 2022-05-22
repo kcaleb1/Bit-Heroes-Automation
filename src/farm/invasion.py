@@ -9,8 +9,10 @@ BTN = join(FEATURE_PATH, 'button.png')
 
 
 class Invasion(Farm):
+    feature = 'invasion'
+
     def __init__(self):
-        super().__init__('invasion')
+        super().__init__()
 
     def do_run(self):
         find_image_and_click_then_sleep(BTN, retry_time=5)
@@ -31,4 +33,5 @@ class Invasion(Farm):
                 value=self.cost, expect='not in 1-5')
 
     def __str__(self) -> str:
-        return super().__str__() + f"Cost: {self.cost}\n"
+        return '\n'.join([super().__str__(),
+                          f"Cost: {self.cost}"])

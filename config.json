@@ -10,33 +10,33 @@
     },
     "gauntlet": {
         "is_run": true,
-        "cost": 5
+        "cost": 1
     },
     "invasion": {
         "is_run": true,
-        "cost": 5
+        "cost": 6
     },
     "trials": {
         "is_run": true,
-        "cost": 5
+        "cost": 1
     },
     "gvg": {
         "is_run": true,
-        "cost": 5
+        "cost": 6
     },
     "expedition": {
         "is_run": true,
-        "cost": 5,
+        "cost": 1,
         "zone": 2
     },
     "pvp": {
         "is_run": true,
-        "cost": 5
+        "cost": 6
     },
     "raid": {
         "is_run": true,
         "boss": 4,
-        "difficulty": "heroic"
+        "difficulty": "heroica"
     },
     "quest": {
         "is_run": true,
