@@ -2,7 +2,9 @@
 
 ## Support
 **Version:** [Bit Heros on Steam](https://store.steampowered.com/app/666860/Bit_Heroes/)
+<br>
 **Resolution:** 800x480
+<br>
 **Language:** English
 
 ## Caution
