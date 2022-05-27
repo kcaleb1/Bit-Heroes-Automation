@@ -2,7 +2,8 @@ from farm import Farm
 from time import sleep
 from const import *
 from error import InvalidValueValidateException
-from utils import check_no_energy, click_town, decline_except_persuade, enable_auto_on, find_image, find_image_and_click_then_sleep
+from ui.farm.quest import QuestConfigUI
+from utils import check_no_energy, click_town, decline_except_persuade, enable_auto_on, find_image, find_image_and_click_then_sleep, open_treasure
 
 
 FEATURE_PATH = join(IMG_PATH, 'quest')
@@ -22,9 +23,21 @@ QUESTS_DIF = {
     'heroic': join(FEATURE_PATH, 'heroic.png')
 }
 
+ZONES = {
+    1: [4, 8, 12, 99],
+    2: [4, 8, 12, 99],
+    3: [4, 8, 12, 99],
+    4: [4, 8, 12, 99],
+    5: [4, 8, 12, 99],
+    6: [4, 8, 12, 99],
+    7: [4],
+}
+
 
 class Quest(Farm):
     feature = 'quest'
+    zones = ZONES
+    configUI = QuestConfigUI
 
     def __init__(self):
         super().__init__()
@@ -63,7 +76,10 @@ class Quest(Farm):
         while True:
             if click_town():
                 return
-            decline_except_persuade(DECLINE)
+            if self.decline_treasure:
+                decline_except_persuade(DECLINE)
+            else:
+                open_treasure()
             decline_except_persuade(DECLINE_MERCHANTS)
 
     def mapping_config(self):
@@ -82,14 +98,16 @@ class Quest(Farm):
 
     def validate(self):
         super().validate()
-        if not self.zone > 0:
+        if self.zone not in ZONES:
+            z = list(ZONES.keys())
+            z.sort()
             raise InvalidValueValidateException(
                 farm=self.feature, key='zone',
-                value=self.zone, expect='> 0')
-        if self.floor not in range(1, 12+1) and self.floor != 99:
+                value=self.zone, expect=f'not in [{z[0]}, {z[len(z)-1]}]')
+        if self.floor not in ZONES[self.zone] and self.floor != 99:
             raise InvalidValueValidateException(
-                farm=self.feature, key='zone',
-                value=self.zone, expect='>= 0 and < 12 or equal 99 (for dungeon)')
+                farm=self.feature, key='floor',
+                value=self.floor, expect=f'not in {ZONES[self.zone]}\nor equal 99 (for dungeon)')
         if self.difficulty not in DIFFICULTIES.keys():
             raise InvalidValueValidateException(
                 farm=self.feature, key='difficulty',

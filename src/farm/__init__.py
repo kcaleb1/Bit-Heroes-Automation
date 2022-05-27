@@ -4,21 +4,23 @@ import json
 import multiprocessing
 import threading
 import warnings
-from const import CONFIG_FILE, MARKER_FILE, TIME_FORMAT
+from const import CONFIG_FILE, USAGE_FILE, TIME_FORMAT
 import const
 from debug import save_print_dbg
 from decorator import go_main_screen
 from error import EmptyBaitException, InvalidValueValidateException, NoEnergyException, UnableJoinBossException
+from window import get_app
 
 
 class Farm(object):
     feature = None
+    configUI = None
     name = None
     thread = None
     process = None
-    is_run = False
     debug = None
     run_time = 0
+    start_time = None
 
     def __init__(self):
         self.reset_config()
@@ -29,6 +31,7 @@ class Farm(object):
 
     def reset_config(self):
         self.run_time = 0
+        self.start_time = None
         self.set_name()
         self.get_config()
         self.mapping_config()
@@ -63,12 +66,13 @@ class Farm(object):
 
     def decorator_init(f):
         def wrapper(self):
-            start = datetime.now()
+            get_app()
+            self.start_time = datetime.now()
             save_print_dbg(f"Running '{self.feature}'")
             save_print_dbg(f"\n***Debug for '{self.name}'***")
             result = f(self)
             save_print_dbg(f"Finished '{self.feature}'")
-            self.run_time += (datetime.now() - start).seconds
+            self.run_time += (datetime.now() - self.start_time).seconds
             minutes = int(self.run_time / 60)
             txt = '_____Total %s:%ss' % (minutes, self.run_time - 60 * minutes)
             save_print_dbg(txt=txt)
@@ -79,25 +83,29 @@ class Farm(object):
     def decorator_save_result(fun):
         def wrapper(self):
             self.result = fun(self)
-            marker = {}
-            with open(MARKER_FILE, 'r') as f:
-                marker = json.load(f)
-            # mapping
-            if self.feature not in marker:
-                marker[self.feature] = {
-                    'total_time': self.run_time,
-                    'total_run': 1,
-                    'runnable': self.result
-                }
-            else:
-                marker[self.feature]['total_time'] += self.run_time
-                marker[self.feature]['total_run'] += 1
-                marker[self.feature]['runnable'] = self.result
+            self._save_result(self.result)
 
-            # store to marker.json
-            with open(MARKER_FILE, 'w') as f:
-                f.write(json.dumps(marker, indent=4, sort_keys=True))
         return wrapper
+
+    def _save_result(self, result: bool):
+        marker = {}
+        with open(USAGE_FILE, 'r') as f:
+            marker = json.load(f)
+        # mapping
+        if self.feature not in marker:
+            marker[self.feature] = {
+                'total_time': self.run_time,
+                'total_run': 1,
+                'runnable': result
+            }
+        else:
+            marker[self.feature]['total_time'] += self.run_time
+            marker[self.feature]['total_run'] += 1
+            marker[self.feature]['runnable'] = result
+
+        # store to usage.json
+        with open(USAGE_FILE, 'w') as f:
+            f.write(json.dumps(marker, indent=4, sort_keys=True))
 
     def decorator_ignore_warning(f):
         def wrapper(self):
@@ -117,7 +125,6 @@ class Farm(object):
         Use self.start/1 to run
         '''
         const.dbg_name = f'{self.name}'
-        self.start_time = datetime.now()
         self.do_run()
 
     def do_run(self):
@@ -142,6 +149,7 @@ class Farm(object):
         if self.thread:
             return
 
+        self.start_time = datetime.now()
         self.process = multiprocessing.Process(target=self._start_thread)
         self.process.start()
 
@@ -153,6 +161,9 @@ class Farm(object):
             self.process.terminate()
         self.thread = None
         self.process = None
+        # mark farm as runnable, do due this terminated
+        self.run_time = (datetime.now() - self.start_time).seconds
+        self._save_result(True)
 
     def is_done(self):
         if self.process:
@@ -165,22 +176,36 @@ class Farm(object):
 
     def get_config(self):
         with open(CONFIG_FILE, 'r') as f:
-            self.cfg = load(f).get(self.feature, {})
+            cfg = load(f)
+            self.cfg = cfg.get(self.feature, {})
+            self.decline_treasure = cfg.get('decline_treasure', True)
 
     def mapping_config(self):
         if not self.cfg:
             self.cfg = {}
-        self.is_run = self.cfg.get('is_run', False)
 
     def validate(self):
         if not self.feature:
             raise InvalidValueValidateException(
                 farm='', key='feature',
                 value=self.feature, expect='!=null')
+        if type(self.decline_treasure) != bool:
+            raise InvalidValueValidateException(
+                farm='', key='decline_treasure',
+                value=self.decline_treasure, expect='not boolean')
+
+    def get_run_time(self):
+        if self.is_done():
+            return self.run_time
+        return (datetime.now() - self.start_time).seconds
 
     def get_result(self):
-        with open(MARKER_FILE, 'r') as f:
+        with open(USAGE_FILE, 'r') as f:
             return json.load(f).get(self.feature, {}).get('runnable', False)
+
+    def show_config_ui(self, parent, main):
+        if self.configUI != None:
+            self.configUI(self, parent, main)
 
     def __str__(self) -> str:
         return '\n'.join([f"Farm: {self.feature}"])

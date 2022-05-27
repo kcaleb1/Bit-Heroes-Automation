@@ -28,21 +28,12 @@ def find_image_position(
     # convert from maximum size to current game resolution
     find_image = Image.open(image_find_path).convert('RGBA')
     old_width, old_height = find_image._size
-    new_height = int(old_height * const.y_multiply)
-    new_width = int(old_width * const.x_multiply)
-    if old_width != new_width or old_height != new_height:
-        find_image = find_image.resize(
-            (new_width, new_height), Image.ANTIALIAS)
-        old_width, old_height = find_image._size
-        # save_image_dbg(f'resize-{name}', find_image)
     find = np.array(find_image)
 
     heat_map = cv2.matchTemplate(source, find, cv2.TM_CCOEFF_NORMED)
     max_corr = round(np.max(heat_map), 2)
-    # threshold = min(round((const.y_multiply + const.y_multiply) / 2, 2), DEFAULT_THRESHOLD_IMAGE_MATCH)
 
     save_print_dbg(f'matching: {max_corr:.2f}/{threshold}')
-    # save_print_dbg(f'resize: y:{const.y_multiply:.2f} x:{const.x_multiply:.2f}\tmatching: {max_corr:.2f}/{threshold}')
 
     if threshold and not max_corr >= threshold:
         raise ImageNotFoundException(image_path=image_path)
@@ -127,7 +118,7 @@ def go_main_screen():
 def raise_exception_when_runnable(fun, exception: Exception):
     try:
         fun()
-        sleep(0.5)
+        sleep(SLEEP)
         raise exception()
     except exception as ex:
         raise ex
@@ -165,10 +156,22 @@ def click_town() -> bool:
 
 
 def check_no_energy():
-    sleep(0.5)
+    def find_not_energy():
+        try:
+            _, _, img = find_image(
+                COMMON_NOT_ENOUGH, threshold=0.9, retry_time=3, return_game_screen=True)
+            y, x = find_image(COMMON_NO, threshold=0.9,
+                              retry_time=3, game_screen=img)
+            click_screen_and_sleep(y, x)
+        except:
+            # in case of warning can't leave guild, click yes
+            find_image_and_click_then_sleep(
+                COMMON_YES, threshold=0.9, retry_time=3)
+            raise Exception()
+
+    sleep(SLEEP)
     raise_exception_when_runnable(
-        lambda: find_image_and_click_then_sleep(
-            COMMON_NO, threshold=0.9, retry_time=3),
+        lambda: find_not_energy(),
         NoEnergyException
     )
 
@@ -193,6 +196,7 @@ def click_cost_and_play(cost: str, menu_cost=COMMON_COST, play_btn=COMMON_PLAY):
 
 
 def fight_wait_town():
+    sleep(1)
     while not enable_auto_on():
         sleep(SLEEP)
     while not click_town():
@@ -209,3 +213,16 @@ def decline_except_persuade(decline):
             click_screen_and_sleep(y, x, sleep_duration=0.5)
             find_image_and_click_then_sleep(
                 COMMON_YES, retry_time=1, ignore_exception=True)
+
+
+def open_treasure():
+    try:
+        find_image_and_click_then_sleep(
+            COMMON_OPEN, retry_time=1, sleep_duration=0.5)
+        find_image_and_click_then_sleep(
+            COMMON_YES, retry_time=1, sleep_duration=0.5)
+        # decline when no key
+        find_image_and_click_then_sleep(
+            COMMON_NO, retry_time=1, sleep_duration=0.5)
+    except:
+        pass

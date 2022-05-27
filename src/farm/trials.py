@@ -1,6 +1,7 @@
 from const import *
 from error import InvalidValueValidateException
 from farm import Farm
+from ui.farm.trials import TrailsConfigUI
 from utils import click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
 
 
@@ -11,6 +12,7 @@ PLAY = join(FEATURE_PATH, 'play.png')
 
 class Trails(Farm):
     feature = 'trails'
+    configUI = TrailsConfigUI
 
     def __init__(self):
         super().__init__()

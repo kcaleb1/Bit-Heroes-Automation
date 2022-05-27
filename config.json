@@ -1,47 +1,36 @@
 {
-    "debug": true,
-    "save_captured_image": false,
     "capture_interval": 0.3,
-    "fishing": {
-        "is_run": true
+    "debug": true,
+    "decline_treasure": false,
+    "save_captured_image": false,
+    "boss": {},
+    "expedition": {
+        "cost": 3,
+        "zone": 1
     },
-    "boss": {
-        "is_run": true
-    },
+    "fishing": {},
     "gauntlet": {
-        "is_run": true,
-        "cost": 1
-    },
-    "invasion": {
-        "is_run": true,
-        "cost": 1
-    },
-    "trials": {
-        "is_run": true,
         "cost": 1
     },
     "gvg": {
-        "is_run": true,
         "cost": 1
     },
-    "expedition": {
-        "is_run": true,
-        "cost": 1,
-        "zone": 2
+    "invasion": {
+        "cost": 1
     },
     "pvp": {
-        "is_run": true,
         "cost": 1
     },
+    "quest": {
+        "difficulty": "heroic",
+        "floor": 4,
+        "zone": 1
+    },
     "raid": {
-        "is_run": true,
         "boss": 4,
         "difficulty": "heroic"
     },
-    "quest": {
-        "is_run": true,
-        "zone": 7,
-        "floor": 4,
-        "difficulty": "heroic"
+    "trials": {
+        "cost": 1
     }
 }

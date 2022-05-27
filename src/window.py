@@ -1,3 +1,4 @@
+from turtle import title
 import pyautogui
 import pywinauto
 import win32gui
@@ -12,7 +13,9 @@ import const
 
 def get_app():
     const.app = pywinauto.Application().connect(path=APP_NAME)
+    cur_pos = pyautogui.position()
     const.app.top_window().set_focus()
+    pyautogui.moveTo(cur_pos.x, cur_pos.y)
 
 
 def click_screen_and_sleep(y: int, x: int, sleep_duration=SLEEP):
@@ -28,32 +31,20 @@ def click_screen_and_sleep(y: int, x: int, sleep_duration=SLEEP):
 
 
 def get_game_screen(game_title=GAME_TITLE):
-    global x_multiply, y_multiply
-
     if sys.platform in ['Windows', 'win32', 'cygwin']:
-        # if not const.hwnd:
-        const.hwnd = win32gui.FindWindow(None, game_title)
+        hwnd = win32gui.FindWindow(None, game_title)
 
-        if not const.hwnd:
+        if not hwnd:
             raise MismatchConditionException(txt=f'{game_title} not running')
 
-        x, y, x1, y1 = win32gui.GetClientRect(const.hwnd)
-        if x1 == MAX_RESOLUTION[0] and y1 == MAX_RESOLUTION[1]:
-            pass
-        # elif x1 <= MAX_RESOLUTION[0] and y1 <= MAX_RESOLUTION[1]:
-        #     const.x_multiply = x1 / MAX_RESOLUTION[0]
-        #     const.y_multiply = y1 / MAX_RESOLUTION[1]
-        #     save_print_dbg(f'*current_resolution: {x1}:{y1}')
-        #     save_print_dbg(f'*max_resolution:     {MAX_RESOLUTION}')
-        else:
+        x, y, x1, y1 = win32gui.GetClientRect(hwnd)
+        if (x1, y1) != MAX_RESOLUTION:
             raise MismatchConditionException(
                 txt='Resolution %s:%s not supported, working resolution is %s:%s' % (x1, y1, *MAX_RESOLUTION))
 
-        x, y = win32gui.ClientToScreen(const.hwnd, (x, y))
-        x1, y1 = win32gui.ClientToScreen(const.hwnd, (x1 - x, y1 - y))
-        const.app_pos = (x, y, x1, y1)
-
-        img = pyautogui.screenshot(region=const.app_pos)
+        x, y = win32gui.ClientToScreen(hwnd, (x, y))
+        x1, y1 = win32gui.ClientToScreen(hwnd, (x1 - x, y1 - y))
+        img = pyautogui.screenshot(region=(x, y, x1, y1))
 
         # save_image_dbg('get_game_screen', img)
 
@@ -63,8 +54,10 @@ def get_game_screen(game_title=GAME_TITLE):
 
 
 def press_escape():
-    # cur_active = pyautogui.getActiveWindow()
     get_app()
+    cur_pos = pyautogui.position()
+    cur_active = pyautogui.getActiveWindow()
     pywinauto.keyboard.send_keys('{VK_ESCAPE}')
+    pyautogui.moveTo(cur_pos.x, cur_pos.y)
+    cur_active.activate()
     save_print_dbg('pressed escape')
-    # cur_active.activate()

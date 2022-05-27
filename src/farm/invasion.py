@@ -1,6 +1,7 @@
 from const import *
 from error import InvalidValueValidateException
 from farm import Farm
+from ui.farm.invasion import InvasionConfigUI
 from utils import click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
 
 
@@ -10,6 +11,7 @@ BTN = join(FEATURE_PATH, 'button.png')
 
 class Invasion(Farm):
     feature = 'invasion'
+    configUI = InvasionConfigUI
 
     def __init__(self):
         super().__init__()

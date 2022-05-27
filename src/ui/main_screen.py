@@ -1,16 +1,20 @@
-from tkinter import CENTER, N, TOP, W, Tk, ttk, StringVar
-
-from cv2 import Stitcher
+from tkinter import DISABLED, LEFT, N, NE, NW, TOP, W, Tk, ttk, StringVar
 from debug import save_print_dbg
 from farm import Farm
 from const import *
-from utils import go_main_screen
+import const
+from ui.farm import ConfigUI
+from utils import find_image_and_click_then_sleep, go_main_screen
 
 
 class MainScreen():
-    done = []
-    done_btns = []
+    # pair 1
+    farms = []
     queue = {}
+    # pair 2
+    done = []
+    done_frames = {}
+
     errors = []
 
     def __init__(self, farms: list) -> None:
@@ -30,24 +34,14 @@ class MainScreen():
         self.root.quit()
 
     def _reset_config(self):
-        self.is_stop = False
-        self.process = None
         self.farm = None
-        if self.done and self.done != []:
-            self.farms += self.done
-        self.done = []
         self.txt_main_label.set('Nothing')
-        # remove done buttons
-        while len(self.done_btns):
-            btn = self.done_btns.pop()
-            if isinstance(btn, ttk.Button):
-                btn.pack_forget()
         # reset queue
         for k in self.queue:
             self.queue[k].pack_forget()
         self.queue = {}
         for farm in self.farms:
-            self._add_queue(farm)
+            self._add_queue_and_farms(farm)
 
     def _create_root(self):
         self.root = Tk()
@@ -95,51 +89,100 @@ class MainScreen():
         self._start_stop_swap()
 
     def _create_queue_frame(self):
-        ttk.Label(self.root, text='queue',
-                  padding=(10, 0), background='#9e9e9e'
-                  ).grid(column=1, row=1)
+        def move_queue_to_done():
+            while len(self.farms):
+                f = self.farms.pop(0)
+                self._add_done_farm_btn(f)
+                self._remove_queue(f)
+
+        fr = ttk.Frame(self.root)
+        fr.grid(column=1, row=1)
+        ttk.Button(fr, text='<<<',
+                   command=lambda: move_queue_to_done(),
+                   padding=(-22, -2)
+                   ).pack(side=LEFT)
+        ttk.Label(fr, text='queue',
+                  padding=(5, 0, 26, 0), background='#9e9e9e'
+                  ).pack(side=LEFT)
+        #
         self.queue_fr = ttk.Frame(self.root, padding=(10, 0))
         self.queue_fr.grid(column=1, row=2, sticky=N)
 
-    def _add_queue(self, farm: Farm):
-        self.queue[farm.feature] = ttk.Label(self.queue_fr, text=farm.feature)
-        self.queue[farm.feature].pack(side=TOP)
+    def _add_queue_and_farms(self, farm: Farm):
+        if farm.feature in self.queue:
+            return
+
+        if farm not in self.farms:
+            self.farms.append(farm)
+
+        def move_to_done():
+            self.farms.remove(farm)
+            self._remove_queue(farm)
+            self._add_done_farm_btn(farm)
+
+        fr = ttk.Frame(self.queue_fr)
+        fr.pack(side=TOP, anchor=NW)
+        ttk.Button(fr, text='<<',
+                   command=lambda: move_to_done(),
+                   padding=(-22, -2)
+                   ).pack(side=LEFT)
+        self._create_config_button(fr, farm)
+        self.queue[farm.feature] = fr
 
     def _remove_queue(self, farm: Farm):
+        if farm in self.farms:
+            self.farms.remove(farm)
         self.queue.pop(farm.feature).pack_forget()
 
     def _create_errors_frame(self):
         ttk.Label(self.root, text='errors',
-                  padding=(10, 0), background='#9e9e9e',
+                  padding=(26, 0), background='#9e9e9e',
                   ).grid(column=2, row=1, columnspan=2, sticky=W)
         self.errors_fr = ttk.Frame(self.root, padding=(10, 0))
         self.errors_fr.grid(column=2, row=2, columnspan=2, sticky=N)
 
     def _create_done_frame(self):
-        ttk.Label(self.root, text='done',
-                  background='#9e9e9e', padding=(20, 0)
-                  ).grid(column=0, row=1, sticky=W)
+        def move_done_to_queue():
+            while len(self.done):
+                f = self.done.pop(0)
+                self._add_queue_and_farms(f)
+                self.done_frames.pop(f.feature).pack_forget()
+
+        fr = ttk.Frame(self.root)
+        fr.grid(column=0, row=1, sticky=W)
+
+        ttk.Label(fr, text='done',
+                  background='#9e9e9e', padding=(26, 0, 5, 0)
+                  ).pack(side=LEFT)
+        ttk.Button(fr, text='>>>',
+                   command=lambda: move_done_to_queue(),
+                   padding=(-22, -2)
+                   ).pack(side=LEFT)
+
         self.done_fr = ttk.Frame(self.root)
         self.done_fr.grid(column=0, row=2, sticky=N)
 
-    def _add_done_farm_btn(self, farm: Farm, farm_name: str):
-        def _retry_done(btn: ttk.Button):
+    def _add_done_farm_btn(self, farm: Farm):
+        def move_to_queue():
             self.done.remove(farm)
-            self.farms.append(farm)
-            self._add_queue(farm)
-            btn.pack_forget()
-            self.done_btns.remove(btn)
+            self._add_queue_and_farms(farm)
+            self.done_frames.pop(farm.feature).pack_forget()
 
-        b = ttk.Button(self.done_fr, text=farm_name,
-                       command=lambda: _retry_done(b))
-        self.done_btns.append(b)
-        b.pack(side=TOP)
+        fr = ttk.Frame(self.done_fr)
+        fr.pack(side=TOP, anchor=NE)
+        self._create_config_button(fr, farm)
+        ttk.Button(fr, text='>>',
+                   command=lambda: move_to_queue(),
+                   padding=(-22, -2)
+                   ).pack(side=LEFT)
+        if farm not in self.done:
+            self.done.append(farm)
+        self.done_frames[farm.feature] = fr
 
     def _create_error_frame_btn(self, farm: Farm, error: str):
         def _repaired_error(farm: Farm, fr: ttk.Frame):
             self.errors.remove(farm)
-            self.farms.append(farm)
-            self._add_queue(farm)
+            self._add_queue_and_farms(farm)
             fr.pack_forget()
 
         fr = ttk.Frame(self.errors_fr)
@@ -152,8 +195,7 @@ class MainScreen():
 
     def _start_farm(self):
         if self.farms == None or len(self.farms) == 0 or isinstance(self.farms, Farm):
-            raise Exception('Invalid object')
-        self._reset_config()
+            raise Exception('Empty farms')
         self._start_stop_swap()
         self._do_farm()
 
@@ -165,10 +207,19 @@ class MainScreen():
 
         if self.farm == None or self.farm.is_done():
             self._next_farm()
+        elif self.farm.get_run_time() > TRIGGER_RECONNECT_CHECK:
+            self.farm.stop()
+            const.dbg_name = 'reconnect'
+            while not self.start_enable:
+                try:
+                    find_image_and_click_then_sleep(
+                        COMMON_RECONNECT, retry_time=20)
+                except:
+                    break
+
         self.start_btn.after(1000, self._do_farm)
 
     def _update_timer(self):
-        # update timer
         self.timer += 1
         h = int(self.timer / 3600)
         m = int((self.timer - h * 3600) / 60)
@@ -178,10 +229,9 @@ class MainScreen():
     def _next_farm(self):
         if self.farm != None:
             if self.farm.get_result():
-                self.farms.append(type(self.farm))
-                self._add_queue(self.farm)
+                self._add_queue_and_farms(type(self.farm))
             else:
-                self._move_farm_done(type(self.farm), self.farm.feature)
+                self._move_farm_done(type(self.farm))
 
         if len(self.farms) == 0:
             self._stop_farm()
@@ -191,23 +241,31 @@ class MainScreen():
         farm = self.farms.pop(0)
         self._remove_queue(farm)
 
-        try:
-            self.farm = farm()
-        except Exception as ex:
-            save_print_dbg(f'Failed to run {farm.feature}: {str(ex)}')
-            self._move_farm_error(farm, ex)
+        self.farm = self.try_create_farm(farm)
+        if not self.farm:
             return self._next_farm()
 
         self.farm.start()
         self.txt_main_label.set(str(self.farm))
 
-    def _move_farm_done(self, done: Farm, farm: str):
+    def try_create_farm(self, farm: Farm):
+        try:
+            return farm()
+        except Exception as ex:
+            save_print_dbg(f'Failed to create {farm.feature}: {str(ex)}')
+            self._move_farm_to_error(farm, ex)
+            return None
+
+    def _move_farm_done(self, done: Farm):
         self.done.append(done)
         self.farm = None
-        self._add_done_farm_btn(done, farm)
+        self._add_done_farm_btn(done)
         save_print_dbg(f'--- done: {self.done}')
 
-    def _move_farm_error(self, farm: Farm, error: Exception):
+    def _move_farm_to_error(self, farm: Farm, error: Exception):
+        if farm.feature in self.queue:
+            self._remove_queue(farm)
+
         self.errors.append(farm)
         self.farm = None
         err = str(error)
@@ -219,7 +277,7 @@ class MainScreen():
         if self.farm != None:
             self.farm.stop()
             if type(self.farm) not in self.farms + self.done:
-                self.farms.append(self.farm)
+                self.farms.append(type(self.farm))
         self._reset_config()
         self._start_stop_swap()
 
@@ -235,3 +293,25 @@ class MainScreen():
             self.stop_btn.grid_remove()
             self.start_btn.focus()
         self.start_enable = not self.start_enable
+
+    def get_root_pos(self):
+        x = self.root.winfo_x()
+        y = self.root.winfo_y()
+        return (x, y)
+
+    def _create_config_button(self, parent, farm: Farm):
+        def btn_cmd():
+            f = self.try_create_farm(farm)
+            if not f:
+                return
+            f.show_config_ui(parent, self)
+
+        if farm.configUI == None:
+            t = ttk.Button(parent, text=farm.feature,
+                           padding=(0, -2),
+                           state=DISABLED)
+        else:
+            t = ttk.Button(parent, text=farm.feature,
+                           padding=(0, -2),
+                           command=lambda: btn_cmd())
+        t.pack(side=LEFT)

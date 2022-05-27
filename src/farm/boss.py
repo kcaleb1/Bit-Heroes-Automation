@@ -24,21 +24,21 @@ class Boss(Farm):
         find_image_and_click_then_sleep(BTN)
         try:
             find_image_and_click_then_sleep(
-                JOIN_BTN, sleep_duration=1)
+                JOIN_BTN, retry_time=5, sleep_duration=1)
         except:
             raise UnableJoinBossException()
 
         check_no_energy()
         for _ in range(10):
-            raise_exception_when_runnable(
-                lambda: find_image(COMMON_CLOSE, retry_time=1),
-                UnableJoinBossException
-            )
             try:
                 find_image_and_click_then_sleep(READY_BTN, retry_time=1)
                 break
             except:
                 pass
+            raise_exception_when_runnable(
+                lambda: find_image(COMMON_CLOSE, retry_time=1),
+                UnableJoinBossException
+            )
         else:
             raise UnableJoinBossException()
 

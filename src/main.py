@@ -10,12 +10,12 @@ from farm.pvp import Pvp
 from farm.raid import Raid
 from farm.quest import Quest
 from farm.expedition import Expedition
-from decorator import create_marker_file, focus_game
+from decorator import create_USAGE_FILE
 from ui.main_screen import MainScreen
+from window import get_app
 
 
-@create_marker_file
-# @focus_game
+@create_USAGE_FILE
 def main_v2():
     farms = [
         Raid,

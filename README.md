@@ -21,6 +21,11 @@
 - Auto Trials (use current difficulty selected)
 - Auto Quest (only big floor and currently max zone is z4f4)
 
+## Download
+
+[Latest version]((https://github.com/ken2057/Bit-Heroes-Automation/releases))
+
+
 ## Usage
 
 1. Edit config.json file
@@ -46,9 +51,9 @@
 - [x] Auto run 'Gauntlet'
 - [x] Auto run 'Quest'
 - [x] Basic UI
+- [x] Config via UI
 - [ ] Add all zone & floor in 'Quest'
 - [ ] Add all boss in 'Raid'
-- [ ] Config via UI
 
 
 References:

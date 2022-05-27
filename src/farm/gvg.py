@@ -1,6 +1,7 @@
 from const import *
 from farm import Farm
 from error import InvalidValueValidateException
+from ui.farm.gvg import GvgConfigUI
 from utils import click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
 
 
@@ -10,6 +11,7 @@ BTN = join(FEATURE_PATH, 'button.png')
 
 class Gvg(Farm):
     feature = 'gvg'
+    configUI = GvgConfigUI
 
     def __init__(self):
         super().__init__()

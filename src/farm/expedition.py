@@ -1,6 +1,7 @@
 from const import *
 from error import InvalidValueValidateException
 from farm import Farm
+from ui.farm.expedition import ExpeditionConfigUI
 from utils import click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
 
 
@@ -20,6 +21,9 @@ ZONES = {
 
 class Expedition(Farm):
     feature = 'expedition'
+    zones = ZONES
+    costs = [1, 2, 3]
+    configUI = ExpeditionConfigUI
 
     def __init__(self):
         super().__init__()

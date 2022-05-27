@@ -4,16 +4,13 @@ from json import load
 
 # global variables
 app = None
-hwnd = None
-app_pos = (0, 0, 0, 0)
-x_multiply, y_multiply = 1, 1
 dbg_name = 'initialize'
 cfg = {}
 
 # --------------------------------------------
 CUR_PATH = getcwd()
 
-MARKER_FILE = join(CUR_PATH, 'marker.json')
+USAGE_FILE = join(CUR_PATH, 'usage.json')
 CONFIG_FILE = join(CUR_PATH, 'config.json')
 with open(CONFIG_FILE, 'r') as f:
     cfg = load(f)
@@ -24,6 +21,7 @@ DEBUG_TEXT_PATH = join(SAVE_DEBUG_PATH, 'debug.log')
 SAVE_ESCAPE_IMG_PATH = join(SAVE_DEBUG_PATH, 'escape')
 
 COMMON_IMAGE_PATH = join(IMG_PATH, 'common')
+
 # COMMON_IMAGE_PATH
 COMMON_ACCEPT = join(COMMON_IMAGE_PATH, 'accept.png')
 COMMON_AUTO_OFF = join(COMMON_IMAGE_PATH, 'auto-off.png')
@@ -41,6 +39,9 @@ COMMON_YES = join(COMMON_IMAGE_PATH, 'yes.png')
 COMMON_PERSUADE = join(COMMON_IMAGE_PATH, 'persuade.png')
 COMMON_SPECIAL_COST = join(COMMON_IMAGE_PATH, 'special-cost.png')
 COMMON_RECONNECT = join(COMMON_IMAGE_PATH, 'reconnect.png')
+COMMON_OPEN = join(COMMON_IMAGE_PATH, 'open.png')
+COMMON_TREASURE_KEY = join(COMMON_IMAGE_PATH, 'treasure-key.png')
+COMMON_NOT_ENOUGH = join(COMMON_IMAGE_PATH, 'not-enough.png')
 
 COSTS = {
     1: join(COMMON_IMAGE_PATH, 'cost-1.png'),
@@ -70,3 +71,7 @@ RETRY_TIME_FIND_IMAGE = 10
 SLEEP = cfg.get('capture_interval', 0.3)
 DEBUG = cfg.get('debug', False)
 DEBUG_SAVE_IMG = cfg.get('save_captured_image', False)
+
+SECOND = 1
+MINUTE = 60 * SECOND
+TRIGGER_RECONNECT_CHECK = 15 * MINUTE
