@@ -13,7 +13,7 @@ class ExpeditionConfigUI(ConfigUI):
                                        value=self.farm.cost,
                                        name='cost')
         self.zone = create_option_menu(self.root,
-                                       data=list(self.farm.zones.keys()),
+                                       data=self.farm.zones,
                                        value=self.farm.zone,
                                        name='zone')
 

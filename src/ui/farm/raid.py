@@ -1,4 +1,4 @@
-from const import DIFFICULTIES
+from const import DIFFICULTIES, LIST_DIFFICULTIES
 from ui.farm import ConfigUI, Farm
 from ui.farm.utils import create_option_menu
 
@@ -9,11 +9,11 @@ class RaidConfigUI(ConfigUI):
 
     def _add_config_frames(self):
         self.boss = create_option_menu(self.root,
-                                       data=list(self.farm.bosses.keys()),
+                                       data=self.farm.bosses,
                                        value=self.farm.boss,
                                        name='boss')
         self.difficulty = create_option_menu(self.root,
-                                             data=list(DIFFICULTIES.keys()),
+                                             data=LIST_DIFFICULTIES,
                                              value=self.farm.difficulty,
                                              name='difficulty')
 

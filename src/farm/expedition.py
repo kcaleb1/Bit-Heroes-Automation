@@ -21,7 +21,7 @@ ZONES = {
 
 class Expedition(Farm):
     feature = 'expedition'
-    zones = ZONES
+    zones = list(ZONES.keys())
     costs = [1, 2, 3]
     configUI = ExpeditionConfigUI
 
@@ -47,10 +47,10 @@ class Expedition(Farm):
         if self.cost not in range(1, 3+1):
             raise InvalidValueValidateException(
                 farm=self.feature, key='cost',
-                value=self.cost, expect='not in 1-3')
+                value=self.cost, expect=f'not in {self.costs}')
         if self.zone not in range(1, 3+1):
             raise InvalidValueValidateException(
-                key='zone', value=self.zone, expect='not in 1-3')
+                key='zone', value=self.zone, expect=f'not in {self.zones}')
 
     def __str__(self) -> str:
         return '\n'.join([super().__str__(),

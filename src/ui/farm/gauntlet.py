@@ -1,4 +1,4 @@
-from const import COSTS
+from const import LIST_COSTS
 from ui.farm import ConfigUI, Farm
 from ui.farm.utils import create_option_menu
 
@@ -9,7 +9,7 @@ class GauntletConfigUI(ConfigUI):
 
     def _add_config_frames(self):
         self.cost = create_option_menu(self.root,
-                                       data=list(COSTS.keys()),
+                                       data=LIST_COSTS,
                                        value=self.farm.cost,
                                        name='cost')
 

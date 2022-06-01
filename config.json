@@ -3,7 +3,13 @@
     "debug": true,
     "decline_treasure": false,
     "save_captured_image": false,
-    "boss": {},
+    "boss": {
+        "is_summon": true,
+        "boss": "Orlag Clan",
+        "tier": 7,
+        "difficulty": "Normal",
+        "is_solo": false
+    },
     "expedition": {
         "cost": 3,
         "zone": 1
@@ -22,13 +28,13 @@
         "cost": 1
     },
     "quest": {
-        "difficulty": "heroic",
-        "floor": 4,
-        "zone": 1
+        "difficulty": "Heroic",
+        "dungeon": "1|Scorpius",
+        "zone": "7|Cambora"
     },
     "raid": {
-        "boss": 4,
-        "difficulty": "heroic"
+        "boss": "A Haile'Of A Mistake",
+        "difficulty": "Heroic"
     },
     "trials": {
         "cost": 1

@@ -1,7 +1,7 @@
 from farm import Farm
 from time import sleep
 from ui.farm.raid import RaidConfigUI
-from utils import check_no_energy, click_town, decline_except_persuade, enable_auto_on, find_image_and_click_then_sleep, find_image, open_treasure, raise_exception_when_runnable
+from utils import check_no_energy, click_town, decline_except_persuade, enable_auto_on, find_image_and_click_then_sleep, find_image, open_treasure
 from const import *
 from error import *
 
@@ -13,16 +13,16 @@ SUMMON_BTN = join(FEATURE_PATH, 'summon.png')
 DECLINE = join(FEATURE_PATH, 'decline.png')
 
 BOSSES = {
-    1: join(FEATURE_PATH, 'boss-1.png'),
-    2: join(FEATURE_PATH, 'boss-2.png'),
-    3: join(FEATURE_PATH, 'boss-3.png'),
-    4: join(FEATURE_PATH, 'boss-4.png')
+    "Astaroth's Awakening": join(FEATURE_PATH, 'boss-1.png'),
+    "Hyper Dimension": join(FEATURE_PATH, 'boss-2.png'),
+    "Woodbeard's Booty": join(FEATURE_PATH, 'boss-3.png'),
+    "A Haile'Of A Mistake": join(FEATURE_PATH, 'boss-4.png')
 }
 
 
 class Raid(Farm):
     feature = 'raid'
-    bosses = BOSSES
+    bosses = list(BOSSES.keys())
     configUI = RaidConfigUI
 
     def __init__(self):
@@ -52,7 +52,7 @@ class Raid(Farm):
             if click_town():
                 return
             if self.decline_treasure:
-                decline_except_persuade(DECLINE)
+                decline_except_persuade(COMMON_DECLINE_TREASURE)
             else:
                 open_treasure()
 
@@ -60,18 +60,18 @@ class Raid(Farm):
         super().mapping_config()
         self.boss = self.cfg.get('boss', 1)
         self.difficulty = self.cfg.get(
-            'difficulty', list(DIFFICULTIES.keys())[0])
+            'difficulty', LIST_DIFFICULTIES)
 
     def validate(self):
         super().validate()
-        if self.boss not in range(1, 4+1):
+        if self.boss not in self.bosses:
             raise InvalidValueValidateException(
                 farm=self.feature, key='boss',
-                value=self.boss, expect='in 1-4')
+                value=self.boss, expect=f'not in {self.bosses}')
         if self.difficulty not in DIFFICULTIES.keys():
             raise InvalidValueValidateException(
                 farm=self.feature, key='difficulty',
-                value=self.difficulty, expect=f'not in {list(DIFFICULTIES.keys())}')
+                value=self.difficulty, expect=f'not in {LIST_DIFFICULTIES}')
 
     def __str__(self) -> str:
         return '\n'.join([super().__str__(),

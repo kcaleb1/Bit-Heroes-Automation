@@ -188,10 +188,10 @@ class MainScreen():
         fr = ttk.Frame(self.errors_fr)
         fr.pack(side=TOP, anchor=W)
 
-        ttk.Label(fr, text=error).grid(column=0, row=0, sticky=W)
+        ttk.Label(fr, text=error).pack(anchor=W)
         ttk.Button(fr, text='fixed',
                    command=lambda: _repaired_error(farm, fr)
-                   ).grid(column=1, row=0, sticky=W)
+                   ).pack(anchor=W)
 
     def _start_farm(self):
         if self.farms == None or len(self.farms) == 0 or isinstance(self.farms, Farm):

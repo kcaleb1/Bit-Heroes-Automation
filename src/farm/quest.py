@@ -7,30 +7,33 @@ from utils import check_no_energy, click_town, decline_except_persuade, enable_a
 
 
 FEATURE_PATH = join(IMG_PATH, 'quest')
+ZONE_PATH = join(FEATURE_PATH, 'zone')
+
 BTN = join(FEATURE_PATH, 'button.png')
 LEFT = join(FEATURE_PATH, 'left.png')
 RIGHT = join(FEATURE_PATH, 'right.png')
-DUNGEON = join(FEATURE_PATH, 'dungeon.png')
 DECLINE = join(FEATURE_PATH, 'decline.png')
-DECLINE_MERCHANTS = join(FEATURE_PATH, 'decline-merchants.png')
-Z1 = join(FEATURE_PATH, 'z1.png')
+Z1 = join(ZONE_PATH, 'z1.png')
 
-DUNGEON_NUM = 99
+DELIMITER = "|"
 
 QUESTS_DIF = {
-    'normal': join(FEATURE_PATH, 'normal.png'),
-    'hard': join(FEATURE_PATH, 'hard.png'),
-    'heroic': join(FEATURE_PATH, 'heroic.png')
+    'Normal': join(FEATURE_PATH, 'normal.png'),
+    'Hard': join(FEATURE_PATH, 'hard.png'),
+    'Heroic': join(FEATURE_PATH, 'heroic.png')
 }
 
+DUNGEON = join(ZONE_PATH, 'dungeon.png')
+DUNGEON_NAME = "4|Dungeon"
+
 ZONES = {
-    1: [4, 8, 12, 99],
-    2: [4, 8, 12, 99],
-    3: [4, 8, 12, 99],
-    4: [4, 8, 12, 99],
-    5: [4, 8, 12, 99],
-    6: [4, 8, 12, 99],
-    7: [4],
+    "1|Bit Valley": ["1|Grimz", "2|Dryad", "3|Lord Cerulean", DUNGEON_NAME],
+    "2|Wintermarsh": ["1|Yeti", "2|Blubber", "3|Gemm", DUNGEON_NAME],
+    "3|Lakehaven": ["1|Nosdoodoo", "2|Jeb", "3|Quirrel", DUNGEON_NAME],
+    "4|Ashvale": ["1|Rexie", "2|Warty", "3|Kov'Alg", DUNGEON_NAME],
+    "5|Aramore": ["1|Torlim", "2|Zorul", "3|Tealk", DUNGEON_NAME],
+    "6|Morgoroth": ["1|Rugumz", "2|Oozmire", "3|Moghur", DUNGEON_NAME],
+    "7|Cambora": ["1|Scorpius"],
 }
 
 
@@ -77,43 +80,49 @@ class Quest(Farm):
             if click_town():
                 return
             if self.decline_treasure:
-                decline_except_persuade(DECLINE)
+                decline_except_persuade(COMMON_DECLINE_TREASURE)
             else:
                 open_treasure()
-            decline_except_persuade(DECLINE_MERCHANTS)
+            decline_except_persuade(DECLINE)
 
     def mapping_config(self):
         super().mapping_config()
-        self.zone = self.cfg.get('zone', 1)
-        self.floor = self.cfg.get('floor', 1)
-        self.difficulty = self.cfg.get(
-            'difficulty', list(DIFFICULTIES.keys())[0])
+        self.zone = self.cfg.get('zone', list(self.zones.keys())[0])
+        self.dungeon = self.cfg.get('dungeon', ZONES[self.zone][0])
+        self.difficulty = self.cfg.get('difficulty', LIST_DIFFICULTIES[0])
 
-        self.zone_name = join(FEATURE_PATH, f'z{self.zone}.png')
-        if self.floor == DUNGEON_NUM:
+        z = self.to_image_name(self.zone)
+        d = self.to_image_name(self.dungeon)
+
+        self.zone_name = join(ZONE_PATH, f'z{z}.png')
+        if self.dungeon == DUNGEON_NAME:
             self.img_quest = DUNGEON
         else:
-            self.img_quest = join(
-                FEATURE_PATH, f'z{self.zone}f{self.floor}.png')
+            self.img_quest = join(ZONE_PATH, f'z{z}d{d}.png')
+
+    def to_image_name(self, text: str):
+        return text.split(DELIMITER)[0]
 
     def validate(self):
         super().validate()
         if self.zone not in ZONES:
-            z = list(ZONES.keys())
+            z = self.zones
             z.sort()
             raise InvalidValueValidateException(
                 farm=self.feature, key='zone',
                 value=self.zone, expect=f'not in [{z[0]}, {z[len(z)-1]}]')
-        if self.floor not in ZONES[self.zone] and self.floor != 99:
+        if self.dungeon not in ZONES[self.zone]:
             raise InvalidValueValidateException(
-                farm=self.feature, key='floor',
-                value=self.floor, expect=f'not in {ZONES[self.zone]}\nor equal 99 (for dungeon)')
-        if self.difficulty not in DIFFICULTIES.keys():
+                farm=self.feature, key='dungeon',
+                value=self.dungeon, expect=f'not in {ZONES[self.zone]}')
+        if self.difficulty not in LIST_DIFFICULTIES:
             raise InvalidValueValidateException(
                 farm=self.feature, key='difficulty',
-                value=self.difficulty, expect=f'not in {list(DIFFICULTIES.keys())}')
+                value=self.difficulty, expect=f'not in {LIST_DIFFICULTIES}')
 
     def __str__(self) -> str:
+        z = self.to_image_name(self.zone)
+        f = self.to_image_name(self.dungeon)
         return '\n'.join([super().__str__(),
-                          f"Zone: Z{self.zone}F{self.floor}",
+                          f"Zone: Z{z}D{f}",
                           f"Difficulty: {self.difficulty}"])

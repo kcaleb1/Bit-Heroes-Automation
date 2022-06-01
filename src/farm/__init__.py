@@ -4,7 +4,7 @@ import json
 import multiprocessing
 import threading
 import warnings
-from const import CONFIG_FILE, USAGE_FILE, TIME_FORMAT
+from const import CONFIG_FILE, READABLE_TIME_FORMAT, USAGE_FILE, TIME_FORMAT
 import const
 from debug import save_print_dbg
 from decorator import go_main_screen
@@ -102,6 +102,8 @@ class Farm(object):
             marker[self.feature]['total_time'] += self.run_time
             marker[self.feature]['total_run'] += 1
             marker[self.feature]['runnable'] = result
+        marker['last_run_at'] = datetime.strftime(
+            datetime.now(), READABLE_TIME_FORMAT)
 
         # store to usage.json
         with open(USAGE_FILE, 'w') as f:
@@ -159,8 +161,8 @@ class Farm(object):
     def stop(self):
         if self.process:
             self.process.terminate()
-        self.thread = None
-        self.process = None
+        # self.thread = None
+        # self.process = None
         # mark farm as runnable, do due this terminated
         self.run_time = (datetime.now() - self.start_time).seconds
         self._save_result(True)

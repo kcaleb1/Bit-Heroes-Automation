@@ -42,6 +42,7 @@ COMMON_RECONNECT = join(COMMON_IMAGE_PATH, 'reconnect.png')
 COMMON_OPEN = join(COMMON_IMAGE_PATH, 'open.png')
 COMMON_TREASURE_KEY = join(COMMON_IMAGE_PATH, 'treasure-key.png')
 COMMON_NOT_ENOUGH = join(COMMON_IMAGE_PATH, 'not-enough.png')
+COMMON_DECLINE_TREASURE = join(COMMON_IMAGE_PATH, 'decline-treasure.png')
 
 COSTS = {
     1: join(COMMON_IMAGE_PATH, 'cost-1.png'),
@@ -51,11 +52,15 @@ COSTS = {
     5: join(COMMON_IMAGE_PATH, 'cost-5.png')
 }
 
+LIST_COSTS = list(COSTS.keys())
+
 DIFFICULTIES = {
-    'normal': join(COMMON_IMAGE_PATH, 'normal.png'),
-    'hard': join(COMMON_IMAGE_PATH, 'hard.png'),
-    'heroic': join(COMMON_IMAGE_PATH, 'heroic.png')
+    'Normal': join(COMMON_IMAGE_PATH, 'normal.png'),
+    'Hard': join(COMMON_IMAGE_PATH, 'hard.png'),
+    'Heroic': join(COMMON_IMAGE_PATH, 'heroic.png')
 }
+
+LIST_DIFFICULTIES = list(DIFFICULTIES.keys())
 
 GAME_TITLE = 'Bit Heroes'
 APP_NAME = GAME_TITLE+'.exe'
@@ -65,6 +70,7 @@ TITLE_BAR_HEIGHT = 10
 PREFIX_CLICK = 10
 
 TIME_FORMAT = '%y%m%d%H%M%S'
+READABLE_TIME_FORMAT = '%y/%m/%d %H:%M:%S'
 
 RETRY_TIME_FIND_IMAGE = 10
 
