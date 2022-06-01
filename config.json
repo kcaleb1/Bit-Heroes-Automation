@@ -12,7 +12,7 @@
     },
     "expedition": {
         "cost": 3,
-        "zone": 1
+        "zone": "Burning Farm"
     },
     "fishing": {},
     "gauntlet": {

@@ -7,15 +7,12 @@ from utils import click_cost_and_play, fight_wait_town, find_image_and_click_the
 
 FEATURE_PATH = join(IMG_PATH, 'expedition')
 BTN = join(FEATURE_PATH, 'button.png')
-Z1 = join(FEATURE_PATH, 'burning-farm.png')
-Z2 = join(FEATURE_PATH, 'hero-fest.png')
-Z3 = join(FEATURE_PATH, 'melvapaloozo.png')
 ENTER = join(FEATURE_PATH, 'enter.png')
 
 ZONES = {
-    1: Z1,
-    2: Z2,
-    3: Z3
+    "Burning Farm": join(FEATURE_PATH, 'burning-farm.png'),
+    "Hero Fest": join(FEATURE_PATH, 'hero-fest.png'),
+    "Melvapaloozo": join(FEATURE_PATH, 'melvapaloozo.png')
 }
 
 
@@ -44,11 +41,11 @@ class Expedition(Farm):
 
     def validate(self):
         super().validate()
-        if self.cost not in range(1, 3+1):
+        if self.cost not in self.costs:
             raise InvalidValueValidateException(
                 farm=self.feature, key='cost',
                 value=self.cost, expect=f'not in {self.costs}')
-        if self.zone not in range(1, 3+1):
+        if self.zone not in self.zones:
             raise InvalidValueValidateException(
                 key='zone', value=self.zone, expect=f'not in {self.zones}')
 
