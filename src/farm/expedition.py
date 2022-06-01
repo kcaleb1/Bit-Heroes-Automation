@@ -19,7 +19,6 @@ ZONES = {
 class Expedition(Farm):
     feature = 'expedition'
     zones = list(ZONES.keys())
-    costs = [1, 2, 3]
     configUI = ExpeditionConfigUI
 
     def __init__(self):
@@ -41,10 +40,10 @@ class Expedition(Farm):
 
     def validate(self):
         super().validate()
-        if self.cost not in self.costs:
+        if self.cost not in LIST_COSTS:
             raise InvalidValueValidateException(
                 farm=self.feature, key='cost',
-                value=self.cost, expect=f'not in {self.costs}')
+                value=self.cost, expect=f'not in {LIST_COSTS}')
         if self.zone not in self.zones:
             raise InvalidValueValidateException(
                 key='zone', value=self.zone, expect=f'not in {self.zones}')

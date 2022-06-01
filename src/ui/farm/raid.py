@@ -1,4 +1,4 @@
-from const import DIFFICULTIES, LIST_DIFFICULTIES
+from const import LIST_DIFFICULTIES
 from ui.farm import ConfigUI, Farm
 from ui.farm.utils import create_option_menu
 

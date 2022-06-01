@@ -1,4 +1,4 @@
-from const import COSTS
+from const import LIST_COSTS
 from ui.farm import ConfigUI, Farm
 from ui.farm.utils import create_option_menu
 
@@ -13,7 +13,7 @@ class ExpeditionConfigUI(ConfigUI):
                                        value=self.farm.zone,
                                        name='zone')
         self.cost = create_option_menu(self.root,
-                                       data=self.farm.costs,
+                                       data=LIST_COSTS,
                                        value=self.farm.cost,
                                        name='cost')
 

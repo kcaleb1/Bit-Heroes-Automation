@@ -1,4 +1,4 @@
-from const import COSTS, LIST_COSTS
+from const import LIST_COSTS
 from ui.farm import ConfigUI, Farm
 from ui.farm.utils import create_option_menu
 
