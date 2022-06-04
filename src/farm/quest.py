@@ -13,6 +13,7 @@ BTN = join(FEATURE_PATH, 'button.png')
 LEFT = join(FEATURE_PATH, 'left.png')
 RIGHT = join(FEATURE_PATH, 'right.png')
 DECLINE = join(FEATURE_PATH, 'decline.png')
+ENTER = join(FEATURE_PATH, 'enter.png')
 Z1 = join(ZONE_PATH, 'z1.png')
 
 DELIMITER = "|"
@@ -69,7 +70,10 @@ class Quest(Farm):
                 pass
 
         find_image_and_click_then_sleep(self.img_quest, sleep_duration=1)
-        find_image_and_click_then_sleep(QUESTS_DIF[self.difficulty])
+        if self.dungeon == DUNGEON_NAME:
+            find_image_and_click_then_sleep(ENTER)
+        else:
+            find_image_and_click_then_sleep(QUESTS_DIF[self.difficulty])
         find_image_and_click_then_sleep(COMMON_ACCEPT)
         check_no_energy()
 

@@ -54,7 +54,7 @@ class Boss(Farm):
             except:
                 find_image_and_click_then_sleep(LEFT_BTN)
         else:
-            raise UnableJoinBossException("???")
+            raise UnableJoinException("???")
 
         find_image_and_click_then_sleep(SUMMON_BOSS_BTN)
 
@@ -104,7 +104,7 @@ class Boss(Farm):
     def check_close(self):
         raise_exception_when_runnable(
             lambda: find_image(COMMON_CLOSE, retry_time=1),
-            UnableJoinBossException
+            UnableJoinException
         )
 
     def do_run_join_lobby(self):
@@ -113,7 +113,7 @@ class Boss(Farm):
             find_image_and_click_then_sleep(
                 JOIN_BTN, retry_time=5, sleep_duration=1)
         except:
-            raise UnableJoinBossException()
+            raise UnableJoinException()
 
         check_no_energy()
         for _ in range(10):
@@ -127,9 +127,9 @@ class Boss(Farm):
 
             if self.is_host():
                 find_image_and_click_then_sleep(COMMON_YES)
-                raise UnableJoinBossException()
+                raise UnableJoinException()
         else:
-            raise UnableJoinBossException()
+            raise UnableJoinException()
 
         start_time = datetime.now()
         is_started = False
@@ -164,7 +164,7 @@ class Boss(Farm):
         if not is_started:
             sleep(SLEEP)
             find_image_and_click_then_sleep(COMMON_YES)
-            raise UnableJoinBossException()
+            raise UnableJoinException()
 
     def get_config(self):
         super().get_config()

@@ -10,12 +10,11 @@ from farm.pvp import Pvp
 from farm.raid import Raid
 from farm.quest import Quest
 from farm.expedition import Expedition
-from decorator import create_USAGE_FILE
+from decorator import create_usage_file
 from ui.main_screen import MainScreen
-from window import get_app
 
 
-@create_USAGE_FILE
+@create_usage_file
 def main_v2():
     farms = [
         Raid,
@@ -29,25 +28,7 @@ def main_v2():
         Boss,  # second last, due to AFK host, or lobby not good
         Fishing
     ]
-
-    screen = MainScreen(farms)
-    screen.display()
-    # this will run each farm, to spend there energy
-    # empty = {}
-    # while len(empty) < len(farms):
-    #     for i, farm in enumerate(farms):
-    #         if i in empty:
-    #             continue
-    #         f = farm()
-    #         f.start(wait_done=True)
-    #         if not f.get_result():
-    #             empty[i] = True
-
-    # while True:
-    #     f = Fishing()  # this last, because no energy needed
-    #     f.start(wait_done=True)
-    #     if not f.get_result():
-    #         break
+    MainScreen(farms).display()
 
 
 if __name__ == '__main__':

@@ -8,7 +8,7 @@ from const import CONFIG_FILE, READABLE_TIME_FORMAT, USAGE_FILE, TIME_FORMAT
 import const
 from debug import save_print_dbg
 from decorator import go_main_screen
-from error import EmptyBaitException, InvalidValueValidateException, NoEnergyException, UnableJoinBossException
+from error import EmptyBaitException, InvalidValueValidateException, NoEnergyException, UnableJoinException
 from window import get_app
 
 
@@ -55,7 +55,7 @@ class Farm(object):
             except EmptyBaitException as ex:
                 err = str(ex)
 
-            except UnableJoinBossException as ex:
+            except UnableJoinException as ex:
                 err = str(ex)
                 special = True
             except Exception as ex:

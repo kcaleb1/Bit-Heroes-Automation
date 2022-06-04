@@ -225,6 +225,7 @@ def open_treasure():
         find_image_and_click_then_sleep(
             COMMON_NO, retry_time=1, sleep_duration=0.5)
         press_escape()
+        sleep(SLEEP)
         find_image_and_click_then_sleep(
             COMMON_YES, retry_time=1, sleep_duration=0.5)
     except:

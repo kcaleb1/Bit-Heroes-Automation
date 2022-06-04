@@ -31,6 +31,7 @@ class Fishing(Farm):
         except:
             return False
 
+    # TODO optimize this
     def do_run(self):
         find_image_and_click_then_sleep(BTN)
         find_image_and_click_then_sleep(COMMON_PLAY)

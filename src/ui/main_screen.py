@@ -260,7 +260,7 @@ class MainScreen():
         self.done.append(done)
         self.farm = None
         self._add_done_farm_btn(done)
-        save_print_dbg(f'--- done: {self.done}')
+        save_print_dbg(f'--- done: {[x.feature for x in self.done]}')
 
     def _move_farm_to_error(self, farm: Farm, error: Exception):
         if farm.feature in self.queue:

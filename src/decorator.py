@@ -10,7 +10,7 @@ def go_main_screen(f):
     return wrapper
 
 
-def create_USAGE_FILE(fun):
+def create_usage_file(fun):
     def wrapper(*args, **kwargs):
         # if file not exist, or failed load, create empty file
         try:

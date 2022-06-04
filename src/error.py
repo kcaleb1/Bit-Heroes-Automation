@@ -33,21 +33,14 @@ class MismatchConditionException(Exception):
         return f"{self.txt}"
 
 
-class UnimplementedException(Exception):
-    def __init__(self, *args: object, **kwargs) -> None:
-        super().__init__(*args)
-        self.feature = kwargs.get('feature', '')
+class UnableJoinException(Exception):
+    '''This exception will put farm back in queue instead of done'''
 
-    def __str__(self):
-        return f"Feature '{self.feature}' not implemented"
-
-
-class UnableJoinBossException(Exception):
     def __init__(self, *args: object, **kwargs) -> None:
         super().__init__(*args)
 
     def __str__(self):
-        return f"Unable to join boss lobby"
+        return f"Unable to join"
 
 
 class InvalidValueValidateException(Exception):

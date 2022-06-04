@@ -2,7 +2,7 @@ from const import *
 from error import InvalidValueValidateException
 from farm import Farm
 from ui.farm.expedition import ExpeditionConfigUI
-from utils import click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
+from utils import check_no_energy, click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
 
 
 FEATURE_PATH = join(IMG_PATH, 'expedition')
@@ -10,9 +10,9 @@ BTN = join(FEATURE_PATH, 'button.png')
 ENTER = join(FEATURE_PATH, 'enter.png')
 
 ZONES = {
-    "Burning Farm": join(FEATURE_PATH, 'burning-farm.png'),
-    "Hero Fest": join(FEATURE_PATH, 'hero-fest.png'),
-    "Melvapaloozo": join(FEATURE_PATH, 'melvapaloozo.png')
+    "1": join(FEATURE_PATH, 'burning-farm.png'),
+    "2": join(FEATURE_PATH, 'hero-fest.png'),
+    "3": join(FEATURE_PATH, 'melvapaloozo.png')
 }
 
 
@@ -24,6 +24,7 @@ class Expedition(Farm):
     def __init__(self):
         super().__init__()
 
+    # TODO find way to dynamic zone image
     def do_run(self):
         find_image_and_click_then_sleep(BTN, retry_time=5)
         click_cost_and_play(COSTS[self.cost])
