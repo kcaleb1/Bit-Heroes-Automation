@@ -21,6 +21,7 @@
 - Auto Trials (use current difficulty selected)
 - Auto Quest (only big floor and currently max zone is z4f4)
 - [Smart rerun mode](#smart-rerun-mode)
+- Auto check reconnect when running
 
 ## Smart rerun mode
 
@@ -51,7 +52,6 @@ Except 'boss'
   - Show which farm was done (out of energy/out of bait)
   - Click `>>` button to add the mode into the queue to farming
   - Click `>>>` to move all mode into queue
-  - If automation was Stop and Start 'done' list will adding into 'queue'
 - 'queue' column:
   - Show automation order
   - Click `<<` button to move the mode into the done
@@ -66,6 +66,7 @@ Except 'boss'
 - [x] Auto run 'Quest'
 - [x] Basic UI
 - [x] Config via UI
+- [ ] Dynamic select zone for Expedition
 - [ ] Add all zone & floor in 'Quest'
 - [ ] Add all boss in 'Raid'
 
