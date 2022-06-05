@@ -2,7 +2,7 @@ from error import InvalidValueValidateException
 from farm import Farm
 from const import *
 from ui.farm.pvp import PvpConfigUI
-from utils import check_no_energy, click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
+from utils import click_play_and_check_no_energy, fight_wait_town, find_image_and_click_then_sleep, select_cost
 
 
 FEATURE_PATH = join(IMG_PATH, 'pvp')
@@ -16,9 +16,12 @@ class Pvp(Farm):
     def __init__(self):
         super().__init__()
 
-    def do_run(self):
+    def select_run(self):
         find_image_and_click_then_sleep(BTN, retry_time=5)
-        click_cost_and_play(COSTS[self.cost])
+        select_cost(COSTS[self.cost])
+
+    def main_run(self):
+        click_play_and_check_no_energy()
         find_image_and_click_then_sleep(COMMON_FIGHT, sleep_duration=0.5)
         find_image_and_click_then_sleep(COMMON_ACCEPT)
         fight_wait_town()

@@ -1,14 +1,14 @@
 from datetime import datetime
-from json import load
-import json
 import multiprocessing
 import threading
+from time import sleep
 import warnings
-from const import CONFIG_FILE, READABLE_TIME_FORMAT, USAGE_FILE, TIME_FORMAT
+from const import CONFIG_FILE, READABLE_TIME_FORMAT, SECOND, SLEEP, USAGE_FILE, TIME_FORMAT
 import const
 from debug import save_print_dbg
-from decorator import go_main_screen
+from decorator import go_main_screen, if_auto_run_then_wait_town, sleep_decorator
 from error import EmptyBaitException, InvalidValueValidateException, NoEnergyException, UnableJoinException
+from utils import get_json_file, write_json_file
 from window import get_app
 
 
@@ -88,9 +88,8 @@ class Farm(object):
         return wrapper
 
     def _save_result(self, result: bool):
-        marker = {}
-        with open(USAGE_FILE, 'r') as f:
-            marker = json.load(f)
+        marker = get_json_file(USAGE_FILE)
+
         # mapping
         if self.feature not in marker:
             marker[self.feature] = {
@@ -105,9 +104,7 @@ class Farm(object):
         marker['last_run_at'] = datetime.strftime(
             datetime.now(), READABLE_TIME_FORMAT)
 
-        # store to usage.json
-        with open(USAGE_FILE, 'w') as f:
-            f.write(json.dumps(marker, indent=4, sort_keys=True))
+        write_json_file(USAGE_FILE, marker, is_sort=True)
 
     def decorator_ignore_warning(f):
         def wrapper(self):
@@ -118,21 +115,34 @@ class Farm(object):
 
     @decorator_ignore_warning
     @decorator_save_result
+    @if_auto_run_then_wait_town
     @decorator_init
     @go_main_screen
     @decorator_catch_exceptions
     def _run(self):
         '''
-        This call self.do_run, since it will be extended
+        This call self.select_run, since it will be extended
         Use self.start/1 to run
         '''
         const.dbg_name = f'{self.name}'
-        self.do_run()
+        self.select_run()
+        self.main_run()
+        while self.rerun_mode:
+            sleep(3 * SECOND)
+            self.main_run()
 
-    def do_run(self):
+    def select_run(self):
         '''
         Inherit class will extend this function to run test
         To keep the decorator in self._run
+        '''
+        pass
+
+    @sleep_decorator
+    def main_run(self):
+        '''
+        Inherit class will extend this function to run test
+        This separate function for rerun_mode
         '''
         pass
 
@@ -167,7 +177,7 @@ class Farm(object):
         self.run_time = (datetime.now() - self.start_time).seconds
         self._save_result(True)
 
-    def is_done(self):
+    def is_done(self) -> bool:
         if self.process:
             return not self.process.is_alive()
         return False
@@ -177,10 +187,10 @@ class Farm(object):
             self.process.join()
 
     def get_config(self):
-        with open(CONFIG_FILE, 'r') as f:
-            cfg = load(f)
-            self.cfg = cfg.get(self.feature, {})
-            self.decline_treasure = cfg.get('decline_treasure', True)
+        cfg = get_json_file(CONFIG_FILE)
+        self.cfg = cfg.get(self.feature, {})
+        self.decline_treasure = cfg.get('decline_treasure', True)
+        self.rerun_mode = cfg.get('rerun_mode', False)
 
     def mapping_config(self):
         if not self.cfg:
@@ -195,19 +205,22 @@ class Farm(object):
             raise InvalidValueValidateException(
                 farm='', key='decline_treasure',
                 value=self.decline_treasure, expect='not boolean')
+        if type(self.rerun_mode) != bool:
+            raise InvalidValueValidateException(
+                farm='', key='rerun_mode',
+                value=self.rerun_mode, expect='not boolean')
 
-    def get_run_time(self):
+    def get_run_time(self) -> int:
         if self.is_done():
             return self.run_time
         return (datetime.now() - self.start_time).seconds
 
-    def get_result(self):
-        with open(USAGE_FILE, 'r') as f:
-            return json.load(f).get(self.feature, {}).get('runnable', False)
+    def get_result(self) -> bool:
+        return get_json_file(USAGE_FILE).get(self.feature, {}).get('runnable', False)
 
     def show_config_ui(self, parent, main):
         if self.configUI != None:
             self.configUI(self, parent, main)
 
     def __str__(self) -> str:
-        return '\n'.join([f"Farm: {self.feature}"])
+        return '\n'.join([f"Farm: {self.feature}\tRerun: {self.rerun_mode}"])

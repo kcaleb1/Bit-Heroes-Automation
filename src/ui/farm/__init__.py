@@ -2,6 +2,7 @@ import json
 from tkinter import Toplevel, ttk
 from const import CONFIG_FILE
 from farm import Farm
+from utils import get_json_file, write_json_file
 
 
 class ConfigUI():
@@ -36,12 +37,9 @@ class ConfigUI():
 
     def _save_config(self):
         self._do_save_config()
-        cfg = {}
-        with open(CONFIG_FILE, 'r') as f:
-            cfg = json.load(f)
+        cfg = get_json_file(CONFIG_FILE)
         cfg[self.farm.feature] = self.farm.cfg
-        with open(CONFIG_FILE, 'w') as f:
-            f.write(json.dumps(cfg, indent=4))
+        write_json_file(CONFIG_FILE, cfg)
         self.root.destroy()
 
     def _do_save_config(self):

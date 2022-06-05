@@ -1,20 +1,20 @@
 {
     "capture_interval": 0.3,
     "debug": true,
-    "decline_treasure": false,
     "save_captured_image": false,
+    "decline_treasure": false,
+    "rerun_mode": false,
     "boss": {
-        "is_summon": true,
         "boss": "Orlag Clan",
-        "tier": 7,
         "difficulty": "Normal",
-        "is_solo": false
+        "is_solo": false,
+        "is_summon": true,
+        "tier": 7
     },
     "expedition": {
-        "cost": 3,
-        "zone": "Burning Farm"
+        "cost": 1,
+        "zone": 2
     },
-    "fishing": {},
     "gauntlet": {
         "cost": 1
     },
@@ -29,14 +29,14 @@
     },
     "quest": {
         "difficulty": "Heroic",
-        "dungeon": "1|Scorpius",
-        "zone": "7|Cambora"
+        "dungeon": "1|Rexie",
+        "zone": "4|Ashvale"
     },
     "raid": {
-        "boss": "A Haile'Of A Mistake",
+        "boss": "Hyper Dimension",
         "difficulty": "Heroic"
     },
-    "trials": {
-        "cost": 1
+    "trails": {
+        "cost": 5
     }
 }

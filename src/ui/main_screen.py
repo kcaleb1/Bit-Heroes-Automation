@@ -1,10 +1,10 @@
+from time import sleep
 from tkinter import DISABLED, LEFT, N, NE, NW, TOP, W, Tk, ttk, StringVar
 from debug import save_print_dbg
 from farm import Farm
 from const import *
 import const
-from ui.farm import ConfigUI
-from utils import find_image_and_click_then_sleep, go_main_screen
+from utils import find_image_and_click_then_sleep, go_main_screen, set_rerun_mode
 
 
 class MainScreen():
@@ -16,6 +16,7 @@ class MainScreen():
     done_frames = {}
 
     errors = []
+    check_run = []
 
     def __init__(self, farms: list) -> None:
         self.farms = farms
@@ -34,6 +35,7 @@ class MainScreen():
         self.root.quit()
 
     def _reset_config(self):
+        self.check_run = []
         self.farm = None
         self.txt_main_label.set('Nothing')
         # reset queue
@@ -42,6 +44,7 @@ class MainScreen():
         self.queue = {}
         for farm in self.farms:
             self._add_queue_and_farms(farm)
+        set_rerun_mode(False)
 
     def _create_root(self):
         self.root = Tk()
@@ -109,11 +112,14 @@ class MainScreen():
         self.queue_fr.grid(column=1, row=2, sticky=N)
 
     def _add_queue_and_farms(self, farm: Farm):
-        if farm.feature in self.queue:
+        if farm in self.queue:
             return
 
         if farm not in self.farms:
             self.farms.append(farm)
+
+        if farm in self.check_run:
+            self.check_run.remove(farm)
 
         def move_to_done():
             self.farms.remove(farm)
@@ -127,12 +133,12 @@ class MainScreen():
                    padding=(-22, -2)
                    ).pack(side=LEFT)
         self._create_config_button(fr, farm)
-        self.queue[farm.feature] = fr
+        self.queue[farm] = fr
 
     def _remove_queue(self, farm: Farm):
         if farm in self.farms:
             self.farms.remove(farm)
-        self.queue.pop(farm.feature).pack_forget()
+        self.queue.pop(farm).pack_forget()
 
     def _create_errors_frame(self):
         ttk.Label(self.root, text='errors',
@@ -146,7 +152,7 @@ class MainScreen():
             while len(self.done):
                 f = self.done.pop(0)
                 self._add_queue_and_farms(f)
-                self.done_frames.pop(f.feature).pack_forget()
+                self.done_frames.pop(f).pack_forget()
 
         fr = ttk.Frame(self.root)
         fr.grid(column=0, row=1, sticky=W)
@@ -166,7 +172,7 @@ class MainScreen():
         def move_to_queue():
             self.done.remove(farm)
             self._add_queue_and_farms(farm)
-            self.done_frames.pop(farm.feature).pack_forget()
+            self.done_frames.pop(farm).pack_forget()
 
         fr = ttk.Frame(self.done_fr)
         fr.pack(side=TOP, anchor=NE)
@@ -177,7 +183,7 @@ class MainScreen():
                    ).pack(side=LEFT)
         if farm not in self.done:
             self.done.append(farm)
-        self.done_frames[farm.feature] = fr
+        self.done_frames[farm] = fr
 
     def _create_error_frame_btn(self, farm: Farm, error: str):
         def _repaired_error(farm: Farm, fr: ttk.Frame):
@@ -197,41 +203,54 @@ class MainScreen():
         if self.farms == None or len(self.farms) == 0 or isinstance(self.farms, Farm):
             raise Exception('Empty farms')
         self._start_stop_swap()
+        self._update_timer()
         self._do_farm()
 
     def _do_farm(self):
         if self.start_enable:
             return
 
-        self._update_timer()
-
         if self.farm == None or self.farm.is_done():
+            self.try_reconnect = 0
             self._next_farm()
-        elif self.farm.get_run_time() > TRIGGER_RECONNECT_CHECK:
-            self.farm.stop()
-            const.dbg_name = 'reconnect'
-            while not self.start_enable:
-                try:
-                    find_image_and_click_then_sleep(
-                        COMMON_RECONNECT, retry_time=20)
-                except:
-                    break
+        elif self.farm.get_run_time() > TRIGGER_RECONNECT_CHECK + (self.try_reconnect * FIVE_MINUTE):
+            def reconnect():
+                find_image_and_click_then_sleep(COMMON_RECONNECT)
+                self.farm.stop()
+                sleep(5)
+                reconnect()
 
-        self.start_btn.after(1000, self._do_farm)
+            self.try_reconnect += 1
+            old_dbg = const.dbg_name
+            const.dbg_name = 'reconnect'
+            try:
+                reconnect()
+            except:
+                pass
+            const.dbg_name = old_dbg
+
+        self.start_btn.after(SECOND_MS, self._do_farm)
 
     def _update_timer(self):
+        if self.start_enable:
+            return
+
         self.timer += 1
         h = int(self.timer / 3600)
         m = int((self.timer - h * 3600) / 60)
         s = int(self.timer - h * 3600 - m * 60)
         self.timer_label.configure(text=f'{h:02d}:{m:02d}:{s:02d}')
 
+        self.timer_label.after(SECOND_MS, self._update_timer)
+
     def _next_farm(self):
         if self.farm != None:
+            f = type(self.farm)
             if self.farm.get_result():
-                self._add_queue_and_farms(type(self.farm))
+                self._add_queue_and_farms(f)
+                self.check_run.append(f)
             else:
-                self._move_farm_done(type(self.farm))
+                self._move_farm_done(f)
 
         if len(self.farms) == 0:
             self._stop_farm()
@@ -240,6 +259,7 @@ class MainScreen():
 
         farm = self.farms.pop(0)
         self._remove_queue(farm)
+        self.check_smart_rerun_enable(farm)
 
         self.farm = self.try_create_farm(farm)
         if not self.farm:
@@ -247,6 +267,15 @@ class MainScreen():
 
         self.farm.start()
         self.txt_main_label.set(str(self.farm))
+
+    def check_smart_rerun_enable(self, farm: Farm):
+        self.check_run.append(farm)
+        self.check_run = list(dict.fromkeys(self.check_run))
+
+        for q in self.queue:
+            if q not in self.check_run:
+                return
+        set_rerun_mode(True)
 
     def try_create_farm(self, farm: Farm):
         try:
@@ -263,7 +292,7 @@ class MainScreen():
         save_print_dbg(f'--- done: {[x.feature for x in self.done]}')
 
     def _move_farm_to_error(self, farm: Farm, error: Exception):
-        if farm.feature in self.queue:
+        if farm in self.queue:
             self._remove_queue(farm)
 
         self.errors.append(farm)

@@ -5,8 +5,6 @@ from const import LIST_DIFFICULTIES
 from ui.farm import ConfigUI, Farm
 from ui.farm.utils import create_option_menu
 
-# TODO FIX THIS SHIT
-
 
 class QuestConfigUI(ConfigUI):
     def __init__(self, farm: Farm, parent, main) -> None:
@@ -52,7 +50,7 @@ class QuestConfigUI(ConfigUI):
         # setup zone frame
         fr_zone = Frame(parent)
         Label(fr_zone, text='zone:', anchor=W).grid(column=0, row=0)
-        clone_zones = copy(list(self.farm.zones.keys()))
+        clone_zones = copy(self.farm.list_zone)
         var_zone = create_var(fr_zone, self.farm.zone)
         clone_zones.insert(0, 0)  # insert empty value, to display whole data
         OptionMenu(fr_zone, var_zone, *clone_zones,

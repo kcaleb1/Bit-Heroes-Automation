@@ -31,11 +31,12 @@ class Fishing(Farm):
         except:
             return False
 
-    # TODO optimize this
-    def do_run(self):
+    def select_run(self):
         find_image_and_click_then_sleep(BTN)
         find_image_and_click_then_sleep(COMMON_PLAY)
 
+    # TODO optimize this
+    def main_run(self):
         y_start, x_start = 0, 0
         while True:
             try:
@@ -45,7 +46,7 @@ class Fishing(Farm):
                 pass
 
         # click start
-        click_screen_and_sleep(y_start, x_start, uniform(0, 2))
+        click_screen_and_sleep(y_start, x_start, uniform(0.5, 1.5))
         # click cast
         click_screen_and_sleep(y_start, x_start)
         sleep(4)
@@ -79,7 +80,7 @@ class Fishing(Farm):
         click_screen_and_sleep(y_start, x_start, sleep_duration=3)
         find_image_and_click_then_sleep(TRADE_BTN, ignore_exception=True)
 
-        for _ in range(10):
+        for _ in range(6):
             if self.is_check_closes():
                 return
 

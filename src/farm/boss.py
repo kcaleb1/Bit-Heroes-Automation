@@ -1,5 +1,5 @@
 from farm import Farm
-from utils import check_no_energy, click_cost_and_play, click_town, enable_auto_on, find_image, find_image_and_click_then_sleep, raise_exception_when_runnable, sleep
+from utils import check_no_energy, click_town_or_rerun, enable_auto_on, find_image, find_image_and_click_then_sleep, raise_exception_when_runnable, sleep
 from window import press_escape
 from const import *
 from error import *
@@ -38,12 +38,14 @@ class Boss(Farm):
 
     def __init__(self):
         super().__init__()
+        # boss will not use rerun mode due to it such for this mode
+        self.rerun_mode = False
 
-    def do_run(self):
-        # self.do_run_summon_boss()
-        self.do_run_join_lobby()
+    def select_run(self):
+        # self.select_run_summon_boss()
+        self.select_run_join_lobby()
 
-    def do_run_summon_boss(self):
+    def select_run_summon_boss(self):
         find_image_and_click_then_sleep(BTN)
         find_image_and_click_then_sleep(SUMMON_BTN)
 
@@ -89,7 +91,7 @@ class Boss(Farm):
         while not enable_auto_on():
             sleep(SLEEP)
 
-        while not click_town():
+        while not click_town_or_rerun():
             sleep(SLEEP)
 
     def is_host(self) -> bool:
@@ -107,7 +109,7 @@ class Boss(Farm):
             UnableJoinException
         )
 
-    def do_run_join_lobby(self):
+    def select_run_join_lobby(self):
         find_image_and_click_then_sleep(BTN)
         try:
             find_image_and_click_then_sleep(
@@ -136,7 +138,7 @@ class Boss(Farm):
         is_auto_on = False
         is_pressed_escape = False
         while True:
-            is_started = click_town()
+            is_started = click_town_or_rerun()
             if is_started:
                 break
 

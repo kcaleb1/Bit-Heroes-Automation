@@ -3,7 +3,7 @@ from time import sleep
 from const import *
 from error import InvalidValueValidateException
 from ui.farm.quest import QuestConfigUI
-from utils import check_no_energy, click_town, decline_except_persuade, enable_auto_on, find_image, find_image_and_click_then_sleep, open_treasure
+from utils import check_no_energy, click_town_or_rerun, decline_except_persuade, enable_auto_on, find_image, find_image_and_click_then_sleep, open_treasure
 
 
 FEATURE_PATH = join(IMG_PATH, 'quest')
@@ -37,16 +37,19 @@ ZONES = {
     "7|Cambora": ["1|Scorpius"],
 }
 
+LIST_ZONES = list(ZONES.keys())
+
 
 class Quest(Farm):
     feature = 'quest'
     zones = ZONES
+    list_zone = LIST_ZONES
     configUI = QuestConfigUI
 
     def __init__(self):
         super().__init__()
 
-    def do_run(self):
+    def select_run(self):
         find_image_and_click_then_sleep(BTN, retry_time=5)
         cur_img = None
         while True:
@@ -61,7 +64,7 @@ class Quest(Farm):
                 find_image(Z1, retry_time=1,
                            game_screen=cur_img, threshold=0.9)
                 cur_zone = 1
-                while cur_zone != self.zone:
+                while self.list_zone[cur_zone] != self.zone:
                     find_image_and_click_then_sleep(
                         RIGHT, ignore_exception=True)
                     cur_zone += 1
@@ -74,14 +77,17 @@ class Quest(Farm):
             find_image_and_click_then_sleep(ENTER)
         else:
             find_image_and_click_then_sleep(QUESTS_DIF[self.difficulty])
+        sleep(SLEEP)
         find_image_and_click_then_sleep(COMMON_ACCEPT)
+
+    def main_run(self):
         check_no_energy()
 
         while not enable_auto_on():
             sleep(SLEEP)
 
         while True:
-            if click_town():
+            if click_town_or_rerun(self.rerun_mode):
                 return
             if self.decline_treasure:
                 decline_except_persuade(COMMON_DECLINE_TREASURE)

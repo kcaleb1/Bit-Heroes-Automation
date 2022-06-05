@@ -1,7 +1,7 @@
 from farm import Farm
 from time import sleep
 from ui.farm.raid import RaidConfigUI
-from utils import check_no_energy, click_town, decline_except_persuade, enable_auto_on, find_image_and_click_then_sleep, find_image, open_treasure
+from utils import check_no_energy, click_town_or_rerun, decline_except_persuade, enable_auto_on, find_image_and_click_then_sleep, find_image, open_treasure
 from const import *
 from error import *
 
@@ -28,9 +28,8 @@ class Raid(Farm):
     def __init__(self):
         super().__init__()
 
-    def do_run(self):
+    def select_run(self):
         find_image_and_click_then_sleep(BTN)
-
         while True:
             try:
                 find_image(BOSSES[self.boss], retry_time=1)
@@ -43,13 +42,15 @@ class Raid(Farm):
         find_image_and_click_then_sleep(DIFFICULTIES[self.difficulty])
         find_image_and_click_then_sleep(COMMON_AUTO_TEAM, sleep_duration=0.5)
         find_image_and_click_then_sleep(COMMON_ACCEPT, sleep_duration=1)
+
+    def main_run(self):
         check_no_energy()
 
         while not enable_auto_on():
             sleep(SLEEP)
 
         while True:
-            if click_town():
+            if click_town_or_rerun(self.rerun_mode):
                 return
             if self.decline_treasure:
                 decline_except_persuade(COMMON_DECLINE_TREASURE)

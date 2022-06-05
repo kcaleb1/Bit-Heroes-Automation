@@ -1,3 +1,5 @@
+import json
+import traceback
 from window import click_screen_and_sleep, get_game_screen, press_escape
 from debug import save_image_dbg, save_print_dbg
 from error import *
@@ -58,6 +60,7 @@ def find_image_and_click_then_sleep(
     find_interval=SLEEP,
     ignore_exception=False,
 ):
+    sleep(0.1)
     y, x = 0, 0
     try:
         y, x = find_image(path, retry_time, threshold,
@@ -129,15 +132,18 @@ def raise_exception_when_runnable(fun, exception: Exception):
 
 
 def enable_auto_on() -> bool:
+    img = get_game_screen()
     try:
-        find_image(COMMON_AUTO_ON, retry_time=1, threshold=0.9)
+        find_image(COMMON_AUTO_ON, retry_time=1,
+                   threshold=0.9, game_screen=img)
         return True
     except:
         pass
 
     try:
-        find_image_and_click_then_sleep(
-            COMMON_AUTO_OFF, retry_time=1, threshold=0.9)
+        y, x = find_image(COMMON_AUTO_OFF, retry_time=1,
+                          threshold=0.9, game_screen=img)
+        click_screen_and_sleep(y, x)
         return True
     except:
         pass
@@ -145,9 +151,10 @@ def enable_auto_on() -> bool:
     return False
 
 
-def click_town() -> bool:
+def click_town_or_rerun(is_rerun=False) -> bool:
+    img = COMMON_RERUN if is_rerun else COMMON_TOWN
     try:
-        y, x = find_image(COMMON_TOWN, retry_time=1, threshold=0.9)
+        y, x = find_image(img, retry_time=1, threshold=0.9)
         sleep(1)
         click_screen_and_sleep(y, x)
         return True
@@ -155,18 +162,20 @@ def click_town() -> bool:
         return False
 
 
-def check_no_energy():
+def check_no_energy(keep_guide=False):
     def find_not_energy():
         try:
             _, _, img = find_image(
                 COMMON_NOT_ENOUGH, threshold=0.9, retry_time=3, return_game_screen=True)
             y, x = find_image(COMMON_NO, threshold=0.9,
                               retry_time=3, game_screen=img)
+            sleep(SLEEP)
             click_screen_and_sleep(y, x)
         except:
             # in case of warning can't leave guild, click yes
-            find_image_and_click_then_sleep(
-                COMMON_YES, threshold=0.9, retry_time=3)
+            if keep_guide:
+                find_image_and_click_then_sleep(
+                    COMMON_YES, threshold=0.9, retry_time=3)
             raise Exception()
 
     sleep(SLEEP)
@@ -176,7 +185,12 @@ def check_no_energy():
     )
 
 
-def click_cost_and_play(cost: str, menu_cost=COMMON_COST, play_btn=COMMON_PLAY):
+def click_cost_and_play(cost: str, menu_cost=COMMON_COST, play_btn=COMMON_PLAY, keep_guide=False):
+    select_cost(cost=cost, menu_cost=menu_cost)
+    click_play_and_check_no_energy(play_btn=play_btn, keep_guide=keep_guide)
+
+
+def select_cost(cost: str, menu_cost=COMMON_COST, keep_guide=False):
     find_image_and_click_then_sleep(menu_cost, retry_time=5)
     clicked = False
     try:
@@ -191,15 +205,17 @@ def click_cost_and_play(cost: str, menu_cost=COMMON_COST, play_btn=COMMON_PLAY):
     finally:
         sleep(SLEEP)
 
+
+def click_play_and_check_no_energy(play_btn=COMMON_PLAY, keep_guide=False):
     find_image_and_click_then_sleep(play_btn, retry_time=5, sleep_duration=1)
-    check_no_energy()
+    check_no_energy(keep_guide=keep_guide)
 
 
-def fight_wait_town():
+def fight_wait_town(is_rerun=False):
     sleep(1)
     while not enable_auto_on():
         sleep(SLEEP)
-    while not click_town():
+    while not click_town_or_rerun(is_rerun=is_rerun):
         sleep(1)
 
 
@@ -230,3 +246,19 @@ def open_treasure():
             COMMON_YES, retry_time=1, sleep_duration=0.5)
     except:
         pass
+
+
+def get_json_file(file) -> dict:
+    with open(file, 'r') as f:
+        return json.load(f)
+
+
+def write_json_file(file, data, is_sort=False) -> dict:
+    with open(file, 'w') as f:
+        f.write(json.dumps(data, indent=4, sort_keys=is_sort))
+
+
+def set_rerun_mode(is_enable: bool):
+    cfg = get_json_file(CONFIG_FILE)
+    cfg['rerun_mode'] = is_enable
+    write_json_file(CONFIG_FILE, cfg)
