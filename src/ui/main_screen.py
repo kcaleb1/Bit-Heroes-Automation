@@ -1,10 +1,21 @@
+import os
 from time import sleep
-from tkinter import DISABLED, LEFT, N, NE, NW, TOP, W, Tk, ttk, StringVar
+from tkinter import DISABLED, LEFT, N, NE, NW, TOP, W, PhotoImage, ttk, StringVar, Tk
 from debug import save_print_dbg
 from farm import Farm
 from const import *
 import const
-from utils import find_image_and_click_then_sleep, go_main_screen, set_rerun_mode
+from ui.config import CommonConfigUI
+from ui.utils import add_tool_tip
+from utils import find_image_and_click_then_sleep, is_rerun_mode, go_main_screen, is_debug, is_smart_rerun, is_smart_rerun_energy
+
+GEAR_IMG = join(UI_IMAGE_PATH, 'gear-solid.png')
+CONFIG_FILE_IMG = join(UI_IMAGE_PATH, 'file-pen-solid.png')
+DEBUG_FILE_IMG = join(UI_IMAGE_PATH, 'file-alt-solid.png')
+START_IMG = join(UI_IMAGE_PATH, 'play-solid.png')
+STOP_IMG = join(UI_IMAGE_PATH, 'stop-solid.png')
+
+IMG_SIZE = 28
 
 
 class MainScreen():
@@ -16,7 +27,6 @@ class MainScreen():
     done_frames = {}
 
     errors = []
-    check_run = []
 
     def __init__(self, farms: list) -> None:
         self.farms = farms
@@ -37,6 +47,7 @@ class MainScreen():
     def _reset_config(self):
         self.check_run = []
         self.farm = None
+        self.enable_rerun = False
         self.txt_main_label.set('Nothing')
         # reset queue
         for k in self.queue:
@@ -44,7 +55,6 @@ class MainScreen():
         self.queue = {}
         for farm in self.farms:
             self._add_queue_and_farms(farm)
-        set_rerun_mode(False)
 
     def _create_root(self):
         self.root = Tk()
@@ -54,41 +64,95 @@ class MainScreen():
         self.root.protocol("WM_DELETE_WINDOW", self._stop)
 
     def _create_main_screen(self):
+        self._load_images()
         self._create_top_frame()
         self._create_errors_frame()
         self._create_queue_frame()
         self._create_done_frame()
 
-    def _create_top_frame(self):
-        self.top_fr = ttk.Frame(self.root)
-        self.top_fr.grid(column=0, row=0, columnspan=3, sticky=W)
-        self._setup_label()
-        self._setup_button()
+    def _load_images(self):
+        self.gear_img = PhotoImage(file=GEAR_IMG).subsample(IMG_SIZE, IMG_SIZE)
 
-    def _setup_label(self):
+        self.config_file_img = PhotoImage(
+            file=CONFIG_FILE_IMG).subsample(IMG_SIZE, IMG_SIZE)
+        self.debug_file_img = PhotoImage(
+            file=DEBUG_FILE_IMG).subsample(IMG_SIZE, IMG_SIZE)
+
+        self.start_img = PhotoImage(file=START_IMG).subsample(22, 22)
+        self.stop_img = PhotoImage(file=STOP_IMG).subsample(22, 22)
+
+    def _create_top_frame(self):
+        top_fr = ttk.Frame(self.root)
+        top_fr.grid(column=0, row=0, columnspan=3, sticky=W)
+        self._setup_label(top_fr)
+        self._setup_button(top_fr)
+        self._utilities_button(top_fr)
+
+    def _utilities_button(self, top_fr: ttk.Frame):
+        fr = ttk.Frame(top_fr, padding=(10, 0, 0, 7))
+        fr.grid(column=0, row=2, sticky=W)
+
+        self._add_common_config_button(fr).pack(side=LEFT)
+        self._add_open_config_file_button(fr).pack(side=LEFT)
+        self._add_open_debug_file_button(fr).pack(side=LEFT)
+
+    def _add_common_config_button(self, top_fr: ttk.Frame) -> ttk.Button:
+        def open_edit_common_config():
+            CommonConfigUI(self.root, self)
+
+        btn = ttk.Button(top_fr, image=self.gear_img,
+                         command=open_edit_common_config)
+        add_tool_tip(btn, "Common configuration")
+        return btn
+
+    def _add_open_config_file_button(self, top_fr: ttk.Frame) -> ttk.Button:
+        def open_config_file():
+            os.startfile(CONFIG_FILE, 'open')
+
+        btn = ttk.Button(top_fr, image=self.config_file_img,
+                         command=open_config_file)
+        add_tool_tip(btn, "Open config file")
+        return btn
+
+    def _add_open_debug_file_button(self, top_fr: ttk.Frame) -> ttk.Button:
+        def open_debug_file():
+            if is_debug and os.path.exists(DEBUG_TEXT_PATH):
+                os.startfile(DEBUG_TEXT_PATH, 'open')
+
+        btn = ttk.Button(top_fr, image=self.debug_file_img,
+                         command=open_debug_file)
+        add_tool_tip(btn, "Open debug file")
+        return btn
+
+    def _setup_label(self, top_fr: ttk.Frame):
         # label timer
         self.timer = 0
-        self.timer_label = ttk.Label(self.top_fr, text='00:00:00')
-        self.timer_label.grid(column=1, row=0)
+        self.timer_label = ttk.Label(top_fr, text='00:00:00')
+        self.timer_label.grid(column=1, row=0, sticky=W)
+        add_tool_tip(self.timer_label, "Total run time")
         # frame to set max height
-        fr = ttk.Frame(self.top_fr, height=50)
-        fr.grid(column=1, row=1, sticky=N)
+        fr = ttk.Frame(top_fr, height=50)
+        fr.grid(column=1, rowspan=2, row=1, sticky=N)
         # label farm
         self.txt_main_label = StringVar()
         self.main_label = ttk.Label(
             fr, textvariable=self.txt_main_label)
         self.main_label.pack()
+        add_tool_tip(self.main_label, "Farm information")
 
-    def _setup_button(self):
+    def _setup_button(self, top_fr: ttk.Frame):
         self.start_enable = False
         # Start farm button
+        pad = (30, 10)
         self.start_btn = ttk.Button(
-            self.top_fr, text="Start",
-            command=self._start_farm, padding=10)
+            top_fr, image=self.start_img,
+            command=self._start_farm, padding=pad)
+        add_tool_tip(self.start_btn, "Start farming")
         # Stop farm button
         self.stop_btn = ttk.Button(
-            self.top_fr, text="Stop",
-            command=self._stop_farm, padding=10)
+            top_fr, image=self.stop_img,
+            command=self._stop_farm, padding=pad)
+        add_tool_tip(self.stop_btn, "Stop farming")
         self._start_stop_swap()
 
     def _create_queue_frame(self):
@@ -100,13 +164,18 @@ class MainScreen():
 
         fr = ttk.Frame(self.root)
         fr.grid(column=1, row=1)
-        ttk.Button(fr, text='<<<',
-                   command=lambda: move_queue_to_done(),
-                   padding=(-22, -2)
-                   ).pack(side=LEFT)
-        ttk.Label(fr, text='queue',
-                  padding=(5, 0, 26, 0), background='#9e9e9e'
-                  ).pack(side=LEFT)
+        btn = ttk.Button(fr, text='<<<',
+                         command=lambda: move_queue_to_done(),
+                         padding=(-22, -2)
+                         )
+        btn.pack(side=LEFT)
+        add_tool_tip(btn, "Move all to done")
+        lb = ttk.Label(fr, text='queue',
+                       padding=(5, 0, 26, 0),
+                       background='#9e9e9e',
+                       )
+        lb.pack(side=LEFT)
+        add_tool_tip(lb, 'Execute order')
         #
         self.queue_fr = ttk.Frame(self.root, padding=(10, 0))
         self.queue_fr.grid(column=1, row=2, sticky=N)
@@ -128,10 +197,12 @@ class MainScreen():
 
         fr = ttk.Frame(self.queue_fr)
         fr.pack(side=TOP, anchor=NW)
-        ttk.Button(fr, text='<<',
-                   command=lambda: move_to_done(),
-                   padding=(-22, -2)
-                   ).pack(side=LEFT)
+        btn = ttk.Button(fr, text='<<',
+                         command=lambda: move_to_done(),
+                         padding=(-22, -2)
+                         )
+        btn.pack(side=LEFT)
+        add_tool_tip(btn, "Move to done")
         self._create_config_button(fr, farm)
         self.queue[farm] = fr
 
@@ -157,13 +228,17 @@ class MainScreen():
         fr = ttk.Frame(self.root)
         fr.grid(column=0, row=1, sticky=W)
 
-        ttk.Label(fr, text='done',
-                  background='#9e9e9e', padding=(26, 0, 5, 0)
-                  ).pack(side=LEFT)
-        ttk.Button(fr, text='>>>',
-                   command=lambda: move_done_to_queue(),
-                   padding=(-22, -2)
-                   ).pack(side=LEFT)
+        lb = ttk.Label(fr, text='done',
+                       background='#9e9e9e', padding=(26, 0, 5, 0)
+                       )
+        lb.pack(side=LEFT)
+        add_tool_tip(lb, 'Not execute')
+        btn = ttk.Button(fr, text='>>>',
+                         command=lambda: move_done_to_queue(),
+                         padding=(-22, -2)
+                         )
+        btn.pack(side=LEFT)
+        add_tool_tip(btn, "Move all to queue")
 
         self.done_fr = ttk.Frame(self.root)
         self.done_fr.grid(column=0, row=2, sticky=N)
@@ -177,10 +252,12 @@ class MainScreen():
         fr = ttk.Frame(self.done_fr)
         fr.pack(side=TOP, anchor=NE)
         self._create_config_button(fr, farm)
-        ttk.Button(fr, text='>>',
-                   command=lambda: move_to_queue(),
-                   padding=(-22, -2)
-                   ).pack(side=LEFT)
+        btn = ttk.Button(fr, text='>>',
+                         command=lambda: move_to_queue(),
+                         padding=(-22, -2)
+                         )
+        btn.pack(side=LEFT)
+        add_tool_tip(btn, "Move to queue")
         if farm not in self.done:
             self.done.append(farm)
         self.done_frames[farm] = fr
@@ -244,7 +321,7 @@ class MainScreen():
         self.timer_label.after(SECOND_MS, self._update_timer)
 
     def _next_farm(self):
-        if self.farm != None:
+        if self.farm:
             f = type(self.farm)
             if self.farm.get_result():
                 self._add_queue_and_farms(f)
@@ -259,23 +336,26 @@ class MainScreen():
 
         farm = self.farms.pop(0)
         self._remove_queue(farm)
-        self.check_smart_rerun_enable(farm)
 
         self.farm = self.try_create_farm(farm)
         if not self.farm:
             return self._next_farm()
 
+        self.farm.rerun_mode = self.check_smart_rerun(farm)
         self.farm.start()
         self.txt_main_label.set(str(self.farm))
 
-    def check_smart_rerun_enable(self, farm: Farm):
+    def check_smart_rerun(self, farm: Farm) -> bool:
+        if not is_smart_rerun():
+            return is_rerun_mode()
+
         self.check_run.append(farm)
         self.check_run = list(dict.fromkeys(self.check_run))
 
         for q in self.queue:
             if q not in self.check_run:
-                return
-        set_rerun_mode(True)
+                return False
+        return True
 
     def try_create_farm(self, farm: Farm):
         try:
@@ -336,11 +416,13 @@ class MainScreen():
             f.show_config_ui(parent, self)
 
         if farm.configUI == None:
-            t = ttk.Button(parent, text=farm.feature,
-                           padding=(0, -2),
-                           state=DISABLED)
+            btn = ttk.Button(parent, text=farm.feature,
+                             padding=(0, -2),
+                             state=DISABLED)
+            add_tool_tip(btn, f"No configuration for {farm.feature}")
         else:
-            t = ttk.Button(parent, text=farm.feature,
-                           padding=(0, -2),
-                           command=lambda: btn_cmd())
-        t.pack(side=LEFT)
+            btn = ttk.Button(parent, text=farm.feature,
+                             padding=(0, -2),
+                             command=lambda: btn_cmd())
+            add_tool_tip(btn, f"Open {farm.feature} configuration")
+        btn.pack(side=LEFT)

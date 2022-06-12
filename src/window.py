@@ -1,8 +1,6 @@
-from turtle import title
 import pyautogui
 import pywinauto
 import win32gui
-
 import sys
 from time import sleep
 from debug import save_image_dbg, save_print_dbg

@@ -3,7 +3,9 @@
     "debug": true,
     "save_captured_image": false,
     "decline_treasure": false,
-    "rerun_mode": false,
+    "rerun_mode": true,
+    "smart_rerun_mode": true,
+    "smart_rerun_energy": true,
     "boss": {
         "boss": "Orlag Clan",
         "difficulty": "Normal",
@@ -12,20 +14,19 @@
         "tier": 7
     },
     "expedition": {
-        "cost": 1,
-        "zone": 2
+        "cost": 5
     },
     "gauntlet": {
-        "cost": 1
+        "cost": 5
     },
     "gvg": {
-        "cost": 1
+        "cost": 5
     },
     "invasion": {
-        "cost": 1
+        "cost": 5
     },
     "pvp": {
-        "cost": 1
+        "cost": 5
     },
     "quest": {
         "difficulty": "Heroic",

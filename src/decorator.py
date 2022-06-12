@@ -1,5 +1,9 @@
 from time import sleep
-from utils import click_town_or_rerun, enable_auto_on, get_json_file, go_main_screen as do_go_main_screen, write_json_file
+from utils import click_town_or_rerun, \
+    enable_auto_on, \
+    get_json_file, \
+    go_main_screen as do_go_main_screen, \
+    save_json_file
 from const import SLEEP, USAGE_FILE
 
 
@@ -41,6 +45,6 @@ def create_usage_file(fun):
         try:
             get_json_file(USAGE_FILE)
         except:
-            write_json_file(USAGE_FILE, {})
+            save_json_file(USAGE_FILE, {})
         return fun(*args, **kwargs)
     return wrapper

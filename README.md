@@ -17,10 +17,11 @@
 - Auto PVP
 - Auto GVG
 - Auto Gauntlet (use current difficulty selected)
-- Auto Expedition (use current difficulty selected)
+- Auto Expedition (use current difficulty selected & zone will select automatically based on the zone progress)
 - Auto Trials (use current difficulty selected)
 - Auto Quest (only big floor and currently max zone is z4f4)
 - [Smart rerun mode](#smart-rerun-mode)
+- [Smart rerun energy](#smart-rerun-energy)
 - Auto check reconnect when running
 
 ## Smart rerun mode
@@ -29,7 +30,17 @@ Run through list of queue first time, for spend first time run, make the energy 
 
 And in the second run queue will use rerun for each farm in queue current mode
 
+Only work when rerun mode enabled
+
 Except 'boss'
+
+## Smart rerun energy
+
+Rerun with energy spend from highest to lowest (5 -> 1)
+
+This will ignore the cost configuration
+
+Only work when rerun mode enabled
 ## Download
 
 [Latest version]((https://github.com/ken2057/Bit-Heroes-Automation/releases))
@@ -66,7 +77,7 @@ Except 'boss'
 - [x] Auto run 'Quest'
 - [x] Basic UI
 - [x] Config via UI
-- [ ] Dynamic select zone for Expedition
+- [x] Dynamic select zone for Expedition
 - [ ] Add all zone & floor in 'Quest'
 - [ ] Add all boss in 'Raid'
 

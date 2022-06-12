@@ -2,7 +2,7 @@ from const import *
 from error import InvalidValueValidateException
 from farm import Farm
 from ui.farm.trials import TrailsConfigUI
-from utils import click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
+from utils import click_play_and_check_no_energy, fight_wait_town, find_image_and_click_then_sleep, select_cost
 
 
 FEATURE_PATH = join(IMG_PATH, 'trials')
@@ -19,10 +19,10 @@ class Trails(Farm):
 
     def select_run(self):
         find_image_and_click_then_sleep(BTN, retry_time=5)
-        click_cost_and_play(
-            COSTS[self.cost], COMMON_SPECIAL_COST, play_btn=PLAY)
+        select_cost(COSTS[self.cost], COMMON_SPECIAL_COST)
 
     def main_run(self):
+        click_play_and_check_no_energy(play_btn=PLAY)
         find_image_and_click_then_sleep(COMMON_ACCEPT, sleep_duration=1)
         fight_wait_town()
 

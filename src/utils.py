@@ -1,5 +1,4 @@
 import json
-import traceback
 from window import click_screen_and_sleep, get_game_screen, press_escape
 from debug import save_image_dbg, save_print_dbg
 from error import *
@@ -253,7 +252,7 @@ def get_json_file(file) -> dict:
         return json.load(f)
 
 
-def write_json_file(file, data, is_sort=False) -> dict:
+def save_json_file(file, data, is_sort=False) -> dict:
     with open(file, 'w') as f:
         f.write(json.dumps(data, indent=4, sort_keys=is_sort))
 
@@ -261,4 +260,28 @@ def write_json_file(file, data, is_sort=False) -> dict:
 def set_rerun_mode(is_enable: bool):
     cfg = get_json_file(CONFIG_FILE)
     cfg['rerun_mode'] = is_enable
-    write_json_file(CONFIG_FILE, cfg)
+    save_json_file(CONFIG_FILE, cfg)
+
+
+def is_smart_rerun() -> bool:
+    return get_json_file(CONFIG_FILE).get('smart_rerun_mode', False)
+
+
+def is_smart_rerun_energy() -> bool:
+    return get_json_file(CONFIG_FILE).get('smart_rerun_energy', False)
+
+
+def is_rerun_mode() -> bool:
+    return get_json_file(CONFIG_FILE).get('rerun_mode', False)
+
+
+def is_debug() -> bool:
+    return get_json_file(CONFIG_FILE).get('debug', False)
+
+
+def is_save_captured_image() -> bool:
+    return get_json_file(CONFIG_FILE).get('save_captured_image', False)
+
+
+def is_decline_treasure() -> bool:
+    return get_json_file(CONFIG_FILE).get('decline_treasure', False)

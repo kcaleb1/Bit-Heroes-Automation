@@ -1,6 +1,6 @@
 from const import LIST_COSTS
 from ui.farm import ConfigUI, Farm
-from ui.farm.utils import create_option_menu
+from ui.utils import create_option_menu
 
 
 class InvasionConfigUI(ConfigUI):

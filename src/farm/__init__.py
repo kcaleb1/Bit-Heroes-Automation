@@ -1,14 +1,15 @@
 from datetime import datetime
 import multiprocessing
+from pickle import LIST
 import threading
 from time import sleep
 import warnings
-from const import CONFIG_FILE, READABLE_TIME_FORMAT, SECOND, SLEEP, USAGE_FILE, TIME_FORMAT
+from const import CONFIG_FILE, LIST_COSTS, READABLE_TIME_FORMAT, SECOND, SLEEP, USAGE_FILE, TIME_FORMAT
 import const
 from debug import save_print_dbg
 from decorator import go_main_screen, if_auto_run_then_wait_town, sleep_decorator
 from error import EmptyBaitException, InvalidValueValidateException, NoEnergyException, UnableJoinException
-from utils import get_json_file, write_json_file
+from utils import get_json_file, is_rerun_mode, save_json_file
 from window import get_app
 
 
@@ -20,6 +21,7 @@ class Farm(object):
     process = None
     debug = None
     run_time = 0
+    total_run = 0
     start_time = None
 
     def __init__(self):
@@ -31,6 +33,7 @@ class Farm(object):
 
     def reset_config(self):
         self.run_time = 0
+        self.total_selected_cost = 0
         self.start_time = None
         self.set_name()
         self.get_config()
@@ -49,12 +52,16 @@ class Farm(object):
                 f(self)
                 return True
             except NoEnergyException:
+                if self.is_smart_rerun_energy():
+                    if not self.rerun_mode:  # in case of smart rerun enabled
+                        special = True
+                    else:
+                        return wrapper(self)
                 err = NoEnergyException(feature=str(self.feature))
             except KeyboardInterrupt:
                 err = f"'{self.feature}' stopped by keyboard"
             except EmptyBaitException as ex:
                 err = str(ex)
-
             except UnableJoinException as ex:
                 err = str(ex)
                 special = True
@@ -104,7 +111,7 @@ class Farm(object):
         marker['last_run_at'] = datetime.strftime(
             datetime.now(), READABLE_TIME_FORMAT)
 
-        write_json_file(USAGE_FILE, marker, is_sort=True)
+        save_json_file(USAGE_FILE, marker, is_sort=True)
 
     def decorator_ignore_warning(f):
         def wrapper(self):
@@ -125,6 +132,8 @@ class Farm(object):
         Use self.start/1 to run
         '''
         const.dbg_name = f'{self.name}'
+        self.check_smart_rerun_energy()
+        self.total_selected_cost += 1
         self.select_run()
         self.main_run()
         while self.rerun_mode:
@@ -133,7 +142,8 @@ class Farm(object):
 
     def select_run(self):
         '''
-        Inherit class will extend this function to run test
+        Inherit class will extend this function to setup for run
+        E.g. select mode, select cost
         To keep the decorator in self._run
         '''
         pass
@@ -191,6 +201,7 @@ class Farm(object):
         self.cfg = cfg.get(self.feature, {})
         self.decline_treasure = cfg.get('decline_treasure', True)
         self.rerun_mode = cfg.get('rerun_mode', False)
+        self.smart_rerun_energy = cfg.get('smart_rerun_energy', False)
 
     def mapping_config(self):
         if not self.cfg:
@@ -205,10 +216,10 @@ class Farm(object):
             raise InvalidValueValidateException(
                 farm='', key='decline_treasure',
                 value=self.decline_treasure, expect='not boolean')
-        if type(self.rerun_mode) != bool:
+        if type(self.smart_rerun_energy) != bool:
             raise InvalidValueValidateException(
-                farm='', key='rerun_mode',
-                value=self.rerun_mode, expect='not boolean')
+                farm='', key='smart_rerun_energy',
+                value=self.smart_rerun_energy, expect='not boolean')
 
     def get_run_time(self) -> int:
         if self.is_done():
@@ -221,6 +232,20 @@ class Farm(object):
     def show_config_ui(self, parent, main):
         if self.configUI != None:
             self.configUI(self, parent, main)
+
+    def check_smart_rerun_energy(self):
+        if not self.is_valid_smart_rerun_energy():
+            return
+        self.cost = max(max(LIST_COSTS) -
+                        self.total_selected_cost, min(LIST_COSTS))
+
+    def is_smart_rerun_energy(self) -> bool:
+        if not self.is_valid_smart_rerun_energy():
+            return
+        return not (self.cost == min(LIST_COSTS))
+
+    def is_valid_smart_rerun_energy(self) -> bool:
+        return hasattr(self, 'cost') and self.smart_rerun_energy and is_rerun_mode()
 
     def __str__(self) -> str:
         return '\n'.join([f"Farm: {self.feature}\tRerun: {self.rerun_mode}"])

@@ -21,6 +21,7 @@ DEBUG_TEXT_PATH = join(SAVE_DEBUG_PATH, 'debug.log')
 SAVE_ESCAPE_IMG_PATH = join(SAVE_DEBUG_PATH, 'escape')
 
 COMMON_IMAGE_PATH = join(IMG_PATH, 'common')
+UI_IMAGE_PATH = join(IMG_PATH, 'ui')
 
 # COMMON_IMAGE_PATH
 COMMON_ACCEPT = join(COMMON_IMAGE_PATH, 'accept.png')

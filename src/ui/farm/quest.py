@@ -3,7 +3,7 @@ from tkinter import W, Frame, Label, StringVar, IntVar
 from tkinter.ttk import OptionMenu
 from const import LIST_DIFFICULTIES
 from ui.farm import ConfigUI, Farm
-from ui.farm.utils import create_option_menu
+from ui.utils import create_option_menu
 
 
 class QuestConfigUI(ConfigUI):
