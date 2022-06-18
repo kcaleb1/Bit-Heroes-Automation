@@ -2,7 +2,7 @@ from const import CONFIG_FILE, DEBUG_TEXT_PATH, LIST_COSTS, SAVE_DEBUG_PATH
 import const
 from ui import BaseConfigUi
 from ui.utils import create_check_button, create_option_menu
-from utils import get_json_file, is_decline_treasure, is_rerun_mode, is_debug, is_save_captured_image, is_smart_rerun, is_smart_rerun_energy, save_json_file
+from utils import get_json_file, is_decline_treasure, is_rerun_mode, is_debug, is_save_captured_image, is_smart_rerun, is_brush_force_energy, save_json_file
 
 
 class CommonConfigUI(BaseConfigUi):
@@ -33,8 +33,8 @@ class CommonConfigUI(BaseConfigUi):
             'Run each mode 1 by 1 in first run\n'
             'And then run each mode until ran out of energy \n'
             'Only work when rerun enabled')
-        self.smart_rerun_energy = create_check_button(
-            self.root, is_smart_rerun_energy(), 'Smart rerun energy',
+        self.brush_force_energy = create_check_button(
+            self.root, is_brush_force_energy(), 'Brush force energy',
             'Rerun by use highest energy and then decrease when got not enough energy until 1\n'
             'This will ignore the cost configuration\n'
             'Only work when rerun enabled')
@@ -51,7 +51,7 @@ class CommonConfigUI(BaseConfigUi):
         const.DEBUG_SAVE_IMG = cfg['save_captured_image']
         cfg['rerun_mode'] = self.rerun.get()
         cfg['smart_rerun_mode'] = self.smart_rerun.get()
-        cfg['smart_rerun_energy'] = self.smart_rerun_energy.get()
+        cfg['brush_force_energy'] = self.brush_force_energy.get()
         cfg['decline_treasure'] = self.decline_treasure.get()
 
         # set all cost of farm, except 0

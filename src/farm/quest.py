@@ -48,9 +48,10 @@ class Quest(Farm):
 
     def __init__(self):
         super().__init__()
+        self.button = BTN
+        self.no_energy_bars = []
 
-    def select_run(self):
-        find_image_and_click_then_sleep(BTN, retry_time=5)
+    def config_run(self):
         cur_img = None
         while True:
             try:
@@ -63,7 +64,7 @@ class Quest(Farm):
             try:
                 find_image(Z1, retry_time=1,
                            game_screen=cur_img, threshold=0.9)
-                cur_zone = 1
+                cur_zone = 0
                 while self.list_zone[cur_zone] != self.zone:
                     find_image_and_click_then_sleep(
                         RIGHT, ignore_exception=True)

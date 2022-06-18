@@ -27,9 +27,9 @@ class Raid(Farm):
 
     def __init__(self):
         super().__init__()
+        self.button = BTN
 
-    def select_run(self):
-        find_image_and_click_then_sleep(BTN)
+    def config_run(self):
         while True:
             try:
                 find_image(BOSSES[self.boss], retry_time=1)

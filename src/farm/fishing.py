@@ -20,6 +20,8 @@ class Fishing(Farm):
 
     def __init__(self):
         super().__init__()
+        self.button = BTN
+        self.no_energy_bars = []
 
     def is_check_closes(self):
         try:
@@ -31,8 +33,7 @@ class Fishing(Farm):
         except:
             return False
 
-    def select_run(self):
-        find_image_and_click_then_sleep(BTN)
+    def config_run(self):
         find_image_and_click_then_sleep(COMMON_PLAY)
 
     # TODO optimize this

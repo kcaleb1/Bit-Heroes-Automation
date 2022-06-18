@@ -22,9 +22,9 @@ class Expedition(Farm):
 
     def __init__(self):
         super().__init__()
+        self.button = BTN
 
-    def select_run(self):
-        find_image_and_click_then_sleep(BTN, retry_time=5)
+    def config_run(self):
         click_cost_and_play(COSTS[self.cost], keep_guide=True)
         for zone in ZONE_PRIORITY:
             try:

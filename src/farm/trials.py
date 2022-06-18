@@ -16,9 +16,9 @@ class Trails(Farm):
 
     def __init__(self):
         super().__init__()
+        self.button = BTN
 
-    def select_run(self):
-        find_image_and_click_then_sleep(BTN, retry_time=5)
+    def config_run(self):
         select_cost(COSTS[self.cost], COMMON_SPECIAL_COST)
 
     def main_run(self):

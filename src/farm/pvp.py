@@ -7,6 +7,7 @@ from utils import click_play_and_check_no_energy, fight_wait_town, find_image_an
 
 FEATURE_PATH = join(IMG_PATH, 'pvp')
 BTN = join(FEATURE_PATH, 'button.png')
+NO_ENERGY_BAR = join(FEATURE_PATH, 'no-energy-bar.png')
 
 
 class Pvp(Farm):
@@ -15,9 +16,11 @@ class Pvp(Farm):
 
     def __init__(self):
         super().__init__()
+        self.button = BTN
+        # self.no_energy_bars = [NO_ENERGY_BAR]
+        self.no_energy_bars = []
 
-    def select_run(self):
-        find_image_and_click_then_sleep(BTN, retry_time=5)
+    def config_run(self):
         select_cost(COSTS[self.cost])
 
     def main_run(self):
@@ -32,10 +35,10 @@ class Pvp(Farm):
 
     def validate(self):
         super().validate()
-        if self.cost not in range(1, 5+1):
+        if self.cost not in LIST_COSTS:
             raise InvalidValueValidateException(
                 farm=self.feature, key='cost',
-                value=self.cost, expect='not in 1-5')
+                value=self.cost, expect=f'not in {LIST_COSTS}')
 
     def __str__(self) -> str:
         return '\n'.join([super().__str__(),

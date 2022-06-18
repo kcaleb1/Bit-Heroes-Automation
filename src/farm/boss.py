@@ -40,13 +40,17 @@ class Boss(Farm):
         super().__init__()
         # boss will not use rerun mode due to it such for this mode
         self.rerun_mode = False
+        self.brush_force_energy = False
+        self.button = BTN
 
-    def select_run(self):
+    def config_run(self):
+        # boss will not use rerun mode due to it such for this mode
+        self.rerun_mode = False
+        self.brush_force_energy = False
         # self.select_run_summon_boss()
         self.select_run_join_lobby()
 
     def select_run_summon_boss(self):
-        find_image_and_click_then_sleep(BTN)
         find_image_and_click_then_sleep(SUMMON_BTN)
 
         for _ in range(10):
@@ -110,7 +114,6 @@ class Boss(Farm):
         )
 
     def select_run_join_lobby(self):
-        find_image_and_click_then_sleep(BTN)
         try:
             find_image_and_click_then_sleep(
                 JOIN_BTN, retry_time=5, sleep_duration=1)

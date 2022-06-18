@@ -21,7 +21,7 @@
 - Auto Trials (use current difficulty selected)
 - Auto Quest (only big floor and currently max zone is z4f4)
 - [Smart rerun mode](#smart-rerun-mode)
-- [Smart rerun energy](#smart-rerun-energy)
+- [Brush force energy](#brush-force-energy)
 - Auto check reconnect when running
 
 ## Smart rerun mode
@@ -34,13 +34,14 @@ Only work when rerun mode enabled
 
 Except 'boss'
 
-## Smart rerun energy
+## Brush force energy
 
 Rerun with energy spend from highest to lowest (5 -> 1)
 
 This will ignore the cost configuration
 
 Only work when rerun mode enabled
+
 ## Download
 
 [Latest version]((https://github.com/ken2057/Bit-Heroes-Automation/releases))

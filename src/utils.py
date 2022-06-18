@@ -189,14 +189,14 @@ def click_cost_and_play(cost: str, menu_cost=COMMON_COST, play_btn=COMMON_PLAY, 
     click_play_and_check_no_energy(play_btn=play_btn, keep_guide=keep_guide)
 
 
-def select_cost(cost: str, menu_cost=COMMON_COST, keep_guide=False):
+def select_cost(cost: str, menu_cost=COMMON_COST):
     find_image_and_click_then_sleep(menu_cost, retry_time=5)
     clicked = False
     try:
         find_image_and_click_then_sleep(
-            cost, retry_time=5, sleep_duration=0.5, threshold=0.9)
+            cost, retry_time=3, sleep_duration=0.5, threshold=0.9)
         clicked = True
-        find_image(cost, retry_time=5)
+        find_image(cost, retry_time=1)
         press_escape()
     except:
         if not clicked:
@@ -267,8 +267,8 @@ def is_smart_rerun() -> bool:
     return get_json_file(CONFIG_FILE).get('smart_rerun_mode', False)
 
 
-def is_smart_rerun_energy() -> bool:
-    return get_json_file(CONFIG_FILE).get('smart_rerun_energy', False)
+def is_brush_force_energy() -> bool:
+    return get_json_file(CONFIG_FILE).get('brush_force_energy', False)
 
 
 def is_rerun_mode() -> bool:
@@ -285,3 +285,18 @@ def is_save_captured_image() -> bool:
 
 def is_decline_treasure() -> bool:
     return get_json_file(CONFIG_FILE).get('decline_treasure', False)
+
+
+def is_image_exist(img: str, retry_time=1, threshold=0.8) -> bool:
+    try:
+        find_image(img, retry_time=retry_time, threshold=threshold)
+        return True
+    except:
+        return False
+
+
+def is_no_energy_bar(imgs) -> bool:
+    for img in imgs:
+        if is_image_exist(img, threshold=0.9):
+            return True
+    return False

@@ -5,7 +5,7 @@
     "decline_treasure": false,
     "rerun_mode": true,
     "smart_rerun_mode": true,
-    "smart_rerun_energy": true,
+    "brush_force_energy": true,
     "boss": {
         "boss": "Orlag Clan",
         "difficulty": "Normal",
@@ -30,7 +30,7 @@
     },
     "quest": {
         "difficulty": "Heroic",
-        "dungeon": "1|Rexie",
+        "dungeon": "2|Warty",
         "zone": "4|Ashvale"
     },
     "raid": {

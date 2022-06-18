@@ -43,6 +43,8 @@ COMMON_RECONNECT = join(COMMON_IMAGE_PATH, 'reconnect.png')
 COMMON_OPEN = join(COMMON_IMAGE_PATH, 'open.png')
 COMMON_TREASURE_KEY = join(COMMON_IMAGE_PATH, 'treasure-key.png')
 COMMON_NOT_ENOUGH = join(COMMON_IMAGE_PATH, 'not-enough.png')
+COMMON_NO_ENERGY_BAR_1 = join(COMMON_IMAGE_PATH, 'no-energy-bar-1.png')
+COMMON_NO_ENERGY_BAR_2 = join(COMMON_IMAGE_PATH, 'no-energy-bar-2.png')
 COMMON_DECLINE_TREASURE = join(COMMON_IMAGE_PATH, 'decline-treasure.png')
 
 COSTS = {

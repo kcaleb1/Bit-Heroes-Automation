@@ -7,7 +7,12 @@ from const import *
 import const
 from ui.config import CommonConfigUI
 from ui.utils import add_tool_tip
-from utils import find_image_and_click_then_sleep, is_rerun_mode, go_main_screen, is_debug, is_smart_rerun, is_smart_rerun_energy
+from utils import \
+    find_image_and_click_then_sleep, \
+    is_rerun_mode, \
+    go_main_screen, \
+    is_debug, \
+    is_smart_rerun
 
 GEAR_IMG = join(UI_IMAGE_PATH, 'gear-solid.png')
 CONFIG_FILE_IMG = join(UI_IMAGE_PATH, 'file-pen-solid.png')
@@ -306,6 +311,7 @@ class MainScreen():
                 pass
             const.dbg_name = old_dbg
 
+        self.set_main_label_by_farm()
         self.start_btn.after(SECOND_MS, self._do_farm)
 
     def _update_timer(self):
@@ -343,7 +349,7 @@ class MainScreen():
 
         self.farm.rerun_mode = self.check_smart_rerun(farm)
         self.farm.start()
-        self.txt_main_label.set(str(self.farm))
+        self.set_main_label_by_farm()
 
     def check_smart_rerun(self, farm: Farm) -> bool:
         if not is_smart_rerun():
@@ -426,3 +432,7 @@ class MainScreen():
                              command=lambda: btn_cmd())
             add_tool_tip(btn, f"Open {farm.feature} configuration")
         btn.pack(side=LEFT)
+
+    def set_main_label_by_farm(self):
+        self.txt_main_label.set(
+            self.farm.__str__() if self.farm else 'Nothing')

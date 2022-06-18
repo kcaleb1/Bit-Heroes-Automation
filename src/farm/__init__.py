@@ -1,28 +1,35 @@
 from datetime import datetime
 import multiprocessing
-from pickle import LIST
 import threading
 from time import sleep
 import warnings
-from const import CONFIG_FILE, LIST_COSTS, READABLE_TIME_FORMAT, SECOND, SLEEP, USAGE_FILE, TIME_FORMAT
+from const import COMMON_NO_ENERGY_BAR_1, COMMON_NO_ENERGY_BAR_2, CONFIG_FILE, LIST_COSTS, READABLE_TIME_FORMAT, SECOND, SLEEP, USAGE_FILE, TIME_FORMAT
 import const
 from debug import save_print_dbg
-from decorator import go_main_screen, if_auto_run_then_wait_town, sleep_decorator
-from error import EmptyBaitException, InvalidValueValidateException, NoEnergyException, UnableJoinException
-from utils import get_json_file, is_rerun_mode, save_json_file
+from decorator import go_main_screen, sleep_decorator
+from error import EmptyBaitException, InvalidValueValidateException, MismatchConditionException, NoEnergyException, UnableJoinException
 from window import get_app
+from utils import \
+    click_town_or_rerun, \
+    enable_auto_on, \
+    find_image_and_click_then_sleep, \
+    get_json_file, \
+    is_image_exist, \
+    is_no_energy_bar, \
+    is_rerun_mode, \
+    save_json_file
 
 
 class Farm(object):
     feature = None
+    button = None
     configUI = None
     name = None
     thread = None
     process = None
     debug = None
     run_time = 0
-    total_run = 0
-    start_time = None
+    no_energy_bars = [COMMON_NO_ENERGY_BAR_1, COMMON_NO_ENERGY_BAR_2]
 
     def __init__(self):
         self.reset_config()
@@ -35,6 +42,8 @@ class Farm(object):
         self.run_time = 0
         self.total_selected_cost = 0
         self.start_time = None
+        self.flag_brush_force_energy = False
+        self.current_status = 'Waiting to start...'
         self.set_name()
         self.get_config()
         self.mapping_config()
@@ -52,10 +61,12 @@ class Farm(object):
                 f(self)
                 return True
             except NoEnergyException:
-                if self.is_smart_rerun_energy():
-                    if not self.rerun_mode:  # in case of smart rerun enabled
+                if self.is_brush_force_energy():
+                    # in case of smart rerun enabled
+                    if not self.rerun_mode:
                         special = True
                     else:
+                        self.flag_brush_force_energy = True
                         return wrapper(self)
                 err = NoEnergyException(feature=str(self.feature))
             except KeyboardInterrupt:
@@ -94,24 +105,43 @@ class Farm(object):
 
         return wrapper
 
+    def decorator_if_auto_run_then_wait_town(f):
+        '''
+        Use to check if farm start while other farm running
+        then wait and go town, to start
+        '''
+
+        def wrapper(self):
+            if not is_image_exist(self.button):
+                self.current_status = 'Check reconnect or running...'
+                for _ in range(4):
+                    if enable_auto_on():
+                        while not click_town_or_rerun():
+                            sleep(SLEEP)
+                        break
+                else:
+                    click_town_or_rerun()
+            return f(self)
+        return wrapper
+
     def _save_result(self, result: bool):
-        marker = get_json_file(USAGE_FILE)
+        usage = get_json_file(USAGE_FILE)
 
         # mapping
-        if self.feature not in marker:
-            marker[self.feature] = {
+        if self.feature not in usage:
+            usage[self.feature] = {
                 'total_time': self.run_time,
                 'total_run': 1,
                 'runnable': result
             }
         else:
-            marker[self.feature]['total_time'] += self.run_time
-            marker[self.feature]['total_run'] += 1
-            marker[self.feature]['runnable'] = result
-        marker['last_run_at'] = datetime.strftime(
+            usage[self.feature]['total_time'] += self.run_time
+            usage[self.feature]['total_run'] += 1
+            usage[self.feature]['runnable'] = result
+        usage['last_run_at'] = datetime.strftime(
             datetime.now(), READABLE_TIME_FORMAT)
 
-        save_json_file(USAGE_FILE, marker, is_sort=True)
+        save_json_file(USAGE_FILE, usage, is_sort=True)
 
     def decorator_ignore_warning(f):
         def wrapper(self):
@@ -122,25 +152,42 @@ class Farm(object):
 
     @decorator_ignore_warning
     @decorator_save_result
-    @if_auto_run_then_wait_town
+    @decorator_if_auto_run_then_wait_town
     @decorator_init
     @go_main_screen
     @decorator_catch_exceptions
     def _run(self):
         '''
-        This call self.select_run, since it will be extended
+        This call self.config_run, since it will be extended
         Use self.start/1 to run
         '''
         const.dbg_name = f'{self.name}'
-        self.check_smart_rerun_energy()
+
+        self.check_brush_force_energy()
         self.total_selected_cost += 1
-        self.select_run()
+        self.save_cost_to_usage()
+
+        self.current_status = 'Selecting mode...'
+        self.select_mode()
+        if is_no_energy_bar(self.no_energy_bars):
+            self.flag_brush_force_energy = False
+            raise NoEnergyException()
+        self.config_run()
+        self.current_status = 'Running...'
         self.main_run()
         while self.rerun_mode:
             sleep(3 * SECOND)
             self.main_run()
 
-    def select_run(self):
+    def select_mode(self):
+        if not self.button:
+            raise MismatchConditionException(txt='Missing button image')
+        # when rerun with smart energy, don't need to click mode again
+        if self.flag_brush_force_energy:
+            return
+        find_image_and_click_then_sleep(self.button, retry_time=3)
+
+    def config_run(self):
         '''
         Inherit class will extend this function to setup for run
         E.g. select mode, select cost
@@ -179,6 +226,7 @@ class Farm(object):
             self.process.join()
 
     def stop(self):
+        self.current_status = 'Stopped...'
         if self.process:
             self.process.terminate()
         # self.thread = None
@@ -201,7 +249,7 @@ class Farm(object):
         self.cfg = cfg.get(self.feature, {})
         self.decline_treasure = cfg.get('decline_treasure', True)
         self.rerun_mode = cfg.get('rerun_mode', False)
-        self.smart_rerun_energy = cfg.get('smart_rerun_energy', False)
+        self.brush_force_energy = cfg.get('brush_force_energy', False)
 
     def mapping_config(self):
         if not self.cfg:
@@ -216,10 +264,10 @@ class Farm(object):
             raise InvalidValueValidateException(
                 farm='', key='decline_treasure',
                 value=self.decline_treasure, expect='not boolean')
-        if type(self.smart_rerun_energy) != bool:
+        if type(self.brush_force_energy) != bool:
             raise InvalidValueValidateException(
-                farm='', key='smart_rerun_energy',
-                value=self.smart_rerun_energy, expect='not boolean')
+                farm='', key='brush_force_energy',
+                value=self.brush_force_energy, expect='not boolean')
 
     def get_run_time(self) -> int:
         if self.is_done():
@@ -233,19 +281,28 @@ class Farm(object):
         if self.configUI != None:
             self.configUI(self, parent, main)
 
-    def check_smart_rerun_energy(self):
-        if not self.is_valid_smart_rerun_energy():
+    def check_brush_force_energy(self):
+        if not self.is_valid_brush_force_energy():
             return
         self.cost = max(max(LIST_COSTS) -
                         self.total_selected_cost, min(LIST_COSTS))
 
-    def is_smart_rerun_energy(self) -> bool:
-        if not self.is_valid_smart_rerun_energy():
-            return
+    def is_brush_force_energy(self) -> bool:
+        if not self.is_valid_brush_force_energy():
+            return False
         return not (self.cost == min(LIST_COSTS))
 
-    def is_valid_smart_rerun_energy(self) -> bool:
-        return hasattr(self, 'cost') and self.smart_rerun_energy and is_rerun_mode()
+    def is_valid_brush_force_energy(self) -> bool:
+        return hasattr(self, 'cost') and self.brush_force_energy and is_rerun_mode()
+
+    def save_cost_to_usage(self):
+        if not hasattr(self, 'cost') or self.cfg == {} or not self.cfg:
+            return
+        self.cfg['cost'] = self.cost
+        usage = get_json_file(USAGE_FILE)[self.feature] = self.cfg
+        save_json_file(USAGE_FILE, usage)
 
     def __str__(self) -> str:
-        return '\n'.join([f"Farm: {self.feature}\tRerun: {self.rerun_mode}"])
+        txt = [f"Farm: {self.feature}\tRerun: {self.rerun_mode}"]
+        return '\n'.join(txt)
+        # return '\n'.join([self.current_status] + txt)

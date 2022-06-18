@@ -15,9 +15,9 @@ class Gauntlet(Farm):
 
     def __init__(self):
         super().__init__()
+        self.button = BTN
 
-    def select_run(self):
-        find_image_and_click_then_sleep(BTN, retry_time=5)
+    def config_run(self):
         select_cost(COSTS[self.cost], COMMON_SPECIAL_COST)
 
     def main_run(self):
@@ -31,10 +31,10 @@ class Gauntlet(Farm):
 
     def validate(self):
         super().validate()
-        if self.cost not in range(1, 5+1):
+        if self.cost not in LIST_COSTS:
             raise InvalidValueValidateException(
                 farm=self.feature, key='cost',
-                value=self.cost, expect='not in 1-5')
+                value=self.cost, expect=f'not in {LIST_COSTS}')
 
     def __str__(self) -> str:
         return '\n'.join([super().__str__(),
