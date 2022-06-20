@@ -35,6 +35,7 @@ ZONES = {
     "5|Aramore": ["1|Torlim", "2|Zorul", "3|Tealk", DUNGEON_NAME],
     "6|Morgoroth": ["1|Rugumz", "2|Oozmire", "3|Moghur", DUNGEON_NAME],
     "7|Cambora": ["1|Scorpius"],
+    "9|Eshlyn": ["2|Eshlyn Abyss"],
 }
 
 LIST_ZONES = list(ZONES.keys())
