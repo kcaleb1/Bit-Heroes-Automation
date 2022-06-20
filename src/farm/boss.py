@@ -22,7 +22,11 @@ INVITE_BTN = join(FEATURE_PATH, 'invite.png')
 
 BOSSES = {
     "Orlag Clan": join(FEATURE_PATH, 'orlag-clan.png'),
-    "Netherworld": join(FEATURE_PATH, 'netherworld.png')
+    "Netherworld": join(FEATURE_PATH, 'netherworld.png'),
+    "Melvin Factory": join(FEATURE_PATH, 'melvin-factory.png'),
+    "3XT3RMIN4TION": join(FEATURE_PATH, '3xt3rmin4tion.png'),
+    "Brimstone Syndicate": join(FEATURE_PATH, 'brimstone-syndicate.png'),
+    "Titans Attack!": join(FEATURE_PATH, 'titans-attack!.png')
 }
 
 BOSS_DIFFICULTIES = {
