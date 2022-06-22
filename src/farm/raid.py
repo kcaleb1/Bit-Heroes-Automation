@@ -13,14 +13,14 @@ SUMMON_BTN = join(FEATURE_PATH, 'summon.png')
 DECLINE = join(FEATURE_PATH, 'decline.png')
 
 BOSSES = {
-    "Astaroth's Awakening": join(FEATURE_PATH, 'boss-1.png'),
-    "Hyper Dimension": join(FEATURE_PATH, 'boss-2.png'),
-    "Woodbeard's Booty": join(FEATURE_PATH, 'boss-3.png'),
-    "A Haile'Of A Mistake": join(FEATURE_PATH, 'boss-4.png'),
-    "Zol's Labyrinth": join(FEATURE_PATH, 'boss-5.png'),
-    "Mallowdale": join(FEATURE_PATH, 'boss-6.png'),
-    "Gorbon's Rockin' Ruckus": join(FEATURE_PATH, 'boss-7.png'),
-    "Charred Expanse": join(FEATURE_PATH, 'boss-8.png')
+    "3|Astaroth's Awakening": join(FEATURE_PATH, 'boss-1.png'),
+    "4|Hyper Dimension": join(FEATURE_PATH, 'boss-2.png'),
+    "5|Woodbeard's Booty": join(FEATURE_PATH, 'boss-3.png'),
+    "6|A Haile'Of A Mistake": join(FEATURE_PATH, 'boss-4.png'),
+    "7|Zol's Labyrinth": join(FEATURE_PATH, 'boss-5.png'),
+    "8|Mallowdale": join(FEATURE_PATH, 'boss-6.png'),
+    "9|Gorbon's Rockin' Ruckus": join(FEATURE_PATH, 'boss-7.png'),
+    "10|Charred Expanse": join(FEATURE_PATH, 'boss-8.png')
 }
 
 
