@@ -39,6 +39,14 @@ BOSS_DIFFICULTIES = {
 class Boss(Farm):
     feature = 'boss'
     bosses = list(BOSSES.keys())
+    default_config = {
+        'cost': LIST_COSTS[0],
+        'is_summon': False,
+        'is_solo': False,
+        'boss': list(BOSSES.keys())[0],
+        'tier': 3,
+        'difficulty': list(BOSS_DIFFICULTIES.keys())[0],
+    }
 
     def __init__(self):
         super().__init__()
@@ -54,6 +62,7 @@ class Boss(Farm):
         # self.select_run_summon_boss()
         self.select_run_join_lobby()
 
+    # TODO finish this :)
     def select_run_summon_boss(self):
         find_image_and_click_then_sleep(SUMMON_BTN)
 
@@ -177,9 +186,11 @@ class Boss(Farm):
 
     def get_config(self):
         super().get_config()
-        self.cost = self.cfg.get('cost', 1)
-        self.is_summon = self.cfg.get('is_summon', False)
-        self.is_solo = self.cfg.get('is_solo', False)
-        self.boss = self.cfg.get('boss', self.bosses[0])
-        self.tier = self.cfg.get('tier', )
-        self.difficulty = self.cfg.get('difficulty', 1)
+        self.cost = self.cfg.get('cost', self.default_config['cost'])
+        self.is_summon = self.cfg.get(
+            'is_summon', self.default_config['is_summon'])
+        self.is_solo = self.cfg.get('is_solo', self.default_config['is_solo'])
+        self.boss = self.cfg.get('boss', self.default_config['boss'])
+        self.tier = self.cfg.get('tier', self.default_config['tier'])
+        self.difficulty = self.cfg.get(
+            'difficulty', self.default_config['difficulty'])

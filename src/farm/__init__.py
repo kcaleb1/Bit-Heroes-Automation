@@ -30,6 +30,7 @@ class Farm(object):
     debug = None
     run_time = 0
     no_energy_bars = [COMMON_NO_ENERGY_BAR_1, COMMON_NO_ENERGY_BAR_2]
+    default_config = {}
 
     def __init__(self):
         self.reset_config()
@@ -43,7 +44,7 @@ class Farm(object):
         self.total_selected_cost = 0
         self.start_time = None
         self.flag_brush_force_energy = False
-        self.set_and_save_status('Waiting to start...')
+        self.save_status('Waiting to start...')
         self.set_name()
         self.get_config()
         self.mapping_config()
@@ -113,7 +114,7 @@ class Farm(object):
 
         def wrapper(self):
             if not is_image_exist(self.button):
-                self.set_and_save_status('Check reconnect or running...')
+                self.save_status('Check reconnect or running...')
                 for _ in range(4):
                     if enable_auto_on():
                         while not click_town_or_rerun():
@@ -167,13 +168,13 @@ class Farm(object):
         self.total_selected_cost += 1
         self.save_cost_to_usage()
 
-        self.set_and_save_status('Selecting mode...')
+        self.save_status('Selecting mode...')
         self.select_mode()
         if is_no_energy_bar(self.no_energy_bars):
             self.flag_brush_force_energy = False
             raise NoEnergyException()
         self.config_run()
-        self.set_and_save_status('Running...')
+        self.save_status('Running...')
         self.main_run()
         while self.rerun_mode:
             sleep(3 * SECOND)
@@ -221,12 +222,13 @@ class Farm(object):
         self.start_time = datetime.now()
         self.process = multiprocessing.Process(target=self._start_thread)
         self.process.start()
+        self.save_error('')
 
         if wait_done:
             self.process.join()
 
     def stop(self):
-        self.set_and_save_status('Stopped...')
+        self.save_status('Stopped...')
         if self.process:
             self.process.terminate()
         # self.thread = None
@@ -310,15 +312,37 @@ class Farm(object):
 
         return get_json_file(USAGE_FILE).get(self.feature, {}).get('cost', self.cost)
 
-    def set_and_save_status(self, status: str):
-        self.status = status
+    def save_status(self, status: str):
         usage = get_json_file(USAGE_FILE)
-        usage['status'] = self.status
+        usage['status'] = status
         save_json_file(USAGE_FILE, usage)
 
     def get_status_from_usage(self) -> str:
         return get_json_file(USAGE_FILE).get('status', 'None')
 
+    def save_error(self, error: str):
+        '''
+        Use when got error that can't re-run able
+        e.g. Tier raid/quest not reachable
+        '''
+        usage = get_json_file(USAGE_FILE)
+        f = usage.get(self.feature, {})
+        f['error'] = error
+        usage[self.feature] = f
+        save_json_file(USAGE_FILE, usage)
+
+    def get_error(self) -> str:
+        return get_json_file(USAGE_FILE).get(self.feature, {}).get('error', '')
+
     def __str__(self) -> str:
         txt = [f"Farm: {self.feature}\tRerun: {self.rerun_mode}"]
         return '\n'.join([self.get_status_from_usage()] + txt)
+
+    def set_default_config(self):
+        '''
+        When got error related to config, UI will call this function to reset config to default
+        Set default config into self.default_config
+        '''
+        cfg = get_json_file(CONFIG_FILE)
+        cfg[self.feature] = self.default_config
+        save_json_file(CONFIG_FILE, cfg)

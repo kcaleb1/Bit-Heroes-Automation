@@ -4,8 +4,8 @@
     "save_captured_image": false,
     "decline_treasure": false,
     "rerun_mode": true,
-    "smart_rerun_mode": true,
-    "brush_force_energy": false,
+    "smart_rerun_mode": false,
+    "brush_force_energy": true,
     "boss": {
         "boss": "Orlag Clan",
         "difficulty": "Normal",
@@ -28,16 +28,16 @@
     "pvp": {
         "cost": 5
     },
-    "quest": {
-        "difficulty": "Heroic",
-        "dungeon": "2|Eshlyn Abyss",
-        "zone": "9|Eshlyn"
-    },
-    "raid": {
-        "boss": "Charred Expanse",
-        "difficulty": "Heroic"
-    },
     "trails": {
         "cost": 5
+    },
+    "raid": {
+        "boss": "3|Astaroth's Awakening",
+        "difficulty": "Normal"
+    },
+    "quest": {
+        "zone": "7|Cambora",
+        "dungeon": "1|Scorpius",
+        "difficulty": "Heroic"
     }
 }

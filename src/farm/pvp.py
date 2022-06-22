@@ -13,6 +13,9 @@ NO_ENERGY_BAR = join(FEATURE_PATH, 'no-energy-bar.png')
 class Pvp(Farm):
     feature = 'pvp'
     configUI = PvpConfigUI
+    default_config = {
+        'cost': LIST_COSTS[0]
+    }
 
     def __init__(self):
         super().__init__()
@@ -31,7 +34,7 @@ class Pvp(Farm):
 
     def mapping_config(self):
         super().mapping_config()
-        self.cost = self.cfg.get('cost', 1)
+        self.cost = self.cfg.get('cost', self.default_config['cost'])
 
     def validate(self):
         super().validate()

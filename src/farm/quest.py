@@ -1,7 +1,7 @@
 from farm import Farm
 from time import sleep
 from const import *
-from error import ImageNotFoundException, InvalidValueValidateException, UnableJoinException
+from error import CannotRerunException, ImageNotFoundException, InvalidValueValidateException, UnableJoinException
 from ui.farm.quest import QuestConfigUI
 from utils import check_no_energy, click_town_or_rerun, decline_except_persuade, enable_auto_on, find_image, find_image_and_click_then_sleep, open_treasure
 
@@ -49,6 +49,11 @@ class Quest(Farm):
     zones = ZONES
     list_zone = LIST_ZONES
     configUI = QuestConfigUI
+    default_config = {
+        'zone': LIST_ZONES[0],
+        'dungeon': ZONES[LIST_ZONES[0]][0],
+        'difficulty': LIST_DIFFICULTIES[0]
+    }
 
     def __init__(self):
         super().__init__()
@@ -71,18 +76,25 @@ class Quest(Farm):
                 cur_zone = 0
                 while self.list_zone[cur_zone] != self.zone:
                     if cur_zone > len(self.list_zone):
-                        raise UnableJoinException()
+                        raise CannotRerunException()
                     find_image_and_click_then_sleep(
                         RIGHT, ignore_exception=True)
                     cur_zone += 1
                 break
-            except UnableJoinException:
-                raise ImageNotFoundException(
-                    txt=f'Zone {self.img_quest} not found')
+            except CannotRerunException:
+                error = f'Quest {self.zone} not found'
+                self.save_error(error)
+                raise CannotRerunException(error)
             except:
                 pass
 
-        find_image_and_click_then_sleep(self.img_quest, sleep_duration=1)
+        try:
+            find_image_and_click_then_sleep(self.img_quest, sleep_duration=1)
+        except:
+            error = f'Quest {self.quest_name} not found or tier not reachable'
+            self.save_error(error)
+            raise CannotRerunException(error)
+
         if self.dungeon == DUNGEON_NAME:
             find_image_and_click_then_sleep(ENTER)
         else:
@@ -107,18 +119,20 @@ class Quest(Farm):
 
     def mapping_config(self):
         super().mapping_config()
-        self.zone = self.cfg.get('zone', list(self.zones.keys())[0])
-        self.dungeon = self.cfg.get('dungeon', ZONES[self.zone][0])
-        self.difficulty = self.cfg.get('difficulty', LIST_DIFFICULTIES[0])
+        self.zone = self.cfg.get('zone', self.default_config['zone'])
+        self.dungeon = self.cfg.get('dungeon', self.default_config['dungeon'])
+        self.difficulty = self.cfg.get(
+            'difficulty', self.default_config['difficulty'])
 
         z = self.to_image_name(self.zone)
         d = self.to_image_name(self.dungeon)
+        self.quest_name = f'z{z}d{d}.png'
 
         self.zone_name = join(ZONE_PATH, f'z{z}.png')
         if self.dungeon == DUNGEON_NAME:
             self.img_quest = DUNGEON
         else:
-            self.img_quest = join(ZONE_PATH, f'z{z}d{d}.png')
+            self.img_quest = join(ZONE_PATH, self.quest_name)
 
     def to_image_name(self, text: str):
         return text.split(DELIMITER)[0]

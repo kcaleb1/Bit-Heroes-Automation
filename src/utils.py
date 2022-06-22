@@ -300,3 +300,12 @@ def is_no_energy_bar(imgs) -> bool:
         if is_image_exist(img, threshold=0.9):
             return True
     return False
+
+
+def clean_config_of_farm(name: str):
+    cfg = get_json_file(CONFIG_FILE)
+    try:
+        cfg.pop(name)
+    except:
+        pass
+    save_json_file(CONFIG_FILE, cfg)

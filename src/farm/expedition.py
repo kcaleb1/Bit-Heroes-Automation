@@ -19,6 +19,9 @@ ZONE_PRIORITY = [
 class Expedition(Farm):
     feature = 'expedition'
     configUI = ExpeditionConfigUI
+    default_config = {
+        'cost': LIST_COSTS[0]
+    }
 
     def __init__(self):
         super().__init__()
@@ -44,7 +47,7 @@ class Expedition(Farm):
 
     def mapping_config(self):
         super().mapping_config()
-        self.cost = self.cfg.get('cost', 1)
+        self.cost = self.cfg.get('cost', self.default_config['cost'])
 
     def validate(self):
         super().validate()

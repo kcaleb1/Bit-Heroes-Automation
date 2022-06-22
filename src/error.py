@@ -56,3 +56,8 @@ class InvalidValueValidateException(Exception):
                 f"invalid value '{self.key}'='{self.value}'\n"
                 f"reason: {self.expect}"
                 )
+
+
+class CannotRerunException(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)

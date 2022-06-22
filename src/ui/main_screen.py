@@ -8,6 +8,7 @@ import const
 from ui.config import CommonConfigUI
 from ui.utils import add_tool_tip
 from utils import \
+    clean_config_of_farm, \
     find_image_and_click_then_sleep, \
     is_rerun_mode, \
     go_main_screen, \
@@ -269,17 +270,22 @@ class MainScreen():
 
     def _create_error_frame_btn(self, farm: Farm, error: str):
         def _repaired_error(farm: Farm, fr: ttk.Frame):
+            clean_config_of_farm(farm.feature)
+            self.try_create_farm(farm).set_default_config()
             self.errors.remove(farm)
             self._add_queue_and_farms(farm)
             fr.pack_forget()
 
         fr = ttk.Frame(self.errors_fr)
-        fr.pack(side=TOP, anchor=W)
+        fr.pack(side=LEFT, anchor=N)
 
-        ttk.Label(fr, text=error).pack(anchor=W)
-        ttk.Button(fr, text='fixed',
-                   command=lambda: _repaired_error(farm, fr)
-                   ).pack(anchor=W)
+        btn = ttk.Button(fr, text='<<',
+                         padding=(-22, 10),
+                         command=lambda: _repaired_error(farm, fr)
+                         )
+        btn.pack(anchor=W, side=LEFT)
+        add_tool_tip(btn, 'Move back to queue with default config')
+        ttk.Label(fr, text=error, wraplength=160).pack(anchor=W, side=LEFT)
 
     def _start_farm(self):
         if self.farms == None or len(self.farms) == 0 or isinstance(self.farms, Farm):
@@ -333,7 +339,11 @@ class MainScreen():
                 self._add_queue_and_farms(f)
                 self.check_run.append(f)
             else:
-                self._move_farm_done(f)
+                err = self.farm.get_error()
+                if err == '':
+                    self._move_farm_done(f)
+                else:
+                    self._move_farm_to_error(f, Exception(err))
 
         if len(self.farms) == 0:
             self._stop_farm()

@@ -28,6 +28,10 @@ class Raid(Farm):
     feature = 'raid'
     bosses = list(BOSSES.keys())
     configUI = RaidConfigUI
+    default_config = {
+        'boss': list(BOSSES.keys())[0],
+        'difficulty': LIST_DIFFICULTIES[0]
+    }
 
     def __init__(self):
         super().__init__()
@@ -42,7 +46,9 @@ class Raid(Farm):
                 find_image_and_click_then_sleep(MOVE_LEFT)
                 sleep(0.5)
         else:
-            raise ImageNotFoundException(image_path=f'{self.boss} not found')
+            error = f'Raid {self.boss} not found or tier not reachable'
+            self.save_error(error)
+            raise CannotRerunException(error)
 
         find_image_and_click_then_sleep(SUMMON_BTN)
         find_image_and_click_then_sleep(DIFFICULTIES[self.difficulty])
@@ -65,9 +71,9 @@ class Raid(Farm):
 
     def mapping_config(self):
         super().mapping_config()
-        self.boss = self.cfg.get('boss', 1)
+        self.boss = self.cfg.get('boss', self.default_config['boss'])
         self.difficulty = self.cfg.get(
-            'difficulty', LIST_DIFFICULTIES)
+            'difficulty', self.default_config['difficulty'])
 
     def validate(self):
         super().validate()
