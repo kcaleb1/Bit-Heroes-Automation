@@ -30,4 +30,4 @@ def save_print_dbg(txt: str, end='\n', is_print=True):
 
 
 def print_stacktrace():
-    print(traceback.format_exc())
+    save_print_dbg(traceback.format_exc())

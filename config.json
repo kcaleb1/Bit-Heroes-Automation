@@ -32,12 +32,12 @@
         "cost": 5
     },
     "raid": {
-        "boss": "3|Astaroth's Awakening",
-        "difficulty": "Normal"
+        "boss": "6|A Haile'Of A Mistake",
+        "difficulty": "Heroic"
     },
     "quest": {
-        "zone": "1|Bit Valley",
-        "dungeon": "1|Grimz",
-        "difficulty": "Normal"
+        "zone": "7|Cambora",
+        "dungeon": "1|Scorpius",
+        "difficulty": "Heroic"
     }
 }

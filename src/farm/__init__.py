@@ -136,6 +136,14 @@ class Farm(object):
                 'runnable': result
             }
         else:
+            validate = {
+                'total_time': 0,
+                'total_run': 0,
+            }
+            for k, v in validate.items():
+                if k not in usage[self.feature]:
+                    usage[self.feature][k] = v
+
             usage[self.feature]['total_time'] += self.run_time
             usage[self.feature]['total_run'] += 1
             usage[self.feature]['runnable'] = result

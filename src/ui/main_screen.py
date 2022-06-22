@@ -1,7 +1,7 @@
 import os
 from time import sleep
 from tkinter import DISABLED, LEFT, N, NE, NW, TOP, W, PhotoImage, ttk, StringVar, Tk
-from debug import save_print_dbg
+from debug import print_stacktrace, save_print_dbg
 from farm import Farm
 from const import *
 import const
@@ -33,6 +33,9 @@ class MainScreen():
     done_frames = {}
 
     errors = []
+
+    start_btn_id = None
+    timer_label_id = None
 
     def __init__(self, farms: list) -> None:
         self.farms = farms
@@ -319,7 +322,7 @@ class MainScreen():
             const.dbg_name = old_dbg
 
         self.set_main_label_by_farm()
-        self.start_btn.after(SECOND_MS, self._do_farm)
+        self.start_btn_id = self.start_btn.after(SECOND_MS, self._do_farm)
 
     def _update_timer(self):
         if self.start_enable:
@@ -331,7 +334,8 @@ class MainScreen():
         s = int(self.timer - h * 3600 - m * 60)
         self.timer_label.configure(text=f'{h:02d}:{m:02d}:{s:02d}')
 
-        self.timer_label.after(SECOND_MS, self._update_timer)
+        self.timer_label_id = self.timer_label.after(
+            SECOND_MS, self._update_timer)
 
     def _next_farm(self):
         if self.farm:
@@ -400,12 +404,25 @@ class MainScreen():
 
     def _stop_farm(self):
         save_print_dbg("**Stop farm")
+
         if self.farm != None:
             self.farm.stop()
             if type(self.farm) not in self.farms + self.done:
                 self.farms.append(type(self.farm))
-        self._start_stop_swap()
         self._reset_config()
+        self._start_stop_swap()
+
+    def _stop_schedule_events(self):
+        events = {
+            self.start_btn: self.start_btn_id,
+            self.timer_label: self.timer_label_id
+        }
+
+        for k, v in events.items():
+            try:
+                k.after_cancel(v)
+            except:
+                pass
 
     def _start_stop_swap(self):
         if self.start_enable:
