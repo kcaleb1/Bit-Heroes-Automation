@@ -16,7 +16,11 @@ BOSSES = {
     "Astaroth's Awakening": join(FEATURE_PATH, 'boss-1.png'),
     "Hyper Dimension": join(FEATURE_PATH, 'boss-2.png'),
     "Woodbeard's Booty": join(FEATURE_PATH, 'boss-3.png'),
-    "A Haile'Of A Mistake": join(FEATURE_PATH, 'boss-4.png')
+    "A Haile'Of A Mistake": join(FEATURE_PATH, 'boss-4.png'),
+    "Zol's Labyrinth": join(FEATURE_PATH, 'boss-5.png'),
+    "Mallowdale": join(FEATURE_PATH, 'boss-6.png'),
+    "Gorbon's Rockin' Ruckus": join(FEATURE_PATH, 'boss-7.png'),
+    "Charred Expanse": join(FEATURE_PATH, 'boss-8.png')
 }
 
 

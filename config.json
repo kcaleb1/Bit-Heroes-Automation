@@ -5,7 +5,7 @@
     "decline_treasure": false,
     "rerun_mode": true,
     "smart_rerun_mode": true,
-    "brush_force_energy": true,
+    "brush_force_energy": false,
     "boss": {
         "boss": "Orlag Clan",
         "difficulty": "Normal",
@@ -30,11 +30,11 @@
     },
     "quest": {
         "difficulty": "Heroic",
-        "dungeon": "2|Warty",
-        "zone": "4|Ashvale"
+        "dungeon": "2|Eshlyn Abyss",
+        "zone": "9|Eshlyn"
     },
     "raid": {
-        "boss": "Hyper Dimension",
+        "boss": "Charred Expanse",
         "difficulty": "Heroic"
     },
     "trails": {

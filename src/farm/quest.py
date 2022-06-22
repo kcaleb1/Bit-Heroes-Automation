@@ -34,7 +34,11 @@ ZONES = {
     "4|Ashvale": ["1|Rexie", "2|Warty", "3|Kov'Alg", DUNGEON_NAME],
     "5|Aramore": ["1|Torlim", "2|Zorul", "3|Tealk", DUNGEON_NAME],
     "6|Morgoroth": ["1|Rugumz", "2|Oozmire", "3|Moghur", DUNGEON_NAME],
-    "7|Cambora": ["1|Scorpius"],
+    "7|Cambora": ["1|Scorpius", "2|Vedaire", DUNGEON_NAME],
+    "8|Galaran": ["1|Googamenz", "2|The Trilogy", DUNGEON_NAME],
+    "9|Eshlyn": ["1|Eshlyn Void", "2|Eshlyn Abyss", DUNGEON_NAME],
+    "10|Vamor": ["1|Calverang", "2|Broken Abyss", "3|Elemental Colony", DUNGEON_NAME],
+    "11|Melvin's Genesis": ["1|Eldingverold"],
 }
 
 LIST_ZONES = list(ZONES.keys())
