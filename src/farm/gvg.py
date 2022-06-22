@@ -40,4 +40,4 @@ class Gvg(Farm):
 
     def __str__(self) -> str:
         return '\n'.join([super().__str__(),
-                          f"Cost: {self.cost}"])
+                          f"Cost: {self.get_cost_from_usage()}"])

@@ -43,7 +43,7 @@ class Farm(object):
         self.total_selected_cost = 0
         self.start_time = None
         self.flag_brush_force_energy = False
-        self.current_status = 'Waiting to start...'
+        self.set_and_save_status('Waiting to start...')
         self.set_name()
         self.get_config()
         self.mapping_config()
@@ -113,7 +113,7 @@ class Farm(object):
 
         def wrapper(self):
             if not is_image_exist(self.button):
-                self.current_status = 'Check reconnect or running...'
+                self.set_and_save_status('Check reconnect or running...')
                 for _ in range(4):
                     if enable_auto_on():
                         while not click_town_or_rerun():
@@ -167,13 +167,13 @@ class Farm(object):
         self.total_selected_cost += 1
         self.save_cost_to_usage()
 
-        self.current_status = 'Selecting mode...'
+        self.set_and_save_status('Selecting mode...')
         self.select_mode()
         if is_no_energy_bar(self.no_energy_bars):
             self.flag_brush_force_energy = False
             raise NoEnergyException()
         self.config_run()
-        self.current_status = 'Running...'
+        self.set_and_save_status('Running...')
         self.main_run()
         while self.rerun_mode:
             sleep(3 * SECOND)
@@ -226,7 +226,7 @@ class Farm(object):
             self.process.join()
 
     def stop(self):
-        self.current_status = 'Stopped...'
+        self.set_and_save_status('Stopped...')
         if self.process:
             self.process.terminate()
         # self.thread = None
@@ -284,8 +284,10 @@ class Farm(object):
     def check_brush_force_energy(self):
         if not self.is_valid_brush_force_energy():
             return
-        self.cost = max(max(LIST_COSTS) -
-                        self.total_selected_cost, min(LIST_COSTS))
+        cost = max(max(LIST_COSTS) -
+                   self.total_selected_cost, min(LIST_COSTS))
+        save_print_dbg(f'Change cost from {self.cost} to {cost}')
+        self.cost = cost
 
     def is_brush_force_energy(self) -> bool:
         if not self.is_valid_brush_force_energy():
@@ -293,16 +295,30 @@ class Farm(object):
         return not (self.cost == min(LIST_COSTS))
 
     def is_valid_brush_force_energy(self) -> bool:
-        return hasattr(self, 'cost') and self.brush_force_energy and is_rerun_mode()
+        return hasattr(self, 'cost') and self.brush_force_energy == True and is_rerun_mode()
 
     def save_cost_to_usage(self):
-        if not hasattr(self, 'cost') or self.cfg == {} or not self.cfg:
+        if not hasattr(self, 'cost'):
             return
-        self.cfg['cost'] = self.cost
-        usage = get_json_file(USAGE_FILE)[self.feature] = self.cfg
+        usage = get_json_file(USAGE_FILE)
+        usage[self.feature]['cost'] = self.cost
         save_json_file(USAGE_FILE, usage)
+
+    def get_cost_from_usage(self) -> int:
+        if not hasattr(self, 'cost'):
+            return -1
+
+        return get_json_file(USAGE_FILE).get(self.feature, {}).get('cost', self.cost)
+
+    def set_and_save_status(self, status: str):
+        self.status = status
+        usage = get_json_file(USAGE_FILE)
+        usage['status'] = self.status
+        save_json_file(USAGE_FILE, usage)
+
+    def get_status_from_usage(self) -> str:
+        return get_json_file(USAGE_FILE).get('status', 'None')
 
     def __str__(self) -> str:
         txt = [f"Farm: {self.feature}\tRerun: {self.rerun_mode}"]
-        return '\n'.join(txt)
-        # return '\n'.join([self.current_status] + txt)
+        return '\n'.join([self.get_status_from_usage()] + txt)
