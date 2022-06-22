@@ -404,7 +404,7 @@ class MainScreen():
 
     def _stop_farm(self):
         save_print_dbg("**Stop farm")
-
+        self._stop_schedule_events()
         if self.farm != None:
             self.farm.stop()
             if type(self.farm) not in self.farms + self.done:
