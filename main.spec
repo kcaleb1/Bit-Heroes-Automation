@@ -46,5 +46,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='bit-heroes-automation-v1.0.4',
+    name='bit-heroes-automation-v1.0.5',
 )

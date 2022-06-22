@@ -79,6 +79,7 @@ Only work when rerun mode enabled
 - [x] Basic UI
 - [x] Config via UI
 - [x] Dynamic select zone for Expedition
+- [ ] Display error got when running (e.g. config quest/raid not unreachable)
 - [ ] Add all zone & floor in 'Quest'
 - [ ] Add all boss in 'Raid'
 

@@ -34,13 +34,15 @@ class Raid(Farm):
         self.button = BTN
 
     def config_run(self):
-        while True:
+        for _ in range(len(self.bosses) + 1):
             try:
                 find_image(BOSSES[self.boss], retry_time=1)
                 break
             except:
                 find_image_and_click_then_sleep(MOVE_LEFT)
                 sleep(0.5)
+        else:
+            raise ImageNotFoundException(image_path=f'{self.boss} not found')
 
         find_image_and_click_then_sleep(SUMMON_BTN)
         find_image_and_click_then_sleep(DIFFICULTIES[self.difficulty])

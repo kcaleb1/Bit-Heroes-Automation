@@ -1,7 +1,7 @@
 from farm import Farm
 from time import sleep
 from const import *
-from error import InvalidValueValidateException
+from error import ImageNotFoundException, InvalidValueValidateException, UnableJoinException
 from ui.farm.quest import QuestConfigUI
 from utils import check_no_energy, click_town_or_rerun, decline_except_persuade, enable_auto_on, find_image, find_image_and_click_then_sleep, open_treasure
 
@@ -70,10 +70,15 @@ class Quest(Farm):
                            game_screen=cur_img, threshold=0.9)
                 cur_zone = 0
                 while self.list_zone[cur_zone] != self.zone:
+                    if cur_zone > len(self.list_zone):
+                        raise UnableJoinException()
                     find_image_and_click_then_sleep(
                         RIGHT, ignore_exception=True)
                     cur_zone += 1
                 break
+            except UnableJoinException:
+                raise ImageNotFoundException(
+                    txt=f'Zone {self.img_quest} not found')
             except:
                 pass
 
