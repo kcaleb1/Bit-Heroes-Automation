@@ -404,8 +404,8 @@ class MainScreen():
             self.farm.stop()
             if type(self.farm) not in self.farms + self.done:
                 self.farms.append(type(self.farm))
-        self._reset_config()
         self._start_stop_swap()
+        self._reset_config()
 
     def _start_stop_swap(self):
         if self.start_enable:

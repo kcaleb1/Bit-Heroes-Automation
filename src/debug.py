@@ -3,7 +3,7 @@ import traceback
 from PIL import Image
 from datetime import datetime
 from os import path, mkdir
-from const import DEBUG_SAVE_IMG, SAVE_DEBUG_PATH, DEBUG, DEBUG_TEXT_PATH, TIME_FORMAT
+from const import DEBUG_SAVE_IMG, MAX_DEBUG_SIZE, SAVE_DEBUG_PATH, DEBUG, DEBUG_TEXT_PATH, TIME_FORMAT
 import const
 
 
@@ -22,8 +22,7 @@ def save_image_dbg(name: str, img: Image):
 def save_print_dbg(txt: str, end='\n', is_print=True):
     if not DEBUG:
         return
-    if is_print:
-        print(txt, end=end)
+    print(txt, end=end)
     if not isdir(SAVE_DEBUG_PATH):
         mkdir(SAVE_DEBUG_PATH)
     with open(DEBUG_TEXT_PATH, 'a+') as f:
