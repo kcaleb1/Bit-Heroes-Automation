@@ -3,7 +3,7 @@ import traceback
 from PIL import Image
 from datetime import datetime
 from os import path, mkdir
-from const import DEBUG_SAVE_IMG, MAX_DEBUG_SIZE, SAVE_DEBUG_PATH, DEBUG, DEBUG_TEXT_PATH, TIME_FORMAT
+from const import DEBUG_SAVE_IMG, SAVE_DEBUG_PATH, DEBUG, DEBUG_TEXT_PATH, TIME_FORMAT
 import const
 
 

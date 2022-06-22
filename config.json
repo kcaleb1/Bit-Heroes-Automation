@@ -36,8 +36,8 @@
         "difficulty": "Normal"
     },
     "quest": {
-        "zone": "7|Cambora",
-        "dungeon": "1|Scorpius",
-        "difficulty": "Heroic"
+        "zone": "1|Bit Valley",
+        "dungeon": "1|Grimz",
+        "difficulty": "Normal"
     }
 }
