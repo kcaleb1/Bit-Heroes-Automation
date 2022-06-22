@@ -46,7 +46,7 @@ class Raid(Farm):
                 find_image_and_click_then_sleep(MOVE_LEFT)
                 sleep(0.5)
         else:
-            error = f'Raid {self.boss} not found or tier not reachable'
+            error = f'Raid {self.boss} not found or tier unreachable'
             self.save_error(error)
             raise CannotRerunException(error)
 

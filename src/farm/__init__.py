@@ -323,7 +323,7 @@ class Farm(object):
     def save_error(self, error: str):
         '''
         Use when got error that can't re-run able
-        e.g. Tier raid/quest not reachable
+        e.g. Tier raid/quest unreachable
         '''
         usage = get_json_file(USAGE_FILE)
         f = usage.get(self.feature, {})

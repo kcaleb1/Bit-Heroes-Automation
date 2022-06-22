@@ -277,15 +277,16 @@ class MainScreen():
             fr.pack_forget()
 
         fr = ttk.Frame(self.errors_fr)
-        fr.pack(side=LEFT, anchor=N)
+        fr.pack(side=TOP, anchor=N)
 
         btn = ttk.Button(fr, text='<<',
                          padding=(-22, 10),
-                         command=lambda: _repaired_error(farm, fr)
+                         command=lambda: _repaired_error(farm, fr),
                          )
         btn.pack(anchor=W, side=LEFT)
         add_tool_tip(btn, 'Move back to queue with default config')
-        ttk.Label(fr, text=error, wraplength=160).pack(anchor=W, side=LEFT)
+        ttk.Label(fr, text=error, wraplength=160,
+                  width=160).pack(anchor=W, side=LEFT)
 
     def _start_farm(self):
         if self.farms == None or len(self.farms) == 0 or isinstance(self.farms, Farm):

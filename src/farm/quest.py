@@ -89,9 +89,10 @@ class Quest(Farm):
                 pass
 
         try:
-            find_image_and_click_then_sleep(self.img_quest, sleep_duration=1)
+            find_image_and_click_then_sleep(
+                self.img_quest, sleep_duration=1, retry_time=3)
         except:
-            error = f'Quest {self.quest_name} not found or tier not reachable'
+            error = f'Quest {self.quest_name} not found or tier unreachable'
             self.save_error(error)
             raise CannotRerunException(error)
 
