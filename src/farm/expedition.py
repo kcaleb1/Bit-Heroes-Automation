@@ -2,7 +2,7 @@ from const import *
 from error import InvalidValueValidateException, UnableJoinException
 from farm import Farm
 from ui.farm.expedition import ExpeditionConfigUI
-from utils import check_no_energy, click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep
+from utils import check_no_energy, click_cost_and_play, fight_wait_town, find_image_and_click_then_sleep, go_main_screen
 
 
 FEATURE_PATH = join(IMG_PATH, 'expedition')
@@ -44,6 +44,7 @@ class Expedition(Farm):
         find_image_and_click_then_sleep(COMMON_AUTO_TEAM)
         find_image_and_click_then_sleep(COMMON_ACCEPT)
         fight_wait_town()
+        go_main_screen()
 
     def mapping_config(self):
         super().mapping_config()

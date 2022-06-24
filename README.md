@@ -81,7 +81,7 @@ Only work when rerun mode enabled
 - [x] Dynamic select zone for Expedition
 - [ ] Add all zone & floor in 'Quest'
 - [ ] Add all boss in 'Raid'
+- [ ] Summon boss private/public
+- [ ] Expedition tier selectable
+- [ ] Trail tier selectable
 
-
-References:
-- https://www.simple-ai.net/post/find-and-replace-in-image
