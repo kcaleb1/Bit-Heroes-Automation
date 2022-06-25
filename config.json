@@ -32,12 +32,12 @@
         "cost": 5
     },
     "raid": {
-        "boss": "6|A Haile'Of A Mistake",
+        "boss": "7|Zol's Labyrinth",
         "difficulty": "Heroic"
     },
     "quest": {
         "zone": "7|Cambora",
-        "dungeon": "1|Scorpius",
+        "dungeon": "2|Vedaire",
         "difficulty": "Heroic"
     }
 }

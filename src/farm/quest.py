@@ -25,6 +25,8 @@ QUESTS_DIF = {
 }
 
 DUNGEON = join(ZONE_PATH, 'dungeon.png')
+RED_DUNGEON = join(ZONE_PATH, 'red-dungeon.png')
+
 DUNGEON_3_NAME = "3|Dungeon"
 DUNGEON_4_NAME = "4|Dungeon"
 DUNGEON_NAMES = [
@@ -42,9 +44,17 @@ ZONES = {
     "7|Cambora": ["1|Scorpius", "2|Vedaire", DUNGEON_3_NAME],
     "8|Galaran": ["1|Googamenz", "2|The Trilogy", DUNGEON_3_NAME],
     "9|Eshlyn": ["1|Eshlyn Void", "2|Eshlyn Abyss", DUNGEON_3_NAME],
-    "10|Vamor": ["1|Calverang", "2|Broken Abyss", "3|Elemental Colony", DUNGEON_4_NAME],
+    "10|Uamor": ["1|Calverang", "2|Broken Abyss", "3|Elemental Colony", DUNGEON_4_NAME],
     "11|Melvin's Genesis": ["1|Eldingverold"],
 }
+
+RED_DUNGEON_LOCATION = [
+    "7|Cambora",
+    "8|Galaran",
+    "9|Eshlyn",
+    "10|Uamor",
+    "11|Melvin's Genesis"
+]
 
 LIST_ZONES = list(ZONES.keys())
 
@@ -138,6 +148,8 @@ class Quest(Farm):
         self.zone_name = join(ZONE_PATH, f'z{z}.png')
         if self.dungeon in DUNGEON_NAMES:
             self.img_quest = DUNGEON
+            if self.zone in RED_DUNGEON_LOCATION:
+                self.img_quest = RED_DUNGEON
         else:
             self.img_quest = join(ZONE_PATH, self.quest_name)
 
