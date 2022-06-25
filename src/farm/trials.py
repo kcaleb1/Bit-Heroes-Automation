@@ -22,6 +22,7 @@ class Trails(Farm):
         self.button = BTN
 
     def config_run(self):
+        super().config_run()
         select_cost(COSTS[self.cost], COMMON_SPECIAL_COST)
 
     def main_run(self):

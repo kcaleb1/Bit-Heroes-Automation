@@ -24,6 +24,7 @@ class Pvp(Farm):
         self.no_energy_bars = []
 
     def config_run(self):
+        super().config_run()
         select_cost(COSTS[self.cost])
 
     def main_run(self):

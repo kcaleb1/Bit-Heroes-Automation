@@ -38,6 +38,7 @@ class Raid(Farm):
         self.button = BTN
 
     def config_run(self):
+        super().config_run()
         for _ in range(len(self.bosses) + 1):
             try:
                 find_image(BOSSES[self.boss], retry_time=1)

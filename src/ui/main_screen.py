@@ -50,7 +50,7 @@ class MainScreen():
 
     def _stop(self):
         save_print_dbg("**Stop app")
-        self._stop_farm()
+        self._stop_farm(exist=True)
         self.root.quit()
 
     def _reset_config(self):
@@ -402,15 +402,16 @@ class MainScreen():
         save_print_dbg(f'--- error:\n{err}')
         self._create_error_frame_btn(farm, err)
 
-    def _stop_farm(self):
+    def _stop_farm(self, exist=False):
         save_print_dbg("**Stop farm")
         self._stop_schedule_events()
         if self.farm != None:
             self.farm.stop()
             if type(self.farm) not in self.farms + self.done:
                 self.farms.append(type(self.farm))
-        self._reset_config()
-        self._start_stop_swap()
+        if not exist:
+            self._reset_config()
+            self._start_stop_swap()
 
     def _stop_schedule_events(self):
         events = {

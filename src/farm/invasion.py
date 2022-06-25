@@ -21,6 +21,7 @@ class Invasion(Farm):
         self.button = BTN
 
     def config_run(self):
+        super().config_run()
         select_cost(COSTS[self.cost], COMMON_COST)
 
     def main_run(self):

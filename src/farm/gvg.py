@@ -21,6 +21,7 @@ class Gvg(Farm):
         self.button = BTN
 
     def config_run(self):
+        super().config_run()
         select_cost(COSTS[self.cost])
 
     def main_run(self):

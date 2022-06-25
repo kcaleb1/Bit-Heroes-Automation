@@ -25,19 +25,24 @@ QUESTS_DIF = {
 }
 
 DUNGEON = join(ZONE_PATH, 'dungeon.png')
-DUNGEON_NAME = "4|Dungeon"
+DUNGEON_3_NAME = "3|Dungeon"
+DUNGEON_4_NAME = "4|Dungeon"
+DUNGEON_NAMES = [
+    DUNGEON_3_NAME,
+    DUNGEON_4_NAME
+]
 
 ZONES = {
-    "1|Bit Valley": ["1|Grimz", "2|Dryad", "3|Lord Cerulean", DUNGEON_NAME],
-    "2|Wintermarsh": ["1|Yeti", "2|Blubber", "3|Gemm", DUNGEON_NAME],
-    "3|Lakehaven": ["1|Nosdoodoo", "2|Jeb", "3|Quirrel", DUNGEON_NAME],
-    "4|Ashvale": ["1|Rexie", "2|Warty", "3|Kov'Alg", DUNGEON_NAME],
-    "5|Aramore": ["1|Torlim", "2|Zorul", "3|Tealk", DUNGEON_NAME],
-    "6|Morgoroth": ["1|Rugumz", "2|Oozmire", "3|Moghur", DUNGEON_NAME],
-    "7|Cambora": ["1|Scorpius", "2|Vedaire", DUNGEON_NAME],
-    "8|Galaran": ["1|Googamenz", "2|The Trilogy", DUNGEON_NAME],
-    "9|Eshlyn": ["1|Eshlyn Void", "2|Eshlyn Abyss", DUNGEON_NAME],
-    "10|Vamor": ["1|Calverang", "2|Broken Abyss", "3|Elemental Colony", DUNGEON_NAME],
+    "1|Bit Valley": ["1|Grimz", "2|Dryad", "3|Lord Cerulean", DUNGEON_4_NAME],
+    "2|Wintermarsh": ["1|Yeti", "2|Blubber", "3|Gemm", DUNGEON_4_NAME],
+    "3|Lakehaven": ["1|Nosdoodoo", "2|Jeb", "3|Quirrel", DUNGEON_4_NAME],
+    "4|Ashvale": ["1|Rexie", "2|Warty", "3|Kov'Alg", DUNGEON_4_NAME],
+    "5|Aramore": ["1|Torlim", "2|Zorul", "3|Tealk", DUNGEON_4_NAME],
+    "6|Morgoroth": ["1|Rugumz", "2|Oozmire", "3|Moghur", DUNGEON_4_NAME],
+    "7|Cambora": ["1|Scorpius", "2|Vedaire", DUNGEON_3_NAME],
+    "8|Galaran": ["1|Googamenz", "2|The Trilogy", DUNGEON_3_NAME],
+    "9|Eshlyn": ["1|Eshlyn Void", "2|Eshlyn Abyss", DUNGEON_3_NAME],
+    "10|Vamor": ["1|Calverang", "2|Broken Abyss", "3|Elemental Colony", DUNGEON_4_NAME],
     "11|Melvin's Genesis": ["1|Eldingverold"],
 }
 
@@ -61,6 +66,7 @@ class Quest(Farm):
         self.no_energy_bars = []
 
     def config_run(self):
+        super().config_run()
         cur_img = None
         while True:
             try:
@@ -96,7 +102,7 @@ class Quest(Farm):
             self.save_error(error)
             raise CannotRerunException(error)
 
-        if self.dungeon == DUNGEON_NAME:
+        if self.dungeon in DUNGEON_NAMES:
             find_image_and_click_then_sleep(ENTER)
         else:
             find_image_and_click_then_sleep(QUESTS_DIF[self.difficulty])
@@ -130,7 +136,7 @@ class Quest(Farm):
         self.quest_name = f'z{z}d{d}.png'
 
         self.zone_name = join(ZONE_PATH, f'z{z}.png')
-        if self.dungeon == DUNGEON_NAME:
+        if self.dungeon in DUNGEON_NAMES:
             self.img_quest = DUNGEON
         else:
             self.img_quest = join(ZONE_PATH, self.quest_name)

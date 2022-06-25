@@ -34,6 +34,7 @@ class Fishing(Farm):
             return False
 
     def config_run(self):
+        super().config_run()
         find_image_and_click_then_sleep(COMMON_PLAY)
 
     # TODO optimize this

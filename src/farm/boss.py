@@ -56,6 +56,7 @@ class Boss(Farm):
         self.button = BTN
 
     def config_run(self):
+        super().config_run()
         # boss will not use rerun mode due to it such for this mode
         self.rerun_mode = False
         self.brush_force_energy = False

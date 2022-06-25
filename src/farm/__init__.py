@@ -176,11 +176,11 @@ class Farm(object):
         self.total_selected_cost += 1
         self.save_cost_to_usage()
 
-        self.save_status('Selecting mode...')
-        self.select_mode()
+        self.save_status('Checking energy...')
         if is_no_energy_bar(self.no_energy_bars):
             self.flag_brush_force_energy = False
             raise NoEnergyException()
+        self.select_mode()
         self.config_run()
         self.save_status('Running...')
         self.main_run()
@@ -189,6 +189,7 @@ class Farm(object):
             self.main_run()
 
     def select_mode(self):
+        self.save_status('Selecting mode...')
         if not self.button:
             raise MismatchConditionException(txt='Missing button image')
         # when rerun with smart energy, don't need to click mode again
@@ -202,6 +203,7 @@ class Farm(object):
         E.g. select mode, select cost
         To keep the decorator in self._run
         '''
+        self.save_status('Config run...')
         pass
 
     @sleep_decorator
