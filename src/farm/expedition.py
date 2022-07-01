@@ -31,14 +31,19 @@ class Expedition(Farm):
 
     def config_run(self):
         super().config_run()
+        selected_cost = False
         try:
-            click_cost_and_play(cost=COSTS[self.cost], keep_guide=True)
+            select_cost(cost=COSTS[self.cost])
+            selected_cost = True
+            click_play_and_check_no_energy(keep_guide=True)
         except NoEnergyException as ex:
             raise ex
-        except:
-            click_cost_and_play(cost=COSTS[self.cost],
-                                menu_cost=COST_MENU_2, keep_guide=True,
-                                play_btn=ENTER)
+        except Exception as ex:
+            if selected_cost:
+                click_cost_and_play(cost=COSTS[self.cost],
+                                    menu_cost=COST_MENU_2, keep_guide=True,
+                                    play_btn=ENTER)
+            raise ex
         for zone in ZONE_PRIORITY:
             try:
                 find_image_and_click_then_sleep(zone, retry_time=4)

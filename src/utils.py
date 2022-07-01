@@ -208,6 +208,15 @@ def select_cost(cost: str, menu_cost=COMMON_COST):
 def click_play_and_check_no_energy(play_btn=COMMON_PLAY, keep_guide=False):
     find_image_and_click_then_sleep(play_btn, retry_time=5, sleep_duration=1)
     check_no_energy(keep_guide=keep_guide)
+    check_not_full_team()
+
+
+def check_not_full_team():
+    def _run():
+        find_image(COMMON_TEAM_NOT_FULL, retry_time=2)
+        find_image_and_click_then_sleep(
+            COMMON_NO, retry_time=2, ignore_exception=True)
+    raise_exception_when_runnable(_run, NotFullTeamException)
 
 
 def fight_wait_town(is_rerun=False):

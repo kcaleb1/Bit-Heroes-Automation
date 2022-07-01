@@ -7,7 +7,7 @@ from const import COMMON_NO_ENERGY_BAR_1, COMMON_NO_ENERGY_BAR_2, CONFIG_FILE, L
 import const
 from debug import save_print_dbg
 from decorator import go_main_screen, sleep_decorator
-from error import EmptyBaitException, InvalidValueValidateException, MismatchConditionException, NoEnergyException, UnableJoinException
+from error import EmptyBaitException, InvalidValueValidateException, MismatchConditionException, NoEnergyException, NotFullTeamException, UnableJoinException
 from window import get_app
 from utils import \
     click_town_or_rerun, \
@@ -74,6 +74,9 @@ class Farm(object):
                 err = f"'{self.feature}' stopped by keyboard"
             except EmptyBaitException as ex:
                 err = str(ex)
+            except NotFullTeamException as ex:
+                err = str(ex)
+                self.save_error(err)
             except UnableJoinException as ex:
                 err = str(ex)
                 special = True
@@ -117,6 +120,7 @@ class Farm(object):
                 self.save_status('Check reconnect or running...')
                 for _ in range(4):
                     if enable_auto_on():
+                        self.save_status('Wait previous run finish...')
                         while not click_town_or_rerun():
                             sleep(SLEEP)
                         break

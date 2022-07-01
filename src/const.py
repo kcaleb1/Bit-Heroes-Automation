@@ -46,6 +46,7 @@ COMMON_NOT_ENOUGH = join(COMMON_IMAGE_PATH, 'not-enough.png')
 COMMON_NO_ENERGY_BAR_1 = join(COMMON_IMAGE_PATH, 'no-energy-bar-1.png')
 COMMON_NO_ENERGY_BAR_2 = join(COMMON_IMAGE_PATH, 'no-energy-bar-2.png')
 COMMON_DECLINE_TREASURE = join(COMMON_IMAGE_PATH, 'decline-treasure.png')
+COMMON_TEAM_NOT_FULL = join(COMMON_IMAGE_PATH, 'team-not-full.png')
 
 COSTS = {
     1: join(COMMON_IMAGE_PATH, 'cost-1.png'),

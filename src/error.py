@@ -61,3 +61,11 @@ class InvalidValueValidateException(Exception):
 class CannotRerunException(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
+
+
+class NotFullTeamException(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+    def __str__(self) -> str:
+        return "Team not full, please rerun by yourself"
