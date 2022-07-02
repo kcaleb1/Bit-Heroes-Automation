@@ -318,3 +318,7 @@ def clean_config_of_farm(name: str):
     except:
         pass
     save_json_file(CONFIG_FILE, cfg)
+
+
+def is_config_error(name: str):
+    return get_json_file(USAGE_FILE).get(name, {}).get('is_config_error', False)

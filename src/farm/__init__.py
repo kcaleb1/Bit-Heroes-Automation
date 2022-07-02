@@ -76,7 +76,7 @@ class Farm(object):
                 err = str(ex)
             except NotFullTeamException as ex:
                 err = str(ex)
-                self.save_error(err)
+                self.save_error(err, is_config_error=False)
             except UnableJoinException as ex:
                 err = str(ex)
                 special = True
@@ -334,7 +334,7 @@ class Farm(object):
     def get_status_from_usage(self) -> str:
         return get_json_file(USAGE_FILE).get('status', 'None')
 
-    def save_error(self, error: str):
+    def save_error(self, error: str, is_config_error=True):
         '''
         Use when got error that can't re-run able
         e.g. Tier raid/quest unreachable
@@ -342,6 +342,7 @@ class Farm(object):
         usage = get_json_file(USAGE_FILE)
         f = usage.get(self.feature, {})
         f['error'] = error
+        f['is_config_error'] = is_config_error
         usage[self.feature] = f
         save_json_file(USAGE_FILE, usage)
 

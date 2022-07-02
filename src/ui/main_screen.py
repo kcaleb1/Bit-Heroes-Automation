@@ -10,6 +10,7 @@ from ui.utils import add_tool_tip
 from utils import \
     clean_config_of_farm, \
     find_image_and_click_then_sleep, \
+    is_config_error, \
     is_rerun_mode, \
     go_main_screen, \
     is_debug, \
@@ -273,8 +274,9 @@ class MainScreen():
 
     def _create_error_frame_btn(self, farm: Farm, error: str):
         def _repaired_error(farm: Farm, fr: ttk.Frame):
-            clean_config_of_farm(farm.feature)
-            self.try_create_farm(farm).set_default_config()
+            if is_config_error(farm.feature):
+                clean_config_of_farm(farm.feature)
+                self.try_create_farm(farm).set_default_config()
             self.errors.remove(farm)
             self._add_queue_and_farms(farm)
             fr.pack_forget()
