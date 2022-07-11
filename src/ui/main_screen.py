@@ -15,12 +15,14 @@ from utils import \
     go_main_screen, \
     is_debug, \
     is_smart_rerun
+from window import start_game
 
 GEAR_IMG = join(UI_IMAGE_PATH, 'gear-solid.png')
 CONFIG_FILE_IMG = join(UI_IMAGE_PATH, 'file-pen-solid.png')
 DEBUG_FILE_IMG = join(UI_IMAGE_PATH, 'file-alt-solid.png')
 START_IMG = join(UI_IMAGE_PATH, 'play-solid.png')
 STOP_IMG = join(UI_IMAGE_PATH, 'stop-solid.png')
+ICON_IMG = join(UI_IMAGE_PATH, 'icon.png')
 
 IMG_SIZE = 28
 
@@ -87,6 +89,8 @@ class MainScreen():
             file=CONFIG_FILE_IMG).subsample(IMG_SIZE, IMG_SIZE)
         self.debug_file_img = PhotoImage(
             file=DEBUG_FILE_IMG).subsample(IMG_SIZE, IMG_SIZE)
+        self.icon_img = PhotoImage(
+            file=ICON_IMG).subsample(8, 8)
 
         self.start_img = PhotoImage(file=START_IMG).subsample(22, 22)
         self.stop_img = PhotoImage(file=STOP_IMG).subsample(22, 22)
@@ -95,13 +99,14 @@ class MainScreen():
         top_fr = ttk.Frame(self.root)
         top_fr.grid(column=0, row=0, columnspan=3, sticky=W)
         self._setup_label(top_fr)
-        self._setup_button(top_fr)
+        self._setup_start_stop_button(top_fr)
         self._utilities_button(top_fr)
 
     def _utilities_button(self, top_fr: ttk.Frame):
         fr = ttk.Frame(top_fr, padding=(10, 0, 0, 7))
         fr.grid(column=0, row=2, sticky=W)
 
+        self._add_open_game_button(fr).pack(side=LEFT)
         self._add_common_config_button(fr).pack(side=LEFT)
         self._add_open_config_file_button(fr).pack(side=LEFT)
         self._add_open_debug_file_button(fr).pack(side=LEFT)
@@ -134,6 +139,12 @@ class MainScreen():
         add_tool_tip(btn, "Open debug file")
         return btn
 
+    def _add_open_game_button(self, top_fr: ttk.Frame) -> ttk.Button:
+        btn = ttk.Button(top_fr, image=self.icon_img,
+                         command=start_game)
+        add_tool_tip(btn, "Start game")
+        return btn
+
     def _setup_label(self, top_fr: ttk.Frame):
         # label timer
         self.timer = 0
@@ -150,7 +161,7 @@ class MainScreen():
         self.main_label.pack()
         add_tool_tip(self.main_label, "Farm information")
 
-    def _setup_button(self, top_fr: ttk.Frame):
+    def _setup_start_stop_button(self, top_fr: ttk.Frame):
         self.start_enable = False
         # Start farm button
         pad = (30, 10)

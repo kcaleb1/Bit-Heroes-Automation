@@ -1,3 +1,4 @@
+import os
 import pyautogui
 import pywinauto
 import win32gui
@@ -30,12 +31,12 @@ def click_screen_and_sleep(y: int, x: int, sleep_duration=SLEEP):
     sleep(sleep_duration)
 
 
-def get_game_screen(game_title=GAME_TITLE):
+def get_game_screen():
     if sys.platform in ['Windows', 'win32', 'cygwin']:
-        hwnd = win32gui.FindWindow(None, game_title)
+        hwnd = win32gui.FindWindow(None, GAME_TITLE)
 
         if not hwnd:
-            raise MismatchConditionException(txt=f'{game_title} not running')
+            raise MismatchConditionException(txt=f'{GAME_TITLE} not running')
 
         x, y, x1, y1 = win32gui.GetClientRect(hwnd)
         if (x1, y1) != MAX_RESOLUTION:
@@ -51,6 +52,17 @@ def get_game_screen(game_title=GAME_TITLE):
         return img
 
     raise MismatchConditionException(txt='OS not supported')
+
+
+def start_game():
+    if sys.platform in ['Windows', 'win32', 'cygwin']:
+        hwnd = win32gui.FindWindow(None, GAME_TITLE)
+        if not hwnd:
+            os.system(f"start steam://rungameid/{STEAM_ID}")
+        else:
+            win32gui.SetForegroundWindow(hwnd)
+    else:
+        raise MismatchConditionException(txt='OS not supported')
 
 
 def press_escape():
