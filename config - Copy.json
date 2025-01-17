@@ -1,0 +1,43 @@
+{
+    "capture_interval": 0.3,
+    "debug": true,
+    "save_captured_image": false,
+    "decline_treasure": false,
+    "rerun_mode": true,
+    "smart_rerun_mode": false,
+    "brush_force_energy": true,
+    "boss": {
+        "boss": "Orlag Clan",
+        "difficulty": "Normal",
+        "is_solo": false,
+        "is_summon": true,
+        "tier": 7
+    },
+    "expedition": {
+        "cost": 5
+    },
+    "gauntlet": {
+        "cost": 5
+    },
+    "gvg": {
+        "cost": 5
+    },
+    "invasion": {
+        "cost": 5
+    },
+    "pvp": {
+        "cost": 5
+    },
+    "trails": {
+        "cost": 5
+    },
+    "raid": {
+        "boss": "7|Zol's Labyrinth",
+        "difficulty": "Heroic"
+    },
+    "quest": {
+        "zone": "7|Cambora",
+        "dungeon": "2|Vedaire",
+        "difficulty": "Heroic"
+    }
+}
